@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\faris\\source\\repos\\API\\API\\API.csproj": {}
+    "C:\\Users\\faris\\Desktop\\webapp\\Bankist_backend\\API\\API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\faris\\source\\repos\\API\\API\\API.csproj": {
+    "C:\\Users\\faris\\Desktop\\webapp\\Bankist_backend\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\faris\\source\\repos\\API\\API\\API.csproj",
+        "projectUniqueName": "C:\\Users\\faris\\Desktop\\webapp\\Bankist_backend\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "C:\\Users\\faris\\source\\repos\\API\\API\\API.csproj",
+        "projectPath": "C:\\Users\\faris\\Desktop\\webapp\\Bankist_backend\\API\\API.csproj",
         "packagesPath": "C:\\Users\\faris\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\faris\\source\\repos\\API\\API\\obj\\",
+        "outputPath": "C:\\Users\\faris\\Desktop\\webapp\\Bankist_backend\\API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -45,6 +45,20 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
