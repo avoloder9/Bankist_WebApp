@@ -16,4 +16,16 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\BanksUserEndpoints\" />
+    <Folder Include="Endpoints\CardEndpoints\" />
+    <Folder Include="Endpoints\DeletedUserEndpoints\" />
+    <Folder Include="Endpoints\LoanEndpoints\" />
+    <Folder Include="Endpoints\LoyaltyEndpoints\" />
+    <Folder Include="Endpoints\TransactionEndpoints\" />
+    <Folder Include="Endpoints\UserEndpoints\Delete\" />
+    <Folder Include="Endpoints\UserEndpoints\Update\" />
+    <Folder Include="Endpoints\UserEndpoints\Post\" />
+  </ItemGroup>
+
 </Project>
