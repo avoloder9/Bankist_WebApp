@@ -28,7 +28,7 @@ namespace API.Endpoints.UserEndpoints.GetAll
                     firstName = x.firstName,
                     lastName = x.lastName,
                     email = x.email,
-                    phone = x.phone,
+                    phone = x.phone,                    
                     birthDate = x.birthDate,
                     registrationDate = x.registrationDate
                 })

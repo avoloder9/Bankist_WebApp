@@ -1,5 +1,7 @@
 using API.Data;
+using API.Endpoints.UserEndpoints.CheckExists;
 using Microsoft.EntityFrameworkCore;
+using static API.Endpoints.UserEndpoints.CheckExists.IUserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(config.GetConnectionString("db1")));
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+builder.Services.AddScoped<IUserService,UserService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,7 +37,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAllOrigins");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

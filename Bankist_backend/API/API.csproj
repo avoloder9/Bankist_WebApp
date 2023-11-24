@@ -25,7 +25,6 @@
     <Folder Include="Endpoints\TransactionEndpoints\" />
     <Folder Include="Endpoints\UserEndpoints\Delete\" />
     <Folder Include="Endpoints\UserEndpoints\Update\" />
-    <Folder Include="Endpoints\UserEndpoints\Post\" />
   </ItemGroup>
 
 </Project>

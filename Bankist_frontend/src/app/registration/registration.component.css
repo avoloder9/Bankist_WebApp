@@ -1,0 +1,21 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+}
+
+.modal__form {
+    max-width: 600px;
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+
+}
+
+.errorDiv {
+    color: red;
+}
