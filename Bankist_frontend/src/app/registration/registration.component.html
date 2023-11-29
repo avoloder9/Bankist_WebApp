@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="registration.component.css">
+</head>
+
+<body>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="modal__form">
+
+        <div class="mb-3 row">
+            <label for="firstName" class="col-sm-3 col-form-label">First Name</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="firstName" class="form-control" />
+                <div class="errorDiv" *ngIf="isFieldInvalid('firstName') && registrationForm.get('firstName')!.touched">
+                    First Name must start with an uppercase letter.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="lastName" class="col-sm-3 col-form-label">Last Name</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="lastName" class="form-control" />
+                <div class="errorDiv" *ngIf="isFieldInvalid('lastName') && registrationForm.get('lastName')!.touched">
+                    Last Name must start with an uppercase letter.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="email" class="col-sm-3 col-form-label">Email Address</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="email" class="form-control" />
+                <div class="errorDiv" *ngIf="isFieldInvalid('email') && registrationForm.get('email')!.touched">
+                    Email is required and must be a valid email address.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="username" class="col-sm-3 col-form-label">Username</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="username" class="form-control" />
+                <div class="errorDiv" *ngIf="isFieldInvalid('username') && registrationForm.get('username')!.touched">
+                    Username is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="password" class="col-sm-3 col-form-label">Password</label>
+            <div class="col-sm-9">
+                <input type="password" formControlName="password" class="form-control" />
+                <div class="errorDiv" *ngIf="isFieldInvalid('password') && registrationForm.get('password')!.touched">
+                    Password is required and must be at least 8 characters, one uppercase letter, one number, and one
+                    special
+                    character.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="phone" class="col-sm-3 col-form-label">Phone</label>
+            <div class="col-sm-9">
+                <input type="phone" formControlName="phone" class="form-control" />
+                <div class="errorDiv" *ngIf="isFieldInvalid('phone') && registrationForm.get('phone')!.touched">
+                    Phone is required and must contain only numbers, 9 or 10 digits.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="birthDate" class="col-sm-3 col-form-label">Birth date</label>
+            <div class="col-sm-9">
+                <input type="date" formControlName="birthDate" class="form-control" />
+                <div class="errorDiv" *ngIf="isFieldInvalid('birthDate') && registrationForm.get('birthDate')!.touched">
+                    Birth date is required.
+                </div>
+            </div>
+        </div>
+
+        <!-- Repeat similar structures for other form fields -->
+
+        <div *ngIf="registrationSuccess" class="mb-3">
+            <p class="text-success">Registration successful</p>
+        </div>
+
+        <div *ngIf="userExists" class="mb-3">
+            <p class="text-danger">User already exists with the same username or email</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="registrationForm.invalid">Register</button>
+
+
+        <button type="button" class="btn btn-secondary float-right" (click)="closePopup()"
+            routerLink="homePage">Close</button>
+    </form>
+</body>
+
+</html>
