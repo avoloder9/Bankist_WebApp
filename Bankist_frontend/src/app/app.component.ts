@@ -5,11 +5,11 @@ import { RegistrationComponent } from './registration/registration.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   buttonDisabled: boolean = false;
-  constructor(private dialogRef: MatDialog) { }
+  constructor(private dialogRef: MatDialog) {}
   openDialog() {
     if (!this.buttonDisabled) {
       this.buttonDisabled = true;
@@ -17,8 +17,7 @@ export class AppComponent {
 
       dialog.afterClosed().subscribe(() => {
         this.buttonDisabled = false;
-      })
+      });
     }
-
   }
 }

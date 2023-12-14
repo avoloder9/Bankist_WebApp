@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
 import { passwordValidator } from './passwordValidator';
 import { MyConfig } from '../myConfig';
 import { HttpResponse } from '@angular/common/http';
@@ -9,22 +9,24 @@ import { numberAsyncValidator } from './numberAsyncValidator';
 import { AppComponent } from '../app.component';
 import { MatDialog } from '@angular/material/dialog';
 import { startWithUppercaseValidator } from './startWithUppercase';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
-
-
   registrationForm: FormGroup;
-  registrationSuccess: boolean = false;
-  userExists: boolean = false;
+  isSending: boolean = false;
+  registrationSuccessful: boolean = false;
+  registrationFailed: boolean = false;
 
-
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private dialogRef: MatDialog) {
-
+  constructor(
+    private fb: FormBuilder,
+    private httpClient: HttpClient,
+    private dialogRef: MatDialog
+  ) {
     this.registrationForm = this.fb.group({
       firstName: ['', [Validators.required, startWithUppercaseValidator()]],
       lastName: ['', [Validators.required, startWithUppercaseValidator()]],
@@ -35,9 +37,7 @@ export class RegistrationComponent implements OnInit {
       birthDate: ['', Validators.required],
     });
   }
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   isFieldInvalid(field: string) {
     return (
@@ -47,37 +47,45 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit() {
-
     if (this.registrationForm.valid) {
-
-      this.httpClient.post<any>(`${MyConfig.serverAddress}/UserCheckExists`, this.registrationForm.value).subscribe(
-        (response: any) => {
-          if (response.exists) {
-            this.userExists = true;
-          }
-          else {
-
-            this.httpClient.post<any>(`${MyConfig.serverAddress}/UserAddEndpoint`, this.registrationForm.value, { responseType: 'text' as 'json' }).subscribe(
-              (response: HttpResponse<any>) => {
-                console.log('Registration successful:', response);
-                this.userExists = false;
-                this.registrationSuccess = true;
-                this.registrationForm.reset();
-                console.log('Form reset:', this.registrationForm.value);
-              },
-              error => {
-                console.error('Error registering user:', error);
-              }
-
-            );
-            console.log('Form submitted:', this.registrationForm.value);
-          }
-        }
-      )
+      this.isSending = true;
+      this.httpClient
+        .post<any>(
+          `${MyConfig.serverAddress}/UserCheckExists`,
+          this.registrationForm.value
+        )
+        .subscribe({
+          next: (response: any) => {
+            if (response.exists) {
+              this.isSending = false;
+              this.registrationFailed = true;
+              this.registrationSuccessful = false;
+            } else {
+              this.httpClient
+                .post<any>(
+                  `${MyConfig.serverAddress}/UserAddEndpoint`,
+                  this.registrationForm.value,
+                  { responseType: 'text' as 'json' }
+                )
+                .subscribe({
+                  next: () => {
+                    this.isSending = false;
+                    this.registrationSuccessful = true;
+                    this.registrationFailed = false;
+                    this.registrationForm.reset();
+                  },
+                  error: () => {
+                    this.isSending = false;
+                    this.registrationSuccessful = false;
+                    this.registrationFailed = true;
+                  },
+                });
+            }
+          },
+        });
     }
   }
   closePopup() {
     this.dialogRef.closeAll();
   }
 }
-

@@ -1,0 +1,18 @@
+$primaryFont: "Poppins", sans-serif;
+$primaryColor: #f3f3f3;
+$secondaryColor: #444;
+$primaryGreen: #39b385;
+$primaryOrange: #ffb003;
+$primaryRed: #e52a5a;
+$greenGradient: linear-gradient(to top left, #39b385, #9be15d);
+$orangeGradient: linear-gradient(to top left, #ffb003, #ffcb03);
+$redGradient:  linear-gradient(to top left, #e52a5a, #ff585f);
+
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: $primaryFont;
+}
