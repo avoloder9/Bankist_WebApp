@@ -7,10 +7,16 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from './navbar/navbar.component';
+import { LoginComponent } from './login/login.component';
+import { LoaderComponent } from './loader/loader.component';
 @NgModule({
   declarations: [
     AppComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    NavbarComponent,
+    LoginComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
