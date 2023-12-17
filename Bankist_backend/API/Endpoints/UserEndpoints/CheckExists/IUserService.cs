@@ -16,7 +16,7 @@ namespace API.Endpoints.UserEndpoints.CheckExists
             }
             public bool UserExists(string username, string email)
             {
-                return _dbContext.User.Any(u => u.userName == username || u.email == email);
+                return _dbContext.User.Any(u => u.username == username || u.email == email);
             }
         }
     }

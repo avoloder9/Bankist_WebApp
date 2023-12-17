@@ -19,10 +19,10 @@ namespace API.Endpoints.BankEndpoints.GetAll
         [HttpGet]
         public override async Task<BankGetAllResponse> Procces([FromQuery] BankGetAllRequest request, CancellationToken cancellationToken)
         {
-            var bank = await _dbContext.Bank.OrderByDescending(x => x.bankId).Select(x => new BankGetAllResponseBank()
+            var bank = await _dbContext.Bank.OrderByDescending(x => x.id).Select(x => new BankGetAllResponseBank()
             {
-                bankId = x.bankId,
-                bankName = x.bankName,
+                bankId = x.id,
+                bankName = x.username,
                 password = x.password,
                 totalCapital = x.totalCapital,
                 numberOfUsers = x.numberOfUsers

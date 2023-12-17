@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231119142238_migration1")]
-    partial class migration1
+    [Migration("20231217132954_migration3")]
+    partial class migration3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,31 +25,55 @@ namespace API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("API.Data.Models.Bank", b =>
+            modelBuilder.Entity("API.Data.Models.Account", b =>
                 {
-                    b.Property<int>("bankId")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("bankId"));
-
-                    b.Property<string>("bankName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("numberOfUsers")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("totalCapital")
-                        .HasColumnType("real");
+                    b.Property<string>("username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("bankId");
+                    b.HasKey("id");
 
-                    b.ToTable("Bank");
+                    b.ToTable("Account");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("API.Data.Models.AutentificationToken", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("accountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("autentificationTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ipAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("accountId");
+
+                    b.ToTable("AutentificationToken");
                 });
 
             modelBuilder.Entity("API.Data.Models.BanksUsers", b =>
@@ -257,13 +281,22 @@ namespace API.Migrations
                     b.ToTable("Transaction");
                 });
 
-            modelBuilder.Entity("API.Data.Models.User", b =>
+            modelBuilder.Entity("API.Data.Models.Bank", b =>
                 {
-                    b.Property<int>("userId")
-                        .ValueGeneratedOnAdd()
+                    b.HasBaseType("API.Data.Models.Account");
+
+                    b.Property<int>("numberOfUsers")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("userId"));
+                    b.Property<float>("totalCapital")
+                        .HasColumnType("real");
+
+                    b.ToTable("Bank");
+                });
+
+            modelBuilder.Entity("API.Data.Models.User", b =>
+                {
+                    b.HasBaseType("API.Data.Models.Account");
 
                     b.Property<DateTime>("birthDate")
                         .HasColumnType("datetime2");
@@ -280,10 +313,6 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -291,13 +320,18 @@ namespace API.Migrations
                     b.Property<DateTime>("registrationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("userName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("userId");
-
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("API.Data.Models.AutentificationToken", b =>
+                {
+                    b.HasOne("API.Data.Models.Account", "account")
+                        .WithMany()
+                        .HasForeignKey("accountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("account");
                 });
 
             modelBuilder.Entity("API.Data.Models.BanksUsers", b =>
@@ -393,6 +427,24 @@ namespace API.Migrations
                     b.Navigation("bank");
 
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("API.Data.Models.Bank", b =>
+                {
+                    b.HasOne("API.Data.Models.Account", null)
+                        .WithOne()
+                        .HasForeignKey("API.Data.Models.Bank", "id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("API.Data.Models.User", b =>
+                {
+                    b.HasOne("API.Data.Models.Account", null)
+                        .WithOne()
+                        .HasForeignKey("API.Data.Models.User", "id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

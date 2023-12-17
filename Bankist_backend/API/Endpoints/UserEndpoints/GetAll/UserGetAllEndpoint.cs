@@ -1,5 +1,7 @@
 ﻿using API.Data;
+using API.Data.Models;
 using API.Helper;
+using API.Helper.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -12,19 +14,22 @@ namespace API.Endpoints.UserEndpoints.GetAll
     {
 
         private readonly ApplicationDbContext _dbContext;
-        public UserGetAllEndpoint(ApplicationDbContext dbContext)
+        private readonly MyAuthService _authService;
+        public UserGetAllEndpoint(ApplicationDbContext dbContext, MyAuthService authService)
         {
             _dbContext = dbContext;
+            _authService = authService;
         }
         [HttpGet]
         public override async Task<UserGetAllResponse> Procces([FromQuery]UserGetAllRequest request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.User.OrderByDescending(x => x.userId).
+ 
+            var user = await _dbContext.User.OrderByDescending(x => x.id).
                 Select(x => new UserGetAllResponseUser()
                 {
 
-                    userId = x.userId,
-                    userName = x.userName,
+                    userId = x.id,
+                    userName = x.username,
                     firstName = x.firstName,
                     lastName = x.lastName,
                     email = x.email,

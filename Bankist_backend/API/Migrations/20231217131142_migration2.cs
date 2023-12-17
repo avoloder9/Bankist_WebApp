@@ -6,25 +6,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class migration1 : Migration
+    public partial class migration2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Bank",
+                name: "Account",
                 columns: table => new
                 {
-                    bankId = table.Column<int>(type: "int", nullable: false)
+                    id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    bankName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    totalCapital = table.Column<float>(type: "real", nullable: false),
-                    numberOfUsers = table.Column<int>(type: "int", nullable: false)
+                    username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bank", x => x.bankId);
+                    table.PrimaryKey("PK_Account", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,23 +40,74 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bank",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false),
+                    totalCapital = table.Column<float>(type: "real", nullable: false),
+                    numberOfUsers = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bank", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Bank_Account_id",
+                        column: x => x.id,
+                        principalTable: "Account",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
-                    userId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    userName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    id = table.Column<int>(type: "int", nullable: false),
                     firstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     lastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     birthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     registrationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.userId);
+                    table.PrimaryKey("PK_User", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_User_Account_id",
+                        column: x => x.id,
+                        principalTable: "Account",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AutentificationToken",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false),
+                    bankId = table.Column<int>(type: "int", nullable: false),
+                    autentificationTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ipAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AutentificationToken", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_AutentificationToken_Bank_bankId",
+                        column: x => x.bankId,
+                        principalTable: "Bank",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AutentificationToken_User_userId",
+                        column: x => x.userId,
+                        principalTable: "User",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,13 +127,13 @@ namespace API.Migrations
                         name: "FK_BankUser_Bank_bankId",
                         column: x => x.bankId,
                         principalTable: "Bank",
-                        principalColumn: "bankId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BankUser_User_userId",
                         column: x => x.userId,
                         principalTable: "User",
-                        principalColumn: "userId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -107,13 +156,13 @@ namespace API.Migrations
                         name: "FK_Card_Bank_bankId",
                         column: x => x.bankId,
                         principalTable: "Bank",
-                        principalColumn: "bankId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Card_User_userId",
                         column: x => x.userId,
                         principalTable: "User",
-                        principalColumn: "userId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -144,13 +193,13 @@ namespace API.Migrations
                         name: "FK_Loan_Bank_bankId",
                         column: x => x.bankId,
                         principalTable: "Bank",
-                        principalColumn: "bankId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Loan_User_userId",
                         column: x => x.userId,
                         principalTable: "User",
-                        principalColumn: "userId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -173,13 +222,13 @@ namespace API.Migrations
                         name: "FK_Loyalty_Bank_bankId",
                         column: x => x.bankId,
                         principalTable: "Bank",
-                        principalColumn: "bankId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Loyalty_User_userId",
                         column: x => x.userId,
                         principalTable: "User",
-                        principalColumn: "userId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -203,15 +252,25 @@ namespace API.Migrations
                         name: "FK_Transaction_Bank_bankId",
                         column: x => x.bankId,
                         principalTable: "Bank",
-                        principalColumn: "bankId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transaction_User_userId",
                         column: x => x.userId,
                         principalTable: "User",
-                        principalColumn: "userId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AutentificationToken_bankId",
+                table: "AutentificationToken",
+                column: "bankId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AutentificationToken_userId",
+                table: "AutentificationToken",
+                column: "userId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BankUser_bankId",
@@ -268,6 +327,9 @@ namespace API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AutentificationToken");
+
+            migrationBuilder.DropTable(
                 name: "BankUser");
 
             migrationBuilder.DropTable(
@@ -290,6 +352,9 @@ namespace API.Migrations
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Account");
         }
     }
 }

@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231217131142_migration2")]
+    partial class migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,14 +56,17 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("accountId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("autentificationTimestamp")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("bankId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ipAddress")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
 
                     b.Property<string>("value")
                         .IsRequired()
@@ -68,7 +74,9 @@ namespace API.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("accountId");
+                    b.HasIndex("bankId");
+
+                    b.HasIndex("userId");
 
                     b.ToTable("AutentificationToken");
                 });
@@ -322,13 +330,21 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Data.Models.AutentificationToken", b =>
                 {
-                    b.HasOne("API.Data.Models.Account", "account")
+                    b.HasOne("API.Data.Models.Bank", "bank")
                         .WithMany()
-                        .HasForeignKey("accountId")
+                        .HasForeignKey("bankId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("account");
+                    b.HasOne("API.Data.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("bank");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("API.Data.Models.BanksUsers", b =>
