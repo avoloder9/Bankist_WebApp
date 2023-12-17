@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { passwordValidator } from '../registration/passwordValidator';
 import { MyConfig } from '../myConfig';
 import { LoaderComponent } from '../loader/loader.component';
-
+import { AuthLoginResponse } from './authLoginResponse';
+import { AuthLoginRequest } from './authLoginRequest';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,8 +16,13 @@ export class LoginComponent {
   isSending: boolean = false;
   userNotFound: boolean = false;
   unauthorized: boolean = false;
-  loginFailed: boolean = false;
   unexpectedError: boolean = false;
+
+
+  /*public loginRequest: AuthLoginRequest = {
+    username: "",
+    password: ""
+  };*/
 
   constructor(private fb: FormBuilder, private httpClient: HttpClient) {
     this.loginForm = this.fb.group({
@@ -24,27 +30,38 @@ export class LoginComponent {
       password: ['', [Validators.required]],
     });
   }
+  ngOnInit(): void {
 
+  }
   isFieldInvalid(field: string) {
+    this.unexpectedError = false;
+
     return (
       this.loginForm.get(field)!.invalid && this.loginForm.get(field)!.touched
     );
   }
 
   onSubmit() {
-    this.reset();
+    console.log(this.loginForm)
     if (this.loginForm.valid) {
+      console.log("nesto");
+      let loginrequest: AuthLoginRequest = {
+        username: this.loginForm.value.username,
+        password: this.loginForm.value.password
+      }
+
+      this.reset();
       this.isSending = true;
-      this.httpClient
-        .post<any>(
-          `${MyConfig.serverAddress}/UserLoginEndpoint`,
-          this.loginForm.value
-        )
+      this.httpClient.post<AuthLoginResponse>(`${MyConfig.serverAddress}/auth`, loginrequest)
         .subscribe({
           next: (response: any) => {
+
+            localStorage.setItem("token", response.autentificationToken.value)
+            console.log(localStorage.getItem("token"))
             this.isSending = false;
             console.log(response);
           },
+
           error: (error) => {
             this.isSending = false;
             console.error(error.message);
@@ -60,14 +77,15 @@ export class LoginComponent {
             }
           },
         });
+
     }
   }
-
   reset() {
     this.isSending = false;
     this.userNotFound = false;
     this.unauthorized = false;
-    this.loginFailed = false;
     this.unexpectedError = false;
   }
+
 }
+

@@ -25,7 +25,7 @@ namespace API.Endpoints.UserEndpoints.Post
         [HttpPost]
         public override async Task<ActionResult<User>> Procces([FromBody] UserAddRequest request, CancellationToken cancellationToken)
         {
-            if (_dbContext.User.Any(x => x.userName == request.userName))
+            if (_dbContext.User.Any(x => x.username == request.userName))
             {
                 return BadRequest("Username has already been taken");
             }
@@ -51,7 +51,7 @@ namespace API.Endpoints.UserEndpoints.Post
                 firstName = request.firstName,
                 lastName = request.lastName,
                 email = request.email,
-                userName = request.userName,
+                username = request.userName,
                 password = request.password,
                 phone = request.phone,
                 birthDate = request.birthDate,

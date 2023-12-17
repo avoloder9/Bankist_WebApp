@@ -5,6 +5,8 @@ namespace API.Data
 {
     public class ApplicationDbContext : DbContext
     {
+        public DbSet<Account> Account { get; set; }
+        public DbSet<AutentificationToken> AutentificationToken { get; set; }
         public DbSet<Bank> Bank { get; set; }
         public DbSet<Card> Card { get; set; }
         public DbSet<DeletedUser> DeletedUser { get; set; }
@@ -24,6 +26,9 @@ namespace API.Data
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
+            modelBuilder.Entity<Account>()
+        .Property(x => x.id)
+        .UseIdentityColumn();
         }
     }
 }

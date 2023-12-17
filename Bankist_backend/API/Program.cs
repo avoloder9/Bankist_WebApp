@@ -1,5 +1,6 @@
 using API.Data;
 using API.Endpoints.UserEndpoints.CheckExists;
+using API.Helper.Services;
 using Microsoft.EntityFrameworkCore;
 using static API.Endpoints.UserEndpoints.CheckExists.IUserService;
 
@@ -13,7 +14,6 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(config.GetConnectionString("db1")));
 builder.Services.AddSwaggerGen();
@@ -29,6 +29,8 @@ builder.Services.AddCors(options =>
         });
 });
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddTransient<MyAuthService>();
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
