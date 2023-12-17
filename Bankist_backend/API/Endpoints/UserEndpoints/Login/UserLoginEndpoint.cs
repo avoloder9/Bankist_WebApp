@@ -8,6 +8,7 @@ using API.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Endpoints.UserEndpoints.Login
 {
@@ -29,25 +30,25 @@ namespace API.Endpoints.UserEndpoints.Login
 
             if (user == null)
             {
+                Response.StatusCode = 404;
                 return new UserLoginResponse
                 {
-                    statusCode = 404,
                     message = "User not found"
                 };
             }
 
             if (user.password != request.password)
             {
+                Response.StatusCode = 401;
                 return new UserLoginResponse
                 {
-                    statusCode = 401,
                     message = "Incorrect password"
                 };
             }
 
+            Response.StatusCode = 200;
             return new UserLoginResponse
             {
-                statusCode = 200,
                 message = "Successfully logged in!"
             };
         }

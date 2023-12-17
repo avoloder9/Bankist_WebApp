@@ -7,7 +7,6 @@ namespace API.Endpoints.UserEndpoints.Login
 {
     public class UserLoginResponse
     {
-        public int statusCode { get; set; }
         public string message { get; set; }
 
     }
