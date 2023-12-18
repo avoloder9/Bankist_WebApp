@@ -11,12 +11,8 @@ namespace API.Data.Models
         public int totalPoints { get; set; }
         public int pointToPromotion {  get; set; }
 
-        public int bankId { get; set; }
-        [ForeignKey(nameof(bankId))]
-        public Bank bank { get; set; }
-
-        public int userId { get; set; }
-        [ForeignKey(nameof(userId))]
-        public User user { get; set; }
+        public int bankUserCardId { get; set; }
+        [ForeignKey(nameof(bankUserCardId))]
+        public BanksUsersCards bankUserCard { get; set; }
     }
 }

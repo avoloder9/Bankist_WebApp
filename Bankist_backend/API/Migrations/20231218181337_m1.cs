@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class migration2 : Migration
+    public partial class m1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,17 +26,56 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeletedUser",
+                name: "Currency",
                 columns: table => new
                 {
-                    deletedUserId = table.Column<int>(type: "int", nullable: false)
+                    currencyId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    deletionDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    currencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    currencyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    symbol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    exchangeRate = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeletedUser", x => x.deletedUserId);
+                    table.PrimaryKey("PK_Currency", x => x.currencyId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LoanType",
+                columns: table => new
+                {
+                    loanTypeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    maxLoanAmount = table.Column<float>(type: "real", nullable: false),
+                    repaymentTerm = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoanType", x => x.loanTypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AutentificationToken",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    accountId = table.Column<int>(type: "int", nullable: false),
+                    autentificationTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ipAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AutentificationToken", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_AutentificationToken_Account_accountId",
+                        column: x => x.accountId,
+                        principalTable: "Account",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,59 +121,42 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AutentificationToken",
+                name: "CardType",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    value = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false),
-                    bankId = table.Column<int>(type: "int", nullable: false),
-                    autentificationTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ipAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CardTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    fees = table.Column<float>(type: "real", nullable: false),
+                    maxLimit = table.Column<float>(type: "real", nullable: false),
+                    currencyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AutentificationToken", x => x.id);
+                    table.PrimaryKey("PK_CardType", x => x.CardTypeId);
                     table.ForeignKey(
-                        name: "FK_AutentificationToken_Bank_bankId",
-                        column: x => x.bankId,
-                        principalTable: "Bank",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AutentificationToken_User_userId",
-                        column: x => x.userId,
-                        principalTable: "User",
-                        principalColumn: "id",
+                        name: "FK_CardType_Currency_currencyId",
+                        column: x => x.currencyId,
+                        principalTable: "Currency",
+                        principalColumn: "currencyId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankUser",
+                name: "DeletedUser",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    bankId = table.Column<int>(type: "int", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false),
-                    accountIssueDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    id = table.Column<int>(type: "int", nullable: false),
+                    reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    deletionDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BankUser", x => x.id);
+                    table.PrimaryKey("PK_DeletedUser", x => x.id);
                     table.ForeignKey(
-                        name: "FK_BankUser_Bank_bankId",
-                        column: x => x.bankId,
-                        principalTable: "Bank",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_BankUser_User_userId",
-                        column: x => x.userId,
+                        name: "FK_DeletedUser_User_id",
+                        column: x => x.id,
                         principalTable: "User",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -146,20 +168,47 @@ namespace API.Migrations
                     expirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     issueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     amount = table.Column<float>(type: "real", nullable: false),
-                    bankId = table.Column<int>(type: "int", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false)
+                    cardTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Card", x => x.cardNumber);
                     table.ForeignKey(
-                        name: "FK_Card_Bank_bankId",
+                        name: "FK_Card_CardType_cardTypeId",
+                        column: x => x.cardTypeId,
+                        principalTable: "CardType",
+                        principalColumn: "CardTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BanksUsersCards",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    bankId = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false),
+                    cardId = table.Column<int>(type: "int", nullable: false),
+                    accountIssueDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BanksUsersCards", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_BanksUsersCards_Bank_bankId",
                         column: x => x.bankId,
                         principalTable: "Bank",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Card_User_userId",
+                        name: "FK_BanksUsersCards_Card_cardId",
+                        column: x => x.cardId,
+                        principalTable: "Card",
+                        principalColumn: "cardNumber",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_BanksUsersCards_User_userId",
                         column: x => x.userId,
                         principalTable: "User",
                         principalColumn: "id",
@@ -183,52 +232,23 @@ namespace API.Migrations
                     totalAmountPayed = table.Column<float>(type: "real", nullable: false),
                     remainingAmount = table.Column<float>(type: "real", nullable: false),
                     status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    bankId = table.Column<int>(type: "int", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false)
+                    loanTypeId = table.Column<int>(type: "int", nullable: false),
+                    cardId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Loan", x => x.loanId);
                     table.ForeignKey(
-                        name: "FK_Loan_Bank_bankId",
-                        column: x => x.bankId,
-                        principalTable: "Bank",
-                        principalColumn: "id",
+                        name: "FK_Loan_Card_cardId",
+                        column: x => x.cardId,
+                        principalTable: "Card",
+                        principalColumn: "cardNumber",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Loan_User_userId",
-                        column: x => x.userId,
-                        principalTable: "User",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Loyalty",
-                columns: table => new
-                {
-                    loyaltyId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    totalPoints = table.Column<int>(type: "int", nullable: false),
-                    pointToPromotion = table.Column<int>(type: "int", nullable: false),
-                    bankId = table.Column<int>(type: "int", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Loyalty", x => x.loyaltyId);
-                    table.ForeignKey(
-                        name: "FK_Loyalty_Bank_bankId",
-                        column: x => x.bankId,
-                        principalTable: "Bank",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Loyalty_User_userId",
-                        column: x => x.userId,
-                        principalTable: "User",
-                        principalColumn: "id",
+                        name: "FK_Loan_LoanType_loanTypeId",
+                        column: x => x.loanTypeId,
+                        principalTable: "LoanType",
+                        principalColumn: "loanTypeId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -242,85 +262,102 @@ namespace API.Migrations
                     amount = table.Column<float>(type: "real", nullable: false),
                     type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    bankId = table.Column<int>(type: "int", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false)
+                    senderCardId = table.Column<int>(type: "int", nullable: false),
+                    recieverCardId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Transaction", x => x.transactionId);
                     table.ForeignKey(
-                        name: "FK_Transaction_Bank_bankId",
-                        column: x => x.bankId,
-                        principalTable: "Bank",
-                        principalColumn: "id",
+                        name: "FK_Transaction_Card_recieverCardId",
+                        column: x => x.recieverCardId,
+                        principalTable: "Card",
+                        principalColumn: "cardNumber",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Transaction_User_userId",
-                        column: x => x.userId,
-                        principalTable: "User",
+                        name: "FK_Transaction_Card_senderCardId",
+                        column: x => x.senderCardId,
+                        principalTable: "Card",
+                        principalColumn: "cardNumber",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Loyalty",
+                columns: table => new
+                {
+                    loyaltyId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    totalPoints = table.Column<int>(type: "int", nullable: false),
+                    pointToPromotion = table.Column<int>(type: "int", nullable: false),
+                    bankUserCardId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Loyalty", x => x.loyaltyId);
+                    table.ForeignKey(
+                        name: "FK_Loyalty_BanksUsersCards_bankUserCardId",
+                        column: x => x.bankUserCardId,
+                        principalTable: "BanksUsersCards",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AutentificationToken_bankId",
+                name: "IX_AutentificationToken_accountId",
                 table: "AutentificationToken",
+                column: "accountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BanksUsersCards_bankId",
+                table: "BanksUsersCards",
                 column: "bankId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AutentificationToken_userId",
-                table: "AutentificationToken",
+                name: "IX_BanksUsersCards_cardId",
+                table: "BanksUsersCards",
+                column: "cardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BanksUsersCards_userId",
+                table: "BanksUsersCards",
                 column: "userId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BankUser_bankId",
-                table: "BankUser",
-                column: "bankId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BankUser_userId",
-                table: "BankUser",
-                column: "userId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Card_bankId",
+                name: "IX_Card_cardTypeId",
                 table: "Card",
-                column: "bankId");
+                column: "cardTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Card_userId",
-                table: "Card",
-                column: "userId");
+                name: "IX_CardType_currencyId",
+                table: "CardType",
+                column: "currencyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loan_bankId",
+                name: "IX_Loan_cardId",
                 table: "Loan",
-                column: "bankId");
+                column: "cardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loan_userId",
+                name: "IX_Loan_loanTypeId",
                 table: "Loan",
-                column: "userId");
+                column: "loanTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loyalty_bankId",
+                name: "IX_Loyalty_bankUserCardId",
                 table: "Loyalty",
-                column: "bankId");
+                column: "bankUserCardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loyalty_userId",
-                table: "Loyalty",
-                column: "userId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transaction_bankId",
+                name: "IX_Transaction_recieverCardId",
                 table: "Transaction",
-                column: "bankId");
+                column: "recieverCardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transaction_userId",
+                name: "IX_Transaction_senderCardId",
                 table: "Transaction",
-                column: "userId");
+                column: "senderCardId");
         }
 
         /// <inheritdoc />
@@ -328,12 +365,6 @@ namespace API.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AutentificationToken");
-
-            migrationBuilder.DropTable(
-                name: "BankUser");
-
-            migrationBuilder.DropTable(
-                name: "Card");
 
             migrationBuilder.DropTable(
                 name: "DeletedUser");
@@ -348,13 +379,28 @@ namespace API.Migrations
                 name: "Transaction");
 
             migrationBuilder.DropTable(
+                name: "LoanType");
+
+            migrationBuilder.DropTable(
+                name: "BanksUsersCards");
+
+            migrationBuilder.DropTable(
                 name: "Bank");
+
+            migrationBuilder.DropTable(
+                name: "Card");
 
             migrationBuilder.DropTable(
                 name: "User");
 
             migrationBuilder.DropTable(
+                name: "CardType");
+
+            migrationBuilder.DropTable(
                 name: "Account");
+
+            migrationBuilder.DropTable(
+                name: "Currency");
         }
     }
 }

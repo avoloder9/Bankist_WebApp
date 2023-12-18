@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Data.Models
 {
-    public class BanksUsers
+    [Table("BanksUsersCards")]
+    public class BanksUsersCards
     {
         public int id { get; set; }
 
@@ -15,9 +16,10 @@ namespace API.Data.Models
         [ForeignKey(nameof(userId))]
         public User user { get; set; }
 
+        public int cardId { get; set; }
+        [ForeignKey(nameof(cardId))]
+        public Card card { get; set; }
+
         public DateTime accountIssueDate { get; set; }
-
-
-
     }
 }
