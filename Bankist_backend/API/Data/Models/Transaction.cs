@@ -12,12 +12,12 @@ namespace API.Data.Models
         public string type { get; set; }
         public string status { get; set; }
 
-        public int bankId { get; set; }
-        [ForeignKey(nameof(bankId))]
-        public Bank bank { get; set; }
+        public int senderCardId { get; set; }
+        [ForeignKey(nameof(senderCardId))]
+        public Card senderCard { get; set; }
 
-        public int userId { get; set; }
-        [ForeignKey(nameof(userId))]
-        public User user { get; set; }
+        public int recieverCardId { get; set; }
+        [ForeignKey(nameof(recieverCardId))]
+        public Card recieverCard { get; set; }
     }
 }

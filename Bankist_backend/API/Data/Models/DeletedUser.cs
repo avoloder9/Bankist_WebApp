@@ -1,9 +1,12 @@
-﻿namespace API.Data.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace API.Data.Models
 {
-    public class DeletedUser
+    [Table("DeletedUser")]
+
+    public class DeletedUser:User
     {
-        public int deletedUserId { get; set; }
-        public string description { get; set; }
+        public string reason { get; set; }
         public DateTime deletionDate { get; set; }
     }
 }

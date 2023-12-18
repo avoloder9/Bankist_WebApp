@@ -18,13 +18,12 @@ namespace API.Data.Models
         public float totalAmountPayed { get; set; }
         public float remainingAmount { get; set; }
         public string status { get; set; }
+        public int loanTypeId {  get; set; }
+        [ForeignKey(nameof(loanTypeId))]
+        public LoanType loanType { get; set; }
 
-        public int bankId { get; set; }
-        [ForeignKey(nameof(bankId))]
-        public Bank bank { get; set; }
-
-        public int userId { get; set; }
-        [ForeignKey(nameof(userId))]
-        public User user { get; set; }
+        public int cardId { get; set; }
+        [ForeignKey(nameof(cardId))]
+        public Card card { get; set; }
     }
 }

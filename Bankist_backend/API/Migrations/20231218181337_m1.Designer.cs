@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231217132954_migration3")]
-    partial class migration3
+    [Migration("20231218181337_m1")]
+    partial class m1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,7 +76,7 @@ namespace API.Migrations
                     b.ToTable("AutentificationToken");
                 });
 
-            modelBuilder.Entity("API.Data.Models.BanksUsers", b =>
+            modelBuilder.Entity("API.Data.Models.BanksUsersCards", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -90,6 +90,9 @@ namespace API.Migrations
                     b.Property<int>("bankId")
                         .HasColumnType("int");
 
+                    b.Property<int>("cardId")
+                        .HasColumnType("int");
+
                     b.Property<int>("userId")
                         .HasColumnType("int");
 
@@ -97,9 +100,11 @@ namespace API.Migrations
 
                     b.HasIndex("bankId");
 
+                    b.HasIndex("cardId");
+
                     b.HasIndex("userId");
 
-                    b.ToTable("BankUser");
+                    b.ToTable("BanksUsersCards");
                 });
 
             modelBuilder.Entity("API.Data.Models.Card", b =>
@@ -113,8 +118,9 @@ namespace API.Migrations
                     b.Property<float>("amount")
                         .HasColumnType("real");
 
-                    b.Property<int>("bankId")
-                        .HasColumnType("int");
+                    b.Property<string>("cardTypeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("expirationDate")
                         .HasColumnType("datetime2");
@@ -122,36 +128,60 @@ namespace API.Migrations
                     b.Property<DateTime>("issueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
                     b.HasKey("cardNumber");
 
-                    b.HasIndex("bankId");
-
-                    b.HasIndex("userId");
+                    b.HasIndex("cardTypeId");
 
                     b.ToTable("Card");
                 });
 
-            modelBuilder.Entity("API.Data.Models.DeletedUser", b =>
+            modelBuilder.Entity("API.Data.Models.CardType", b =>
                 {
-                    b.Property<int>("deletedUserId")
+                    b.Property<string>("CardTypeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("currencyId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("fees")
+                        .HasColumnType("real");
+
+                    b.Property<float>("maxLimit")
+                        .HasColumnType("real");
+
+                    b.HasKey("CardTypeId");
+
+                    b.HasIndex("currencyId");
+
+                    b.ToTable("CardType");
+                });
+
+            modelBuilder.Entity("API.Data.Models.Currency", b =>
+                {
+                    b.Property<int>("currencyId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("deletedUserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("currencyId"));
 
-                    b.Property<DateTime>("deletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("description")
+                    b.Property<string>("currencyCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("deletedUserId");
+                    b.Property<string>("currencyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("DeletedUser");
+                    b.Property<float>("exchangeRate")
+                        .HasColumnType("real");
+
+                    b.Property<string>("symbol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("currencyId");
+
+                    b.ToTable("Currency");
                 });
 
             modelBuilder.Entity("API.Data.Models.Loan", b =>
@@ -165,7 +195,7 @@ namespace API.Migrations
                     b.Property<float>("amount")
                         .HasColumnType("real");
 
-                    b.Property<int>("bankId")
+                    b.Property<int>("cardId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("dueDate")
@@ -176,6 +206,9 @@ namespace API.Migrations
 
                     b.Property<DateTime>("issueDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("loanTypeId")
+                        .HasColumnType("int");
 
                     b.Property<float>("rate")
                         .HasColumnType("real");
@@ -199,16 +232,36 @@ namespace API.Migrations
                     b.Property<float>("totalAmountPayed")
                         .HasColumnType("real");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
                     b.HasKey("loanId");
 
-                    b.HasIndex("bankId");
+                    b.HasIndex("cardId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("loanTypeId");
 
                     b.ToTable("Loan");
+                });
+
+            modelBuilder.Entity("API.Data.Models.LoanType", b =>
+                {
+                    b.Property<int>("loanTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("loanTypeId"));
+
+                    b.Property<float>("maxLoanAmount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("repaymentTerm")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("loanTypeId");
+
+                    b.ToTable("LoanType");
                 });
 
             modelBuilder.Entity("API.Data.Models.Loyalty", b =>
@@ -219,7 +272,7 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("loyaltyId"));
 
-                    b.Property<int>("bankId")
+                    b.Property<int>("bankUserCardId")
                         .HasColumnType("int");
 
                     b.Property<int>("pointToPromotion")
@@ -232,14 +285,9 @@ namespace API.Migrations
                     b.Property<int>("totalPoints")
                         .HasColumnType("int");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
                     b.HasKey("loyaltyId");
 
-                    b.HasIndex("bankId");
-
-                    b.HasIndex("userId");
+                    b.HasIndex("bankUserCardId");
 
                     b.ToTable("Loyalty");
                 });
@@ -255,7 +303,10 @@ namespace API.Migrations
                     b.Property<float>("amount")
                         .HasColumnType("real");
 
-                    b.Property<int>("bankId")
+                    b.Property<int>("recieverCardId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("senderCardId")
                         .HasColumnType("int");
 
                     b.Property<string>("status")
@@ -269,14 +320,11 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
                     b.HasKey("transactionId");
 
-                    b.HasIndex("bankId");
+                    b.HasIndex("recieverCardId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("senderCardId");
 
                     b.ToTable("Transaction");
                 });
@@ -323,6 +371,20 @@ namespace API.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("API.Data.Models.DeletedUser", b =>
+                {
+                    b.HasBaseType("API.Data.Models.User");
+
+                    b.Property<DateTime>("deletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("DeletedUser");
+                });
+
             modelBuilder.Entity("API.Data.Models.AutentificationToken", b =>
                 {
                     b.HasOne("API.Data.Models.Account", "account")
@@ -334,11 +396,17 @@ namespace API.Migrations
                     b.Navigation("account");
                 });
 
-            modelBuilder.Entity("API.Data.Models.BanksUsers", b =>
+            modelBuilder.Entity("API.Data.Models.BanksUsersCards", b =>
                 {
                     b.HasOne("API.Data.Models.Bank", "bank")
                         .WithMany()
                         .HasForeignKey("bankId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("API.Data.Models.Card", "card")
+                        .WithMany()
+                        .HasForeignKey("cardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -349,84 +417,81 @@ namespace API.Migrations
                         .IsRequired();
 
                     b.Navigation("bank");
+
+                    b.Navigation("card");
 
                     b.Navigation("user");
                 });
 
             modelBuilder.Entity("API.Data.Models.Card", b =>
                 {
-                    b.HasOne("API.Data.Models.Bank", "bank")
+                    b.HasOne("API.Data.Models.CardType", "cardType")
                         .WithMany()
-                        .HasForeignKey("bankId")
+                        .HasForeignKey("cardTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("API.Data.Models.User", "user")
+                    b.Navigation("cardType");
+                });
+
+            modelBuilder.Entity("API.Data.Models.CardType", b =>
+                {
+                    b.HasOne("API.Data.Models.Currency", "currency")
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("currencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("bank");
-
-                    b.Navigation("user");
+                    b.Navigation("currency");
                 });
 
             modelBuilder.Entity("API.Data.Models.Loan", b =>
                 {
-                    b.HasOne("API.Data.Models.Bank", "bank")
+                    b.HasOne("API.Data.Models.Card", "card")
                         .WithMany()
-                        .HasForeignKey("bankId")
+                        .HasForeignKey("cardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("API.Data.Models.User", "user")
+                    b.HasOne("API.Data.Models.LoanType", "loanType")
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("loanTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("bank");
+                    b.Navigation("card");
 
-                    b.Navigation("user");
+                    b.Navigation("loanType");
                 });
 
             modelBuilder.Entity("API.Data.Models.Loyalty", b =>
                 {
-                    b.HasOne("API.Data.Models.Bank", "bank")
+                    b.HasOne("API.Data.Models.BanksUsersCards", "bankUserCard")
                         .WithMany()
-                        .HasForeignKey("bankId")
+                        .HasForeignKey("bankUserCardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("API.Data.Models.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("bank");
-
-                    b.Navigation("user");
+                    b.Navigation("bankUserCard");
                 });
 
             modelBuilder.Entity("API.Data.Models.Transaction", b =>
                 {
-                    b.HasOne("API.Data.Models.Bank", "bank")
+                    b.HasOne("API.Data.Models.Card", "recieverCard")
                         .WithMany()
-                        .HasForeignKey("bankId")
+                        .HasForeignKey("recieverCardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("API.Data.Models.User", "user")
+                    b.HasOne("API.Data.Models.Card", "senderCard")
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("senderCardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("bank");
+                    b.Navigation("recieverCard");
 
-                    b.Navigation("user");
+                    b.Navigation("senderCard");
                 });
 
             modelBuilder.Entity("API.Data.Models.Bank", b =>
@@ -443,6 +508,15 @@ namespace API.Migrations
                     b.HasOne("API.Data.Models.Account", null)
                         .WithOne()
                         .HasForeignKey("API.Data.Models.User", "id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("API.Data.Models.DeletedUser", b =>
+                {
+                    b.HasOne("API.Data.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("API.Data.Models.DeletedUser", "id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
