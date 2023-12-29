@@ -10,13 +10,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { LoaderComponent } from './loader/loader.component';
+import { TransactionComponent } from './transaction/transaction.component';
 @NgModule({
   declarations: [
     AppComponent,
     RegistrationComponent,
     NavbarComponent,
     LoginComponent,
-    LoaderComponent
+    LoaderComponent,
+    TransactionComponent
   ],
   imports: [
     BrowserModule,
