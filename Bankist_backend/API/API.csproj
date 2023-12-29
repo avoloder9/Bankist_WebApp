@@ -22,7 +22,6 @@
     <Folder Include="Endpoints\DeletedUserEndpoints\" />
     <Folder Include="Endpoints\LoanEndpoints\" />
     <Folder Include="Endpoints\LoyaltyEndpoints\" />
-    <Folder Include="Endpoints\TransactionEndpoints\" />
     <Folder Include="Endpoints\UserEndpoints\Delete\" />
     <Folder Include="Endpoints\UserEndpoints\Update\" />
   </ItemGroup>
