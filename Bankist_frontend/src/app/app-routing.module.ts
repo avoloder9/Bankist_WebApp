@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BankSelectionComponent } from './components/bank-selection/bank-selection.component';
 import { NewBankComponent } from './components/new-bank/new-bank.component';
-import { TransactionComponent } from './transaction/transaction.component';
+import { TransactionComponent } from './components/transaction/transaction.component';
 const routes: Routes = [
   { path: 'home', component: AppComponent },
   { path: 'register', component: RegistrationComponent },
