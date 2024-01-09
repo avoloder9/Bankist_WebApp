@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistrationComponent } from './registration/registration.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,7 +9,7 @@ import { RegistrationComponent } from './registration/registration.component';
 })
 export class AppComponent {
   buttonDisabled: boolean = false;
-  constructor(private dialogRef: MatDialog) {}
+  constructor(private dialogRef: MatDialog, private router: Router) {}
   openDialog() {
     if (!this.buttonDisabled) {
       this.buttonDisabled = true;

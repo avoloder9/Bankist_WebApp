@@ -1,0 +1,97 @@
+@import "src/styles.scss";
+.container {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .selection {
+    height: 90%;
+    width: 60%;
+    border-radius: 40px;
+    background-image: $greenGradient;
+    overflow: hidden;
+    padding: 50px 40px;
+    text-align: center;
+    .bank-selection-wrapper {
+      border-radius: 10px;
+      height: 90%;
+      overflow: hidden;
+      .bank-selection {
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        .bank {
+          height: 50px;
+          width: 100%;
+          background-color: white;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 10px;
+          border-bottom: 0.5px solid rgba(128, 128, 128, 0.616);
+          transition: 0.3s;
+          z-index: 0;
+          .image-wrapper {
+            height: 100%;
+            img {
+              height: 45px;
+              width: 130px;
+              object-fit: contain;
+            }
+          }
+          p {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            transition: 0.2s;
+            font-weight: 600;
+            color: #444;
+            font-family: $primaryFont;
+          }
+          &:hover {
+            transform: scale(0.95);
+            background-color: rgb(235, 234, 234);
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .return {
+      margin: 1.5rem auto;
+      height: 30px;
+      width: 100px;
+      background-color: #a2b06d;
+      border-radius: 20px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 500;
+      transition: all 0.3s;
+      cursor: pointer;
+      background-image: $redGradient;
+      color: $primaryColor;
+      font-size: 1rem;
+      &:hover {
+        transform: scale(1.1);
+        filter: brightness(1.1);
+        cursor: pointer;
+      }
+    }
+  }
+  .bank-selection::-webkit-scrollbar {
+    width: 5px;
+    overflow: hidden;
+  }
+
+  .bank-selection::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .bank-selection::-webkit-scrollbar-thumb {
+    background-color: $primaryColor;
+    border-radius: 10px;
+  }
+}
