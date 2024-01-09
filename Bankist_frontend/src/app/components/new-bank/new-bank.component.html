@@ -1,0 +1,17 @@
+<app-bank-form *ngIf="modalOpen" (event)="closeModal()"></app-bank-form>
+<div class="container">
+  <div class="selection">
+    <div class="bank-selection-wrapper">
+      <div class="bank-selection">
+        <div class="bank" *ngFor="let bank of banks" (click)="openModal()">
+          <div class="image-wrapper">
+            <img [src]="bank.image" alt="" />
+          </div>
+          <p>{{ bank.name }}</p>
+          <p>Number of users: {{ bank.numberOfUsers }}</p>
+        </div>
+      </div>
+    </div>
+    <button class="return" (click)="return()">Return</button>
+  </div>
+</div>

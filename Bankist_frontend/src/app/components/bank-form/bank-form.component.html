@@ -1,0 +1,15 @@
+<div class="overlay" (click)="closeModal()"></div>
+<div class="bank-form" disabled>
+  <h3>You are opening an account in Unicredit bank.</h3>
+  <div class="image-wrapper">
+    <img src="../../../assets/images/bank1.png" alt="" />
+  </div>
+
+  <div class="registration-info">
+    <div class="deposit">
+      <label for="deposit">Initial deposit</label>
+      <input type="number" placeholder="0.00" name="deposit" />
+    </div>
+  </div>
+  <div class="btn-wrap"><button (click)="register()">Register</button></div>
+</div>

@@ -2,10 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { passwordValidator } from '../registration/passwordValidator';
-import { MyConfig } from '../myConfig';
+import { MyConfig } from '../../myConfig';
 import { LoaderComponent } from '../loader/loader.component';
 import { AuthLoginResponse } from './authLoginResponse';
 import { AuthLoginRequest } from './authLoginRequest';
+import { Store } from '@ngrx/store';
+import { login } from '../../shared/store/login.actions';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,21 +21,18 @@ export class LoginComponent {
   unauthorized: boolean = false;
   unexpectedError: boolean = false;
 
-
-  /*public loginRequest: AuthLoginRequest = {
-    username: "",
-    password: ""
-  };*/
-
-  constructor(private fb: FormBuilder, private httpClient: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private httpClient: HttpClient,
+    private store: Store<{ login: { loggedIn: boolean } }>,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', [Validators.required]],
     });
   }
-  ngOnInit(): void {
 
-  }
   isFieldInvalid(field: string) {
     this.unexpectedError = false;
 
@@ -42,28 +42,29 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    console.log(this.loginForm)
+    console.log(this.loginForm);
     if (this.loginForm.valid) {
-      console.log("nesto");
       let loginrequest: AuthLoginRequest = {
         username: this.loginForm.value.username,
-        password: this.loginForm.value.password
-      }
+        password: this.loginForm.value.password,
+      };
 
       this.reset();
       this.isSending = true;
-      this.httpClient.post<AuthLoginResponse>(`${MyConfig.serverAddress}/auth`, loginrequest)
+      this.httpClient
+        .post<AuthLoginResponse>(`${MyConfig.serverAddress}/auth`, loginrequest)
         .subscribe({
           next: (response: any) => {
-
-            localStorage.setItem("token", response.autentificationToken.value)
-            console.log(localStorage.getItem("token"))
+            localStorage.setItem('token', response.autentificationToken.value);
             this.isSending = false;
-            console.log(response);
+            this.store.dispatch(login());
+            this.loginForm.reset();
+            this.router.navigate(['/bank-selection']);
           },
 
           error: (error) => {
             this.isSending = false;
+            console.log(error);
             console.error(error.message);
             switch (error.status) {
               case 401:
@@ -77,7 +78,6 @@ export class LoginComponent {
             }
           },
         });
-
     }
   }
   reset() {
@@ -86,6 +86,4 @@ export class LoginComponent {
     this.unauthorized = false;
     this.unexpectedError = false;
   }
-
 }
-

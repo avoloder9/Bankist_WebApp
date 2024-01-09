@@ -19,20 +19,21 @@ namespace API.Endpoints.AuthEndpoints.Login
         [HttpPost]
         public override async Task<MyAuthInfo> Procces([FromBody]AuthLoginRequest request, CancellationToken cancellationToken)
         {
-          if (string.IsNullOrEmpty(request.username) || string.IsNullOrEmpty(request.password))
-            {
-                Response.StatusCode = 401;
-                return new MyAuthInfo(null);
-            }
-            
-          
-            Account? loggedInAccount = await _dbContext.Account.FirstOrDefaultAsync(u => u.username == request.username && u.password == request.password, cancellationToken);
+            Account? loggedInAccount = await _dbContext.Account.FirstOrDefaultAsync(u => u.username == request.username, cancellationToken);
 
-            if (loggedInAccount == null)
+            if (loggedInAccount != null)
             {
-                Response.StatusCode = 404;
-                return new MyAuthInfo(null);
+                if(loggedInAccount.password != request.password)
+                {
+                    Response.StatusCode = 401;
+                    return new MyAuthInfo(null);
+                }
+            } else
+            {
+              Response.StatusCode = 404;
+              return new MyAuthInfo(null);
             }
+
 
             string randomString = TokenGenerator.Generate(10);
             var newToken = new AutentificationToken()
