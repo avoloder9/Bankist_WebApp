@@ -1,0 +1,32 @@
+<div class="container">
+    <div *ngIf="isExecute"><app-loader></app-loader></div>
+    <div class="transaction-success" *ngIf="transactionSuccessful && !isExecute">
+        <p class="text-success">Transaction successful</p>
+    </div>
+
+    <form class="transaction" [formGroup]="transactionForm" (ngSubmit)="onSubmit()"
+        *ngIf="!isExecute && !transactionSuccessful">
+        <div class="inputs">
+            <div>
+                <input type="text" placeholder="Transfer from" formControlName="senderCardId"><br>
+            </div>
+            <div>
+                <input type="text" placeholder="Transfer to" formControlName="recieverCardId"><br>
+            </div>
+            <div>
+                <input type="number" step="10" placeholder="Amount" name="amount" formControlName="amount"><br>
+            </div>
+            <div>
+                <input type="text" name="type" placeholder="Purpose of payment" formControlName="type"><br>
+            </div>
+            <div>
+                <input type="text" name="status" placeholder="Status" formControlName="status"><br>
+            </div>
+        </div>
+
+        <button type="submit" (click)="onSubmit()" [disabled]="transactionForm.invalid">Submit Transaction</button>
+        <div class="error " *ngIf="unexpectedError">Unexpected error occured.</div>
+        <div class="error " *ngIf="insufficientFunds">Insufficient funds .</div>
+
+    </form>
+</div>

@@ -15,6 +15,7 @@ import { loginReducer } from './shared/store/login.reducer';
 import { BankSelectionComponent } from './components/bank-selection/bank-selection.component';
 import { NewBankComponent } from './components/new-bank/new-bank.component';
 import { BankFormComponent } from './components/bank-form/bank-form.component';
+import { TransactionComponent } from './transaction/transaction.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +26,8 @@ import { BankFormComponent } from './components/bank-form/bank-form.component';
     BankSelectionComponent,
     NewBankComponent,
     BankFormComponent,
+    ,
+    TransactionComponent,
   ],
   imports: [
     BrowserModule,
