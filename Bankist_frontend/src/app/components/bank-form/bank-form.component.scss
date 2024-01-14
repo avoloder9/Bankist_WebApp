@@ -22,6 +22,53 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  .added {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    p {
+      color: white;
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+    .btn-return {
+      text-align: center;
+      button {
+        margin: 1.5rem auto;
+        height: 50px;
+        width: 170px;
+        background-color: #a2b06d;
+        border-radius: 20px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 500;
+        transition: all 0.3s;
+        cursor: pointer;
+        background-image: $orangeGradient;
+        color: $primaryColor;
+        font-size: 1rem;
+        &:hover {
+          transform: scale(1.1);
+          filter: brightness(1.1);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .loader-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .image-wrapper {
     height: 80px;
     width: 50%;
@@ -49,12 +96,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    .deposit {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1rem;
+    .option {
       font-size: 1.1rem;
       label {
         margin-right: 10px;
       }
-      input {
+      input,
+      select {
         border-radius: 20px;
         border: none;
         font-size: 1rem;

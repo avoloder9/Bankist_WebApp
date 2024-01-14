@@ -1,9 +1,18 @@
-<app-bank-form *ngIf="modalOpen" (event)="closeModal()"></app-bank-form>
+<app-bank-form
+  [selectedBank]="selectedBank"
+  *ngIf="modalOpen"
+  (event)="closeModal()"
+  (refresh)="getBanks()"
+></app-bank-form>
 <div class="container">
-  <div class="selection">
-    <div class="bank-selection-wrapper">
+  <app-loader *ngIf="isLoading"></app-loader>
+  <div class="selection" *ngIf="!isLoading">
+    <div class="empty-wrapper" *ngIf="banks.length === 0">
+      <p>No new bank to select.</p>
+    </div>
+    <div class="bank-selection-wrapper" *ngIf="banks.length !== 0">
       <div class="bank-selection">
-        <div class="bank" *ngFor="let bank of banks" (click)="openModal()">
+        <div class="bank" *ngFor="let bank of banks" (click)="selectBank(bank)">
           <div class="image-wrapper">
             <img [src]="bank.image" alt="" />
           </div>

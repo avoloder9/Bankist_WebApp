@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints.BankEndpoints.GetAll
 {
-
     [ApiController]
     [Route("[controller]")]
     public class BankGetAllEndpoint : MyBaseEndpoint<BankGetAllRequest, BankGetAllResponse>

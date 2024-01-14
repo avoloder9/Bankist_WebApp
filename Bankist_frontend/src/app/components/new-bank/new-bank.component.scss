@@ -13,6 +13,18 @@
     overflow: hidden;
     padding: 50px 40px;
     text-align: center;
+    .empty-wrapper {
+      height: 90%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      p {
+        font-size: 1.3rem;
+        color: white;
+        letter-spacing: 1px;
+      }
+    }
     .bank-selection-wrapper {
       border-radius: 10px;
       height: 90%;

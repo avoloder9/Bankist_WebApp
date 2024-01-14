@@ -44,6 +44,9 @@ namespace API.Endpoints.GenerateDataEndpoints
             banks.Add(new Bank { username = "ASA", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
             banks.Add(new Bank { username = "ProCredit", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
             banks.Add(new Bank { username = "Sparkasse", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Addiko", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "BBI", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Sanpaolo", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
 
             Random rnd = new Random();
 
