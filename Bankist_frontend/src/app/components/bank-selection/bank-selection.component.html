@@ -1,6 +1,7 @@
 <div class="container">
-  <h2>Please select a bank or add a new one</h2>
-  <div class="bank-options-container">
+  <app-loader *ngIf="isLoading"></app-loader>
+  <h2 *ngIf="!isLoading">Please select a bank or add a new one</h2>
+  <div class="bank-options-container" *ngIf="!isLoading">
     <div class="inner-container">
       <div class="bank" *ngFor="let bank of banks">
         <img [src]="bank.image" alt="{{ bank.name }}" />

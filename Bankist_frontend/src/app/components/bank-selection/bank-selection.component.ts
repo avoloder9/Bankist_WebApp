@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
+import { LoaderComponent } from '../loader/loader.component';
 
 interface Bank {
   name: string;
@@ -15,9 +16,11 @@ interface Bank {
 })
 export class BankSelectionComponent implements OnInit {
   banks: Bank[] = [];
+  isLoading: Boolean = false;
   constructor(private router: Router, private httpClient: HttpClient) {}
 
   ngOnInit() {
+    this.isLoading = true;
     const headers = new HttpHeaders({
       Token: localStorage.getItem('token') ?? '',
     });
@@ -43,6 +46,7 @@ export class BankSelectionComponent implements OnInit {
         image: `../assets/images/${item.name}.png`,
       });
     });
+    this.isLoading = false;
   }
 
   addNewBank() {

@@ -1,15 +1,49 @@
 <div class="overlay" (click)="closeModal()"></div>
 <div class="bank-form" disabled>
-  <h3>You are opening an account in Unicredit bank.</h3>
-  <div class="image-wrapper">
-    <img src="../../../assets/images/bank1.png" alt="" />
+  <div class="loader-wrapper" *ngIf="isLoading && !success">
+    <app-loader></app-loader>
   </div>
-
-  <div class="registration-info">
-    <div class="deposit">
-      <label for="deposit">Initial deposit</label>
-      <input type="number" placeholder="0.00" name="deposit" />
+  <ng-container *ngIf="!isLoading && !success">
+    <h3>You are opening an account in {{ selectedBank.name }} bank.</h3>
+    <div class="image-wrapper">
+      <img [src]="selectedBank.image" alt="" />
     </div>
-  </div>
-  <div class="btn-wrap"><button (click)="register()">Register</button></div>
+
+    <div class="registration-info">
+      <div class="option">
+        <label for="deposit">Initial deposit</label>
+        <input
+          type="number"
+          placeholder="0.00"
+          name="deposit"
+          [(ngModel)]="amount"
+        />
+      </div>
+      <div class="option">
+        <label>Card type</label>
+        <select [(ngModel)]="selectedCard">
+          <option *ngFor="let option of cardOptions" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+      <div class="option">
+        <label>Currency</label>
+        <select [(ngModel)]="selectedCurrency">
+          <option *ngFor="let option of currencyOptions" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-wrap"><button (click)="register()">Register</button></div>
+  </ng-container>
+  <ng-container *ngIf="!isLoading && success">
+    <div class="added">
+      <p>Bank account successfully opened.</p>
+      <div class="btn-return">
+        <button (click)="return()">Return to banks</button>
+      </div>
+    </div>
+  </ng-container>
 </div>
