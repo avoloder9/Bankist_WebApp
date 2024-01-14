@@ -6,6 +6,7 @@ namespace API.Data.Models
     public class Card
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int cardNumber { get; set; }
         public DateTime expirationDate { get; set; }
         public DateTime issueDate { get; set; }
@@ -14,5 +15,9 @@ namespace API.Data.Models
         public string cardTypeId {  get; set; }
         [ForeignKey(nameof(cardTypeId))]
         public CardType cardType { get; set; }
+
+        public int currencyId { get; set; }
+        [ForeignKey(nameof(currencyId))]
+        public Currency currency { get; set; }
     }
 }

@@ -107,10 +107,7 @@ namespace API.Migrations
             modelBuilder.Entity("API.Data.Models.Card", b =>
                 {
                     b.Property<int>("cardNumber")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("cardNumber"));
 
                     b.Property<float>("amount")
                         .HasColumnType("real");
@@ -118,6 +115,9 @@ namespace API.Migrations
                     b.Property<string>("cardTypeId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("currencyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("expirationDate")
                         .HasColumnType("datetime2");
@@ -129,6 +129,8 @@ namespace API.Migrations
 
                     b.HasIndex("cardTypeId");
 
+                    b.HasIndex("currencyId");
+
                     b.ToTable("Card");
                 });
 
@@ -137,9 +139,6 @@ namespace API.Migrations
                     b.Property<string>("CardTypeId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("currencyId")
-                        .HasColumnType("int");
-
                     b.Property<float>("fees")
                         .HasColumnType("real");
 
@@ -147,8 +146,6 @@ namespace API.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("CardTypeId");
-
-                    b.HasIndex("currencyId");
 
                     b.ToTable("CardType");
                 });
@@ -428,16 +425,13 @@ namespace API.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("cardType");
-                });
-
-            modelBuilder.Entity("API.Data.Models.CardType", b =>
-                {
                     b.HasOne("API.Data.Models.Currency", "currency")
                         .WithMany()
                         .HasForeignKey("currencyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("cardType");
 
                     b.Navigation("currency");
                 });

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Endpoints\BankEndpoints\GetUnactiveBanks\" />
     <Folder Include="Endpoints\BanksUserEndpoints\" />
     <Folder Include="Endpoints\CardEndpoints\" />
     <Folder Include="Endpoints\DeletedUserEndpoints\" />
@@ -24,6 +25,7 @@
     <Folder Include="Endpoints\LoyaltyEndpoints\" />
     <Folder Include="Endpoints\UserEndpoints\Delete\" />
     <Folder Include="Endpoints\UserEndpoints\Update\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

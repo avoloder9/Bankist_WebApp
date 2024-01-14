@@ -18,18 +18,17 @@ namespace API.Helper.Services
 
         public bool IsLogin()
         {
-
             return GetAuthInfo().isLogin;
         }
 
         public MyAuthInfo GetAuthInfo()
         {
-            string? authToken = _httpContextAccessor.HttpContext!.Request.Headers["my-auth-token"];
-
+            string? authToken = _httpContextAccessor.HttpContext!.Request.Headers["Token"];
+            Console.WriteLine(authToken);
             AutentificationToken? _autentificationToken = _dbContext.AutentificationToken
                 .Include(x => x.account)
                 .SingleOrDefault(x => x.value == authToken);
-
+            Console.WriteLine(_autentificationToken);
             return new MyAuthInfo(_autentificationToken);
         }
     }

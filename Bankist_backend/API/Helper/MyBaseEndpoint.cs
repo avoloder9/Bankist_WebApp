@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+public class InvalidToken
+{
+    public string message { get; set; } 
+}
+
 namespace API.Helper
 {
     public abstract class MyBaseEndpoint<TRequest, TResponse> : ControllerBase

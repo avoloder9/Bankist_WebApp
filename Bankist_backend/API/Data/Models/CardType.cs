@@ -7,9 +7,5 @@ namespace API.Data.Models
         public string CardTypeId {  get; set; }
         public float fees { get; set; }
         public float maxLimit {  get; set; }
-
-        public int currencyId { get; set; }
-        [ForeignKey(nameof(currencyId))]
-        public Currency currency { get; set; }
     }
 }

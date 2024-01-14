@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MyConfig } from 'src/app/myConfig';
 
 interface Bank {
   name: string;
@@ -11,15 +13,37 @@ interface Bank {
   templateUrl: './bank-selection.component.html',
   styleUrls: ['./bank-selection.component.scss'],
 })
-export class BankSelectionComponent {
-  banks: Bank[] = [
-    { name: 'Unicredit Bank', image: '../../assets/images/bank1.png' },
-    { name: 'Reiffeisen Bank', image: '../assets/images/bank2.jpg' },
-    { name: 'BBI Bank', image: '../assets/images/bank3.png' },
-    { name: 'Intesa san paolo', image: '../assets/images/bank4.png' },
-    { name: 'Addiko Bank', image: '../assets/images/bank5.png' },
-  ];
-  constructor(private router: Router) {}
+export class BankSelectionComponent implements OnInit {
+  banks: Bank[] = [];
+  constructor(private router: Router, private httpClient: HttpClient) {}
+
+  ngOnInit() {
+    const headers = new HttpHeaders({
+      Token: localStorage.getItem('token') ?? '',
+    });
+    this.httpClient
+      .get<any>(`${MyConfig.serverAddress}/GetActiveBanksEndpoint`, {
+        headers: headers,
+      })
+      .subscribe({
+        next: (response: any) => {
+          console.log(response);
+          this.setBanks(response);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+  }
+
+  setBanks(data: any) {
+    data.banks.forEach((item: { name: any }) => {
+      this.banks.push({
+        name: item.name,
+        image: `../assets/images/${item.name}.png`,
+      });
+    });
+  }
 
   addNewBank() {
     this.router.navigate(['/new-bank']);
