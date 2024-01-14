@@ -26,6 +26,19 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CardType",
+                columns: table => new
+                {
+                    CardTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    fees = table.Column<float>(type: "real", nullable: false),
+                    maxLimit = table.Column<float>(type: "real", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CardType", x => x.CardTypeId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Currency",
                 columns: table => new
                 {
@@ -121,19 +134,27 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CardType",
+                name: "Card",
                 columns: table => new
                 {
-                    CardTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    fees = table.Column<float>(type: "real", nullable: false),
-                    maxLimit = table.Column<float>(type: "real", nullable: false),
+                    cardNumber = table.Column<int>(type: "int", nullable: false),
+                    expirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    issueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    amount = table.Column<float>(type: "real", nullable: false),
+                    cardTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     currencyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CardType", x => x.CardTypeId);
+                    table.PrimaryKey("PK_Card", x => x.cardNumber);
                     table.ForeignKey(
-                        name: "FK_CardType_Currency_currencyId",
+                        name: "FK_Card_CardType_cardTypeId",
+                        column: x => x.cardTypeId,
+                        principalTable: "CardType",
+                        principalColumn: "CardTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Card_Currency_currencyId",
                         column: x => x.currencyId,
                         principalTable: "Currency",
                         principalColumn: "currencyId",
@@ -157,28 +178,6 @@ namespace API.Migrations
                         principalTable: "User",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Card",
-                columns: table => new
-                {
-                    cardNumber = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    expirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    issueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    amount = table.Column<float>(type: "real", nullable: false),
-                    cardTypeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Card", x => x.cardNumber);
-                    table.ForeignKey(
-                        name: "FK_Card_CardType_cardTypeId",
-                        column: x => x.cardTypeId,
-                        principalTable: "CardType",
-                        principalColumn: "CardTypeId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -330,8 +329,8 @@ namespace API.Migrations
                 column: "cardTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CardType_currencyId",
-                table: "CardType",
+                name: "IX_Card_currencyId",
+                table: "Card",
                 column: "currencyId");
 
             migrationBuilder.CreateIndex(
@@ -397,10 +396,10 @@ namespace API.Migrations
                 name: "CardType");
 
             migrationBuilder.DropTable(
-                name: "Account");
+                name: "Currency");
 
             migrationBuilder.DropTable(
-                name: "Currency");
+                name: "Account");
         }
     }
 }
