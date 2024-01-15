@@ -1,10 +1,12 @@
 @import "src/styles.scss";
+
 .container {
   height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   .selection {
     height: 90%;
     width: 60%;
@@ -13,26 +15,31 @@
     overflow: hidden;
     padding: 50px 40px;
     text-align: center;
+
     .empty-wrapper {
       height: 90%;
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+
       p {
         font-size: 1.3rem;
         color: white;
         letter-spacing: 1px;
       }
     }
+
     .bank-selection-wrapper {
       border-radius: 10px;
       height: 90%;
       overflow: hidden;
+
       .bank-selection {
         height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
+
         .bank {
           height: 50px;
           width: 100%;
@@ -44,14 +51,17 @@
           border-bottom: 0.5px solid rgba(128, 128, 128, 0.616);
           transition: 0.3s;
           z-index: 0;
+
           .image-wrapper {
             height: 100%;
+
             img {
               height: 45px;
               width: 130px;
               object-fit: contain;
             }
           }
+
           p {
             font-size: 0.8rem;
             text-transform: uppercase;
@@ -60,6 +70,7 @@
             color: #444;
             font-family: $primaryFont;
           }
+
           &:hover {
             transform: scale(0.95);
             background-color: rgb(235, 234, 234);
@@ -68,6 +79,7 @@
         }
       }
     }
+
     .return {
       margin: 1.5rem auto;
       height: 30px;
@@ -86,6 +98,7 @@
       background-image: $redGradient;
       color: $primaryColor;
       font-size: 1rem;
+
       &:hover {
         transform: scale(1.1);
         filter: brightness(1.1);
@@ -93,6 +106,7 @@
       }
     }
   }
+
   .bank-selection::-webkit-scrollbar {
     width: 5px;
     overflow: hidden;

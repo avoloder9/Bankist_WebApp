@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
 import { LoaderComponent } from '../loader/loader.component';
 
+
 interface Bank {
   name: string;
   image: string;
@@ -17,8 +18,12 @@ interface Bank {
 export class BankSelectionComponent implements OnInit {
   banks: Bank[] = [];
   isLoading: Boolean = false;
-  constructor(private router: Router, private httpClient: HttpClient) {}
 
+  constructor(private router: Router, private httpClient: HttpClient) { }
+
+  onImageClick(bankName: string) {
+    this.router.navigate(['/userTransactionList', bankName]);
+  }
   ngOnInit() {
     this.isLoading = true;
     const headers = new HttpHeaders({
@@ -48,7 +53,6 @@ export class BankSelectionComponent implements OnInit {
     });
     this.isLoading = false;
   }
-
   addNewBank() {
     this.router.navigate(['/new-bank']);
   }

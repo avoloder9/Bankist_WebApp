@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BankSelectionComponent } from './components/bank-selection/bank-selection.component';
 import { NewBankComponent } from './components/new-bank/new-bank.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
+import { UserTransactionListComponent } from './components/transaction/user-transaction-list/user-transaction-list.component';
 const routes: Routes = [
   { path: 'home', component: AppComponent },
   { path: 'register', component: RegistrationComponent },
@@ -14,10 +15,12 @@ const routes: Routes = [
   { path: 'bank-selection', component: BankSelectionComponent },
   { path: 'new-bank', component: NewBankComponent },
   { path: 'transaction', component: TransactionComponent },
+  { path: 'userTransactionList/:bankName', component: UserTransactionListComponent },
+
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
