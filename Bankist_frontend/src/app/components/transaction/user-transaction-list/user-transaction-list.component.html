@@ -1,0 +1,33 @@
+<nav id="navbar">
+    <div>
+        <a class="options" href="#" routerLink="/userTransactionList">List of Transactions</a>
+        <a class="options" href="#" routerLink="/transaction">Transaction</a>
+        <a class="options" href="#">Settings</a>
+    </div>
+</nav>
+
+
+<table id="transactionTable" *ngIf="transactions">
+    <thead>
+        <tr>
+            <th>Transaction </th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Sender Card</th>
+            <th>Receiver Card</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let transaction of transactions">
+            <td>{{ transaction.transactionId }}</td>
+            <td>{{ transaction.transactionDate }}</td>
+            <td>{{ transaction.amount }}</td>
+            <td>{{ transaction.type }}</td>
+            <td>{{ transaction.status }}</td>
+            <td>{{ transaction.senderCardId }}</td>
+            <td>{{ transaction.recieverCardId }}</td>
+        </tr>
+    </tbody>
+</table>

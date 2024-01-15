@@ -1,4 +1,5 @@
 using API.Data;
+using API.Endpoints.TransactionEndpoints.Get;
 using API.Endpoints.UserEndpoints.CheckExists;
 using API.Helper.Services;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddTransient<MyAuthService>();
 builder.Services.AddHttpContextAccessor();
+//builder.Services.AddScoped<GetUserTransactions>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
