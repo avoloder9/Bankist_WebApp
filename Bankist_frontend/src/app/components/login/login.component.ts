@@ -5,10 +5,10 @@ import { passwordValidator } from '../registration/passwordValidator';
 import { MyConfig } from '../../myConfig';
 import { LoaderComponent } from '../loader/loader.component';
 import { AuthLoginResponse } from './authLoginResponse';
-import { AuthLoginRequest } from './authLoginRequest';
 import { Store } from '@ngrx/store';
 import { login } from '../../shared/store/login.actions';
 import { Router } from '@angular/router';
+import { AuthLoginVM } from './authLoginVM';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -44,7 +44,7 @@ export class LoginComponent {
   onSubmit() {
     console.log(this.loginForm);
     if (this.loginForm.valid) {
-      let loginrequest: AuthLoginRequest = {
+      let loginrequest: AuthLoginVM = {
         username: this.loginForm.value.username,
         password: this.loginForm.value.password,
       };
@@ -52,7 +52,7 @@ export class LoginComponent {
       this.reset();
       this.isSending = true;
       this.httpClient
-        .post<AuthLoginResponse>(`${MyConfig.serverAddress}/auth`, loginrequest)
+        .post<AuthLoginResponse>(`${MyConfig.serverAddress}/Auth/login`, loginrequest)
         .subscribe({
           next: (response: any) => {
             localStorage.setItem('token', response.autentificationToken.value);

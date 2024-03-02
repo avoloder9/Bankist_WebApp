@@ -14,7 +14,7 @@ export class TransactionComponent implements OnInit {
   insufficientFunds: boolean = false;
   transactionSuccessful: boolean = false;
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient) {}
+  constructor(private fb: FormBuilder, private httpClient: HttpClient) { }
 
   ngOnInit(): void {
     this.transactionForm = this.fb.group({
@@ -32,7 +32,7 @@ export class TransactionComponent implements OnInit {
       this.isExecute = true;
       this.httpClient
         .post<any>(
-          `${MyConfig.serverAddress}/TransactionExecuteEndpoint`,
+          `${MyConfig.serverAddress}/Transaction/execute`,
           this.transactionForm.value
         )
         .subscribe({

@@ -37,7 +37,7 @@ export class UserTransactionListComponent implements OnInit {
       this.bankName = params['bankName'];
       if (this.bankName) {
 
-        this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/GetUserTransactions?bankName=${this.bankName}`, { headers: headers })
+        this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`, { headers: headers })
           .subscribe(
             (data) => {
 

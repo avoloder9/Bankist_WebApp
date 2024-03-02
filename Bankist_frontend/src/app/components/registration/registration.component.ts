@@ -37,7 +37,7 @@ export class RegistrationComponent implements OnInit {
       birthDate: ['', Validators.required],
     });
   }
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   isFieldInvalid(field: string) {
     return (
@@ -51,7 +51,7 @@ export class RegistrationComponent implements OnInit {
       this.isSending = true;
       this.httpClient
         .post<any>(
-          `${MyConfig.serverAddress}/UserCheckExists`,
+          `${MyConfig.serverAddress}/User/check`,
           this.registrationForm.value
         )
         .subscribe({
@@ -63,7 +63,7 @@ export class RegistrationComponent implements OnInit {
             } else {
               this.httpClient
                 .post<any>(
-                  `${MyConfig.serverAddress}/UserAddEndpoint`,
+                  `${MyConfig.serverAddress}/User/add`,
                   this.registrationForm.value,
                   { responseType: 'text' as 'json' }
                 )

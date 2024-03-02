@@ -1,9 +1,7 @@
 using API.Data;
-using API.Endpoints.TransactionEndpoints.Get;
-using API.Endpoints.UserEndpoints.CheckExists;
 using API.Helper.Services;
 using Microsoft.EntityFrameworkCore;
-using static API.Endpoints.UserEndpoints.CheckExists.IUserService;
+using static API.Helper.Services.IUserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
