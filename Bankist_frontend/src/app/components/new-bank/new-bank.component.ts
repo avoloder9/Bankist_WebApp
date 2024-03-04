@@ -21,7 +21,7 @@ export class NewBankComponent {
   selectedBank: BankOption;
   banks: BankOption[] = [];
 
-  constructor(private router: Router, private httpClient: HttpClient) {}
+  constructor(private router: Router, private httpClient: HttpClient) { }
 
   ngOnInit() {
     this.getBanks();
@@ -34,7 +34,7 @@ export class NewBankComponent {
       Token: localStorage.getItem('token') ?? '',
     });
     this.httpClient
-      .get<any>(`${MyConfig.serverAddress}/GetUnactiveBanksEndpoint`, {
+      .get<any>(`${MyConfig.serverAddress}/Bank/unactive-banks`, {
         headers: headers,
       })
       .subscribe({

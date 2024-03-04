@@ -30,7 +30,7 @@ export class BankSelectionComponent implements OnInit {
       Token: localStorage.getItem('token') ?? '',
     });
     this.httpClient
-      .get<any>(`${MyConfig.serverAddress}/GetActiveBanksEndpoint`, {
+      .get<any>(`${MyConfig.serverAddress}/Bank/active-banks`, {
         headers: headers,
       })
       .subscribe({

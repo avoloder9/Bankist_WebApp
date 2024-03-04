@@ -9,7 +9,7 @@ interface BankOption {
   image: string;
   numberOfUsers: number;
 }
-interface BankAccountRequest {
+interface BankAccountVM {
   name: string;
   amount: number;
   type: string;
@@ -21,7 +21,7 @@ interface BankAccountRequest {
   styleUrls: ['./bank-form.component.scss'],
 })
 export class BankFormComponent {
-  constructor(private router: Router, private httpClient: HttpClient) {}
+  constructor(private router: Router, private httpClient: HttpClient) { }
 
   @Output() event = new EventEmitter<string>();
   @Output() refresh = new EventEmitter<string>();
@@ -54,7 +54,7 @@ export class BankFormComponent {
     });
     this.httpClient
       .post<any>(
-        `${MyConfig.serverAddress}/NewBankAccountEndpoint`,
+        `${MyConfig.serverAddress}/Bank/new-account`,
         newBankAccount,
         { headers: headers }
       )
