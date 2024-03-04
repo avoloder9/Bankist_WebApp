@@ -2,19 +2,25 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MyConfig } from '../../myConfig';
+import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
   styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent implements OnInit {
+  goBack() {
+    this.location.back();
+  }
+
   transactionForm: FormGroup;
   isExecute: boolean = false;
   unexpectedError: boolean = false;
   insufficientFunds: boolean = false;
   transactionSuccessful: boolean = false;
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient) { }
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private location: Location) { }
 
   ngOnInit(): void {
     this.transactionForm = this.fb.group({
@@ -40,6 +46,7 @@ export class TransactionComponent implements OnInit {
             this.isExecute = false;
             this.transactionSuccessful = true;
             this.transactionForm.reset();
+            this.location.back();
             console.log(response);
           },
           error: (error) => {

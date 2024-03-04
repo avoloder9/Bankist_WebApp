@@ -23,8 +23,11 @@
                 <input type="text" name="status" placeholder="Status" formControlName="status"><br>
             </div>
         </div>
+        <div class="buttons">
+            <button (click)="goBack()">Back</button>
+            <button type="submit" (click)="onSubmit()" [disabled]="transactionForm.invalid">Submit Transaction</button>
+        </div>
 
-        <button type="submit" (click)="onSubmit()" [disabled]="transactionForm.invalid">Submit Transaction</button>
         <div class="error " *ngIf="unexpectedError">Unexpected error occured.</div>
         <div class="error " *ngIf="insufficientFunds">Insufficient funds .</div>
 

@@ -1,4 +1,4 @@
-@import "src/styles.scss";
+@import "/src/styles.scss";
 
 * {
     box-sizing: border-box;
@@ -8,15 +8,14 @@
 }
 
 .options {
+    margin-top: 25%;
     display: block;
     text-decoration: none;
     font-size: 20px;
     color: $primaryColor;
     margin-left: 10%;
-    padding: 10px;
-    margin-top: 10%;
+    padding: 5px;
     transition: 0.3s;
-
 }
 
 nav {
@@ -29,30 +28,172 @@ nav {
     font-weight: bold;
     left: 0;
     top: 76px;
+    text-align: center;
 }
 
 .options:hover {
     color: #a77f7f;
 }
 
-table {
-    font-family: $primaryFont;
-    width: 85%;
-    border-collapse: collapse;
-    margin-top: 80px;
-    padding: 5px;
-    margin-left: 15%;
+.container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     height: 100%;
 }
 
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-    cursor: pointer;
+table {
+    font-family: $primaryFont;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 80px;
+    padding: 10px;
+    margin-left: 18%;
+    height: 100%;
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
 }
 
-th {
-    background-color: #f2f2f2;
+.option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 50px;
+    width: 30%;
+    height: 100%;
+    font-family: $primaryFont;
+    color: $primaryColor;
+
+    button {
+        margin-top: 10%;
+        text-align: center;
+        height: 70px;
+        width: 60%;
+        border-radius: 15px;
+        border: none;
+        transition: transform 0.3s ease;
+        font-size: 20px;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+        text-transform: uppercase
+    }
+
+    .transfer {
+        background-color: $primaryGreen;
+    }
+
+    .loan {
+        background-color: $primaryOrange;
+    }
+
+    .close {
+        background-color: $primaryRed;
+
+    }
+}
+
+
+.imageWrapper {
+    margin-top: 20px;
+    padding: 5px;
+    //  background-color: rgb(241, 237, 237);
+    background-color: $primaryColor;
+    width: 15%;
+    height: 25%;
+    position: relative;
+    float: right;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+
+    h2 {
+        font-family: $primaryFont;
+        font-size: 21px;
+        font-weight: initial;
+        margin-bottom: 10px;
+        color: $secondaryColor;
+    }
+
+    .textWrapper {
+        width: 70%;
+        height: 100%;
+        float: right;
+        text-align: left;
+        padding: 10px;
+        justify-content: space-around;
+    }
+
+    .image {
+        width: 26%;
+        margin-top: 10px;
+        padding: 2px;
+        border-radius: 10px;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+        font-family: $primaryFont;
+        color: rgb(90, 83, 83);
+        padding: 2px;
+    }
+}
+
+.imageWrapper:hover {
+    transform: scale(1.1);
+}
+
+
+.balance {
+    grid-column: 1 / span 2;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    font-family: $primaryFont;
+    color: $secondaryColor;
+
+    .balance__bank {
+        font-size: 2.2rem;
+        font-weight: 50;
+        margin-bottom: -0.2rem;
+        justify-content: space-between;
+        color: $secondaryColor;
+    }
+
+    .balance__label {
+        font-size: 2.2rem;
+        font-weight: 500;
+        margin-bottom: -0.2rem;
+    }
+
+    .balance__date {
+        font-size: 1.4rem;
+        color: #888;
+    }
+
+    .balance__detail {
+        text-align: center;
+        padding: 10px;
+        justify-content: space-around;
+    }
+}
+
+
+
+button:hover {
+    transform: scale(1.1);
 }
