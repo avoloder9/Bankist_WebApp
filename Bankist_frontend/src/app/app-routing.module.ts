@@ -15,12 +15,14 @@ const routes: Routes = [
   { path: 'bank-selection', component: BankSelectionComponent },
   { path: 'new-bank', component: NewBankComponent },
   { path: 'transaction', component: TransactionComponent },
-  { path: 'userTransactionList/:bankName', component: UserTransactionListComponent },
-
+  {
+    path: 'userTransactionList/:bankName',
+    component: UserTransactionListComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

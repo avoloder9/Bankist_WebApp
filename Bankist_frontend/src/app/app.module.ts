@@ -17,6 +17,7 @@ import { NewBankComponent } from './components/new-bank/new-bank.component';
 import { BankFormComponent } from './components/bank-form/bank-form.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { UserTransactionListComponent } from './components/transaction/user-transaction-list/user-transaction-list.component';
+import { VisualizationComponent } from './components/visualization/visualization.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +30,7 @@ import { UserTransactionListComponent } from './components/transaction/user-tran
     BankFormComponent,
     TransactionComponent,
     UserTransactionListComponent,
+    VisualizationComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,4 +44,4 @@ import { UserTransactionListComponent } from './components/transaction/user-tran
   providers: [BankSelectionComponent],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
