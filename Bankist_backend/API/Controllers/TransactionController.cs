@@ -67,25 +67,7 @@ namespace API.Controllers
                .OrderBy(t => t.transactionId)
                .ToList();
 
-                //foreach (var transaction in transactions)
-                //{
-                //    var senderCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == transaction.senderCardId);
-                //    var receiverCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == transaction.recieverCardId);
-
-                //    if (senderCard != null)
-                //    {
-                //        // Kartica je sender, pa mijenjamo iznos na negativan
-                //        transaction.amount = -Math.Abs(transaction.amount);
-                //    }
-                //    else if (receiverCard != null)
-                //    {
-                //        // Kartica je receiver, pa ništa ne mijenjamo
-                //    }
-                //    else
-                //    {
-                //        // U slučaju da ni sender ni receiver nisu pronađeni, možda želite poduzeti odgovarajuće radnje
-                //    }
-              //  }
+               
                 return Ok(transactions);
             }
             catch (Exception ex)

@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MyConfig } from '../../myConfig';
 import { Location } from '@angular/common';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-transaction',
@@ -22,7 +22,7 @@ export class TransactionComponent implements OnInit {
   insufficientFunds: boolean = false;
   transactionSuccessful: boolean = false;
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private location: Location, private route: ActivatedRoute, private cdr: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private location: Location, private route: ActivatedRoute) {
 
   }
 
