@@ -4,11 +4,15 @@ using API.Endpoints.TransactionEndpoints.Execute;
 using API.Helper.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Threading;
+using API.Helper.Auth;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+  
     public class TransactionController : ControllerBase
     {
 
@@ -63,19 +67,25 @@ namespace API.Controllers
                .OrderBy(t => t.transactionId)
                .ToList();
 
-                foreach (var transaction in transactions)
-                {
-                    if (_dbContext.BankUserCard.Any(buc => buc.cardId == transaction.senderCardId))
-                    {
-                        //treba dodati -
-                        transaction.amount = Math.Abs(transaction.amount);
-                    }
-                    else if (_dbContext.BankUserCard.Any(buc => buc.cardId == transaction.recieverCardId))
-                    {
+                //foreach (var transaction in transactions)
+                //{
+                //    var senderCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == transaction.senderCardId);
+                //    var receiverCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == transaction.recieverCardId);
 
-                        transaction.amount = Math.Abs(transaction.amount);
-                    }
-                }
+                //    if (senderCard != null)
+                //    {
+                //        // Kartica je sender, pa mijenjamo iznos na negativan
+                //        transaction.amount = -Math.Abs(transaction.amount);
+                //    }
+                //    else if (receiverCard != null)
+                //    {
+                //        // Kartica je receiver, pa ništa ne mijenjamo
+                //    }
+                //    else
+                //    {
+                //        // U slučaju da ni sender ni receiver nisu pronađeni, možda želite poduzeti odgovarajuće radnje
+                //    }
+              //  }
                 return Ok(transactions);
             }
             catch (Exception ex)
@@ -143,32 +153,31 @@ namespace API.Controllers
                     transactionDate = DateTime.UtcNow,
                     amount = request.amount,
                     type = request.type,
-                    status = request.status,
+                    status = "Pending",
                     senderCardId = request.senderCardId,
                     recieverCardId = request.recieverCardId
                 };
 
                 _dbContext.Transaction.Add(transactionRecord);
-
+                
                 await _dbContext.SaveChangesAsync();
 
+                await Task.Delay(TimeSpan.FromSeconds(3));
+                transactionRecord.status = "Completed";
+                await _dbContext.SaveChangesAsync();
                 transaction.Commit();
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
-                throw ex;
+                return StatusCode(500, "An error occurred while processing the transaction");
             }
 
             return Ok(new TransactionExecuteDetailVM
             {
                 transactionId = transactionRecord?.transactionId ?? 0
             });
+
         }
-
-
-
-
 
 
     }

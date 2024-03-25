@@ -47,16 +47,17 @@ export class UserTransactionListComponent implements OnInit {
               /* this.transactions = data;
                console.log(data);
  */
+              console.log(data);
+
               this.transactions = data.map(transaction => {
-                if (transaction.senderCardId) {
-                  //treba dodati -
-                  transaction.amount = Math.abs(transaction.amount);
-                } else if (transaction.recieverCardId) {
-                  transaction.amount = Math.abs(transaction.amount);
+                console.log("kartica: ", this.cardInfo.cardNumber);
+                if (transaction.senderCardId === this.cardInfo.cardNumber) {
+                  transaction.amount = -Math.abs(transaction.amount);
+                  // Promijenite predznak na suprotni
                 }
                 return transaction;
               });
-              console.log(data);
+              console.log(this.transactions);
             },
             (error) => {
               console.error('Error fetching data:', error);
@@ -66,7 +67,6 @@ export class UserTransactionListComponent implements OnInit {
       }
     });
   }
-
 
   getCardInfo() {
     const headers = this.getHeaders();

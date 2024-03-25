@@ -7,9 +7,7 @@
     <form class="transaction" [formGroup]="transactionForm" (ngSubmit)="onSubmit()"
         *ngIf="!isExecute && !transactionSuccessful">
         <div class="inputs">
-            <div>
-                <input type="text" placeholder="Transfer from" formControlName="senderCardId"><br>
-            </div>
+
             <div>
                 <input type="text" placeholder="Transfer to" formControlName="recieverCardId"><br>
             </div>
@@ -18,9 +16,6 @@
             </div>
             <div>
                 <input type="text" name="type" placeholder="Purpose of payment" formControlName="type"><br>
-            </div>
-            <div>
-                <input type="text" name="status" placeholder="Status" formControlName="status"><br>
             </div>
         </div>
         <div class="buttons">

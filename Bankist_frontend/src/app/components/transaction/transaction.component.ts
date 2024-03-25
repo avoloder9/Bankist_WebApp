@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MyConfig } from '../../myConfig';
 import { Location } from '@angular/common';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-transaction',
@@ -10,6 +11,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent implements OnInit {
+  senderCardId: string;
   goBack() {
     this.location.back();
   }
@@ -20,7 +22,9 @@ export class TransactionComponent implements OnInit {
   insufficientFunds: boolean = false;
   transactionSuccessful: boolean = false;
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private location: Location) { }
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private location: Location, private route: ActivatedRoute, private cdr: ChangeDetectorRef) {
+
+  }
 
   ngOnInit(): void {
     this.transactionForm = this.fb.group({
@@ -28,14 +32,23 @@ export class TransactionComponent implements OnInit {
       recieverCardId: ['', Validators.required],
       amount: ['', [Validators.required, Validators.min(1)]],
       type: ['', Validators.required],
-      status: ['', Validators.required],
+    });
+
+    this.route.params.subscribe(params => {
+      this.transactionForm.patchValue({
+
+        senderCardId: params['cardNumber']
+      });
+
     });
   }
-
   onSubmit() {
     if (this.transactionForm.valid) {
       this.reset();
       this.isExecute = true;
+      const formData = {
+        ...this.transactionForm.value, senderCardId: this.route.snapshot.params['cardNumber']
+      };
       this.httpClient
         .post<any>(
           `${MyConfig.serverAddress}/Transaction/execute`,

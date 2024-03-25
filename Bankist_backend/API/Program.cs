@@ -1,4 +1,5 @@
 using API.Data;
+using API.Helper.Auth;
 using API.Helper.Services;
 using Microsoft.EntityFrameworkCore;
 using static API.Helper.Services.IUserService;
@@ -28,6 +29,7 @@ builder.Services.AddCors(options =>
         });
 });
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddSwaggerGen(x => x.OperationFilter<AuthorizationSwaggerHeader>());
 builder.Services.AddTransient<MyAuthService>();
 builder.Services.AddHttpContextAccessor();
 //builder.Services.AddScoped<GetUserTransactions>();

@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'bank-selection', component: BankSelectionComponent },
   { path: 'new-bank', component: NewBankComponent },
-  { path: 'transaction', component: TransactionComponent },
+  { path: 'transaction/:cardNumber', component: TransactionComponent },
   {
     path: 'userTransactionList/:bankName',
     component: UserTransactionListComponent,
@@ -25,4 +25,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
