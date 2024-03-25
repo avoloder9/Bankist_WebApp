@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 interface Transaction {
   transactionId: number;
@@ -44,16 +44,9 @@ export class UserTransactionListComponent implements OnInit {
           .subscribe(
             (data) => {
 
-              /* this.transactions = data;
-               console.log(data);
- */
-              console.log(data);
-
               this.transactions = data.map(transaction => {
-                console.log("kartica: ", this.cardInfo.cardNumber);
                 if (transaction.senderCardId === this.cardInfo.cardNumber) {
                   transaction.amount = -Math.abs(transaction.amount);
-                  // Promijenite predznak na suprotni
                 }
                 return transaction;
               });
@@ -74,7 +67,7 @@ export class UserTransactionListComponent implements OnInit {
       .subscribe(data => {
         this.cardInfo = data;
       }, error => {
-        console.log('Greška prilikom dohvatanja podataka:', error);
+        console.log('Error fetching data:', error);
       });
   }
   getHeaders(): HttpHeaders {
