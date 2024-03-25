@@ -8,7 +8,6 @@ namespace API.Endpoints.TransactionEndpoints.Execute
         public DateTime transactionDate { get; set; }
         public float amount { get; set; }
         public string type { get; set; }
-        public string status { get; set; }
 
         public int senderCardId { get; set; }
         
