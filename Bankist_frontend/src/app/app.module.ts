@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegistrationComponent } from './components/registration/registration.component';
@@ -18,6 +18,9 @@ import { BankFormComponent } from './components/bank-form/bank-form.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { UserTransactionListComponent } from './components/transaction/user-transaction-list/user-transaction-list.component';
 import { VisualizationComponent } from './components/visualization/visualization.component';
+import { MyAuthInterceptor } from './helpers/auth/myAuthInterceptor';
+import { AuthorizationGuard } from './helpers/auth/authorizationGuardService';
+import { BankViewComponent } from './components/bank-view/bank-view.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +34,7 @@ import { VisualizationComponent } from './components/visualization/visualization
     TransactionComponent,
     UserTransactionListComponent,
     VisualizationComponent,
+    BankViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +45,8 @@ import { VisualizationComponent } from './components/visualization/visualization
     FormsModule,
     StoreModule.forRoot({ login: loginReducer }),
   ],
-  providers: [BankSelectionComponent],
+  providers: [BankSelectionComponent, { provide: HTTP_INTERCEPTORS, useClass: MyAuthInterceptor, multi: true },
+    AuthorizationGuard],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

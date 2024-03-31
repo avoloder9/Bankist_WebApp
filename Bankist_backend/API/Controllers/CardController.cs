@@ -53,18 +53,18 @@ namespace API.Controllers
                         }
                         else
                         {
-                            return NotFound("Kartica nije pronađena.");
+                            return NotFound("Card not found.");
                         }
                     }
                 }
                 else
                 {
-                    return NotFound("Korisnik nije pronađen.");
+                    return NotFound("User not found.");
                 }
             }
             else
             {
-                return NotFound("Kartica korisnika nije pronađena u određenoj banci.");
+                return NotFound("User's card was not found at the specified bank. ");
             }
 
         }

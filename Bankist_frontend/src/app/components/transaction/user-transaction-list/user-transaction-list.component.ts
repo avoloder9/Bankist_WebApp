@@ -33,51 +33,51 @@ export class UserTransactionListComponent implements OnInit {
   constructor(private httpClient: HttpClient, private route: ActivatedRoute) { }
   ngOnInit(): void {
 
-    const headers = this.getHeaders();
+    /*const headers = this.getHeaders();
     console.log(headers);
-    this.route.params.subscribe((params) => {
-      this.bankName = params['bankName'];
-      if (this.bankName) {
-        this.getCardInfo();
+    */this.route.params.subscribe((params) => {
+    this.bankName = params['bankName'];
+    if (this.bankName) {
+      this.getCardInfo();
 
-        this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`, { headers: headers })
-          .subscribe(
-            (data) => {
+      this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`,/* { headers: headers }*/)
+        .subscribe(
+          (data) => {
 
-              this.transactions = data.map(transaction => {
-                if (transaction.senderCardId === this.cardInfo.cardNumber) {
-                  transaction.amount = -Math.abs(transaction.amount);
-                }
-                return transaction;
-              });
-              console.log(this.transactions);
-            },
-            (error) => {
-              console.error('Error fetching data:', error);
-            }
-          );
+            this.transactions = data.map(transaction => {
+              if (transaction.senderCardId === this.cardInfo.cardNumber) {
+                transaction.amount = -Math.abs(transaction.amount);
+              }
+              return transaction;
+            });
+            console.log(this.transactions);
+          },
+          (error) => {
+            console.error('Error fetching data:', error);
+          }
+        );
 
-      }
-    });
+    }
+  });
   }
 
   getCardInfo() {
-    const headers = this.getHeaders();
-    this.httpClient.get<any>(`${MyConfig.serverAddress}/Card/card-info?bankName=${this.bankName}`, { headers: headers })
+    /*const headers = this.getHeaders();*/
+    this.httpClient.get<any>(`${MyConfig.serverAddress}/Card/card-info?bankName=${this.bankName}`, /*{ headers: headers }*/)
       .subscribe(data => {
         this.cardInfo = data;
       }, error => {
         console.log('Error fetching data:', error);
       });
   }
-  getHeaders(): HttpHeaders {
+  /*getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') ?? '';
 
     const headers = new HttpHeaders({
       Token: token
     });
     return headers;
-  }
+  }*/
 }
 
 

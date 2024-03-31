@@ -26,13 +26,13 @@ export class BankSelectionComponent implements OnInit {
   }
   ngOnInit() {
     this.isLoading = true;
-    const headers = new HttpHeaders({
+    /*const headers = new HttpHeaders({
       Token: localStorage.getItem('token') ?? '',
-    });
+    });*/
     this.httpClient
-      .get<any>(`${MyConfig.serverAddress}/Bank/active-banks`, {
+      .get<any>(`${MyConfig.serverAddress}/Bank/active-banks`/*, {
         headers: headers,
-      })
+      }*/)
       .subscribe({
         next: (response: any) => {
           console.log(response);
