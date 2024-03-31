@@ -21,6 +21,16 @@ namespace API.Helper.Services
             return GetAuthInfo().isLogin;
         }
 
+
+        public bool isBank()
+        {
+            return GetAuthInfo().account?.isBank ?? false;
+        }
+        public bool isUser()
+        {
+            return GetAuthInfo().account?.isUser ?? false;
+        }
+
         public MyAuthInfo GetAuthInfo()
         {
             string? authToken = _httpContextAccessor.HttpContext!.Request.Headers["Token"];

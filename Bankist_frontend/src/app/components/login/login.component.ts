@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { passwordValidator } from '../registration/passwordValidator';
 import { MyConfig } from '../../myConfig';
 import { LoaderComponent } from '../loader/loader.component';
 import { AuthLoginResponse } from './authLoginResponse';
@@ -9,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { login } from '../../shared/store/login.actions';
 import { Router } from '@angular/router';
 import { AuthLoginVM } from './authLoginVM';
+import { MyAuthService } from 'src/app/services/MyAuthService';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -25,7 +25,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private httpClient: HttpClient,
     private store: Store<{ login: { loggedIn: boolean } }>,
-    private router: Router
+    private router: Router,
+    private myAuthService: MyAuthService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -55,6 +56,11 @@ export class LoginComponent {
         .post<AuthLoginResponse>(`${MyConfig.serverAddress}/Auth/login`, loginrequest)
         .subscribe({
           next: (response: any) => {
+            this.myAuthService.setLoginAccount(response.autentificationToken);
+            /*  if (this.myAuthService.isBank()) {
+                this.router.navigate(['/bank-view']);
+              }*/
+
             localStorage.setItem('token', response.autentificationToken.value);
             this.isSending = false;
             this.store.dispatch(login());

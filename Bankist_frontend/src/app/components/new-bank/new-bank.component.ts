@@ -30,13 +30,15 @@ export class NewBankComponent {
   getBanks() {
     console.log('GET BANKS');
     this.isLoading = true;
-    const headers = new HttpHeaders({
-      Token: localStorage.getItem('token') ?? '',
-    });
+    /* const headers = new HttpHeaders({
+       Token: localStorage.getItem('token') ?? '',
+     });
+     */
     this.httpClient
-      .get<any>(`${MyConfig.serverAddress}/Bank/unactive-banks`, {
+      .get<any>(`${MyConfig.serverAddress}/Bank/unactive-banks`,
+      /* {
         headers: headers,
-      })
+      }*/)
       .subscribe({
         next: (response: any) => {
           console.log(response);
