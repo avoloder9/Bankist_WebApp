@@ -1,1 +1,27 @@
-<p>bank-view works!</p>
+<div class="container">
+
+    <label>Search: </label>
+    <input type="text" [(ngModel)]="filterTable" placeholder="Enter sender card or receiver card number">
+</div>
+<table class="transactionTable">
+    <thead>
+        <tr>
+            <th>Transaction Date</th>
+            <th>Amount</th>
+            <th>Purpose</th>
+            <th>Status</th>
+            <th>Sender Card</th>
+            <th>Receiver Card</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let transaction of filteredTransactions">
+            <td>{{ transaction.transactionDate | date: 'dd-MM-yyyy' }}</td>
+            <td>{{ transaction.amount }} {{transaction.senderCard.currency.currencyCode}}</td>
+            <td>{{ transaction.type }}</td>
+            <td>{{ transaction.status }}</td>
+            <td>{{ transaction.senderCardId }}</td>
+            <td>{{ transaction.recieverCardId }}</td>
+        </tr>
+    </tbody>
+</table>

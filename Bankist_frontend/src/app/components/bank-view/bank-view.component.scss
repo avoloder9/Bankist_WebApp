@@ -1,0 +1,49 @@
+@import "/src/styles.scss";
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: $primaryFont;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    margin-top: 35px;
+
+    input {
+        width: 70%;
+        height: 70%;
+        border-radius: 10px;
+        font-size: 1rem;
+        padding: 10px;
+    }
+
+    label {
+        font-size: 1.2rem;
+        margin-right: 10px;
+    }
+}
+
+table {
+    font-family: $primaryFont;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 50px;
+    padding: 10px;
+    height: 100%;
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+}

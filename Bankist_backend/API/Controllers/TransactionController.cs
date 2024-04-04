@@ -82,7 +82,7 @@ namespace API.Controllers
         {
             try
             {
-                var transactions = _dbContext.Transaction
+                var transactions = _dbContext.Transaction.Include(x=>x.senderCard).ThenInclude(x=>x.currency).Include(x=>x.recieverCard).ThenInclude(x=>x.currency)
                     .Where(t => _dbContext.BankUserCard
                                     .Where(buc => buc.bankId == bankId)
                                     .Select(buc => buc.cardId)
@@ -91,6 +91,7 @@ namespace API.Controllers
                                     .Where(buc => buc.bankId == bankId)
                                     .Select(buc => buc.cardId)
                                     .Contains(t.recieverCardId))
+                    
                     .OrderByDescending(t => t.transactionDate)
                     .ToList();
 
