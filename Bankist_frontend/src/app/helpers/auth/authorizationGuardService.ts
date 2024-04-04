@@ -13,8 +13,11 @@ export class AuthorizationGuard implements CanActivate {
         if (this.myAuthService.isLogiran()) {
 
             let isBank = this.myAuthService.isBank();
+            console.log(isBank)
+            const authToken = this.myAuthService.getAuthorizationToken();
+            const bankId = authToken?.account?.id;
             if (isBank) {
-                this.router.navigate(['/bank-view']);
+                this.router.navigate(['/bank-view'], { queryParams: { bankId: bankId } });
                 return false;
             }
 
