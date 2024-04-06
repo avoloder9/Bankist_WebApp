@@ -10,6 +10,7 @@ import { TransactionComponent } from './components/transaction/transaction.compo
 import { UserTransactionListComponent } from './components/transaction/user-transaction-list/user-transaction-list.component';
 import { AuthorizationGuard } from './helpers/auth/authorizationGuardService';
 import { BankViewComponent } from './components/bank-view/bank-view.component';
+import { UserListComponent } from './components/user-list/user-list.component';
 const routes: Routes = [
   { path: 'home', component: AppComponent },
   { path: 'register', component: RegistrationComponent },
@@ -22,6 +23,8 @@ const routes: Routes = [
     component: UserTransactionListComponent, canActivate: [AuthorizationGuard],
   },
   { path: 'bank-view', component: BankViewComponent },
+  { path: 'user-list', component: UserListComponent },
+
 ];
 
 @NgModule({
