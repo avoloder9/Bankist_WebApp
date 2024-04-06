@@ -2,6 +2,7 @@
 
     <label>Search: </label>
     <input type="text" [(ngModel)]="filterTable" placeholder="Enter sender card or receiver card number">
+    <button [routerLink]="['/user-list']" [queryParams]="{bankId:bankId}">Users</button>
 </div>
 <table class="transactionTable">
     <thead>

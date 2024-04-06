@@ -1,0 +1,46 @@
+<div class="container">
+
+    <label>Search: </label>
+    <input type="text" [(ngModel)]="filterTable" placeholder="Enter first name, last name or card number">
+    <button [routerLink]="['/bank-view']" [queryParams]="{bankId:bankId}">Users</button>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Card number</th>
+            <th>Amount</th>
+            <th>Registration date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of filteredUsers">
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+
+            <td (mouseenter)="showActualValue($event, user.cardNumber.toString())" (mouseleave)="hideActualValue()">
+                <ng-template [ngIf]="hoveredValue !== user.cardNumber.toString()">
+                    <span class="masked">******</span>
+                </ng-template>
+                <ng-template [ngIf]="hoveredValue === user.cardNumber.toString()">
+                    <span>{{ user.cardNumber }}</span>
+                </ng-template>
+            </td>
+            <td (mouseenter)="showActualValue($event, user.amount.toString())" (mouseleave)="hideActualValue()">
+                <ng-template [ngIf]="hoveredValue !== user.amount.toString()">
+                    <span class="masked">******</span>
+                </ng-template>
+                <ng-template [ngIf]="hoveredValue === user.amount.toString()">
+                    <span>{{ user.amount }}</span>
+                </ng-template>
+            </td>
+
+            <td>{{ user.registrationDate | date: 'dd-MM-yyyy'}}</td>
+        </tr>
+    </tbody>
+</table>
