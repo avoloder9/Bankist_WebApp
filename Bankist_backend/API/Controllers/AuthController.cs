@@ -24,9 +24,14 @@ namespace API.Controllers
         {
             Account loggedInAccount = await _dbContext.Account.FirstOrDefaultAsync(u => u.username == request.username);
 
-            if (loggedInAccount == null || loggedInAccount.password != request.password)
-            {
-                return Unauthorized();
+            if (loggedInAccount == null)
+            {                
+                return NotFound("Username not found.");
+            }
+                       
+            if (loggedInAccount.password != request.password)
+            {                
+                return Unauthorized("Incorrect password.");
             }
 
             string randomString = TokenGenerator.Generate(10);
