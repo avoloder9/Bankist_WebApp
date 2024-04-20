@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
 import { ActivatedRoute } from '@angular/router';
+import { SignalRService } from 'src/app/services/signalR.service';
 
 interface Transaction {
   transactionId: number;
@@ -24,13 +25,19 @@ interface Bank {
 })
 
 export class UserTransactionListComponent implements OnInit {
+
   banks: Bank[] = [];
   transactions: Transaction[] | null = null;
   bankName: string | null = null;
   cardInfo: any;
   today: Date = new Date();
 
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute) { }
+  constructor(private httpClient: HttpClient, private route: ActivatedRoute, private signalRService: SignalRService) {
+
+    this.signalRService.reloadTransactions.subscribe(() => {
+      this.loadTransactions();
+    });
+  }
   ngOnInit(): void {
 
     /*const headers = this.getHeaders();
@@ -38,27 +45,33 @@ export class UserTransactionListComponent implements OnInit {
     */this.route.params.subscribe((params) => {
     this.bankName = params['bankName'];
     if (this.bankName) {
-      this.getCardInfo();
 
-      this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`,/* { headers: headers }*/)
-        .subscribe(
-          (data) => {
-
-            this.transactions = data.map(transaction => {
-              if (transaction.senderCardId === this.cardInfo.cardNumber) {
-                transaction.amount = -Math.abs(transaction.amount);
-              }
-              return transaction;
-            });
-            console.log(this.transactions);
-          },
-          (error) => {
-            console.error('Error fetching data:', error);
-          }
-        );
-
+      this.loadTransactions();
     }
   });
+
+  }
+  loadTransactions() {
+
+    this.getCardInfo();
+
+    this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`,/* { headers: headers }*/)
+      .subscribe(
+        (data) => {
+
+          this.transactions = data.map(transaction => {
+            if (transaction.senderCardId === this.cardInfo.cardNumber) {
+              transaction.amount = -Math.abs(transaction.amount);
+            }
+            return transaction;
+          });
+          console.log(this.transactions);
+        },
+        (error) => {
+          console.error('Error fetching data:', error);
+        }
+      );
+
   }
 
   getCardInfo() {

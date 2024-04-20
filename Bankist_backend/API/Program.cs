@@ -1,6 +1,7 @@
 using API.Data;
 using API.Helper.Auth;
 using API.Helper.Services;
+using API.SignalR;
 using Microsoft.EntityFrameworkCore;
 using static API.Helper.Services.IUserService;
 
@@ -23,15 +24,20 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAllOrigins",
         builder =>
         {
-            builder.AllowAnyOrigin()
+            builder.SetIsOriginAllowed(x => _ = true)
                    .AllowAnyMethod()
-                   .AllowAnyHeader();
+                   .AllowAnyHeader()
+                   .AllowCredentials();
+
         });
+
 });
-builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSwaggerGen(x => x.OperationFilter<AuthorizationSwaggerHeader>());
 builder.Services.AddTransient<MyAuthService>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddMemoryCache();
+builder.Services.AddSignalR();
 //builder.Services.AddScoped<GetUserTransactions>();
 var app = builder.Build();
 
@@ -42,11 +48,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("AllowAllOrigins");
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<SignalRHub>("/path-signalR");
 app.Run();
 

@@ -5,6 +5,11 @@ using API.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Endpoints.AuthEndpoints.Login;
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.SignalR;
+using API.SignalR;
+using API.ViewModels;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace API.Controllers
 {
@@ -13,10 +18,14 @@ namespace API.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly MyAuthService _authService;
-
-        public AuthController(ApplicationDbContext dbContext)
+       private readonly IHubContext<SignalRHub> _hubContext;
+        private readonly IMemoryCache _cache;
+        public AuthController(ApplicationDbContext dbContext, IHubContext<SignalRHub> hubContext, MyAuthService authService, IMemoryCache cache)
         {
             _dbContext = dbContext;
+            _hubContext = hubContext;
+            _authService = authService;
+            _cache = cache;
         }
 
         [HttpPost("login")]
@@ -45,6 +54,8 @@ namespace API.Controllers
             _dbContext.Add(newToken);
             await _dbContext.SaveChangesAsync();
 
+            _cache.Set($"ConnectionId_{loggedInAccount.id}", request.SignalRConnectionID);
+
             return Ok(new MyAuthInfo(newToken));
         }
 
@@ -61,21 +72,19 @@ namespace API.Controllers
             return Ok(new MyAuthInfo(autentificationToken));
         }
         [HttpPost("logout")]
-        public async Task<ActionResult<NoResponse>> Logout([FromBody] NoRequest request)
+        public async Task<ActionResult<NoResponse>> Logout([FromBody] AuthLogoutVM request)
         {
             AutentificationToken? autentificationToken = _authService.GetAuthInfo().autentificationToken;
 
             if (autentificationToken == null)
             {
                 return NotFound();
-            }
-
+            }          
             _dbContext.Remove(autentificationToken);
             await _dbContext.SaveChangesAsync();
 
             return Ok(new NoResponse());
         }
-
 
     }
 }
