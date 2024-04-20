@@ -9,6 +9,7 @@ import { login } from '../../shared/store/login.actions';
 import { Router } from '@angular/router';
 import { AuthLoginVM } from './authLoginVM';
 import { MyAuthService } from 'src/app/services/MyAuthService';
+import { SignalRService } from 'src/app/services/signalR.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,7 +27,8 @@ export class LoginComponent {
     private httpClient: HttpClient,
     private store: Store<{ login: { loggedIn: boolean } }>,
     private router: Router,
-    private myAuthService: MyAuthService
+    private myAuthService: MyAuthService,
+    private signalRService: SignalRService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -45,45 +47,49 @@ export class LoginComponent {
   onSubmit() {
     console.log(this.loginForm);
     if (this.loginForm.valid) {
-      let loginrequest: AuthLoginVM = {
-        username: this.loginForm.value.username,
-        password: this.loginForm.value.password,
-      };
+      this.signalRService.open_ws_connection();
+      this.signalRService.onConnectionIdChange.subscribe((connectionId: string) => {
+        let loginrequest: AuthLoginVM = {
+          username: this.loginForm.value.username,
+          password: this.loginForm.value.password,
+          signalRConnectionID: connectionId
+        };
+        this.reset();
+        this.isSending = true;
 
-      this.reset();
-      this.isSending = true;
-      this.httpClient
-        .post<AuthLoginResponse>(`${MyConfig.serverAddress}/Auth/login`, loginrequest)
-        .subscribe({
-          next: (response: any) => {
-            this.myAuthService.setLoginAccount(response.autentificationToken);
-            /*  if (this.myAuthService.isBank()) {
-                this.router.navigate(['/bank-view']);
-              }*/
+        this.httpClient
+          .post<AuthLoginResponse>(`${MyConfig.serverAddress}/Auth/login`, loginrequest)
+          .subscribe({
+            next: (response: any) => {
+              this.myAuthService.setLoginAccount(response.autentificationToken);
+              /*  if (this.myAuthService.isBank()) {
+                  this.router.navigate(['/bank-view']);
+                }*/
 
-            localStorage.setItem('token', response.autentificationToken.value);
-            this.isSending = false;
-            this.store.dispatch(login());
-            this.loginForm.reset();
-            this.router.navigate(['/bank-selection']);
-          },
+              localStorage.setItem('token', response.autentificationToken.value);
+              this.isSending = false;
+              this.store.dispatch(login());
+              this.loginForm.reset();
+              this.router.navigate(['/bank-selection']);
+            },
 
-          error: (error) => {
-            this.isSending = false;
-            console.log(error);
-            console.error(error.message);
-            switch (error.status) {
-              case 401:
-                this.unauthorized = true;
-                break;
-              case 404:
-                this.userNotFound = true;
-                break;
-              default:
-                this.unexpectedError = true;
-            }
-          },
-        });
+            error: (error) => {
+              this.isSending = false;
+              console.log(error);
+              console.error(error.message);
+              switch (error.status) {
+                case 401:
+                  this.unauthorized = true;
+                  break;
+                case 404:
+                  this.userNotFound = true;
+                  break;
+                default:
+                  this.unexpectedError = true;
+              }
+            },
+          });
+      });
     }
   }
   reset() {
@@ -92,4 +98,5 @@ export class LoginComponent {
     this.unauthorized = false;
     this.unexpectedError = false;
   }
+
 }
