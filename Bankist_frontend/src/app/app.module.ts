@@ -18,6 +18,7 @@ import { BankFormComponent } from './components/bank-form/bank-form.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { UserTransactionListComponent } from './components/transaction/user-transaction-list/user-transaction-list.component';
 import { VisualizationComponent } from './components/visualization/visualization.component';
+import { AtmComponent } from './components/atm/atm.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +32,7 @@ import { VisualizationComponent } from './components/visualization/visualization
     TransactionComponent,
     UserTransactionListComponent,
     VisualizationComponent,
+    AtmComponent,
   ],
   imports: [
     BrowserModule,

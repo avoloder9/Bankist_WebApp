@@ -8,8 +8,9 @@ import { BankSelectionComponent } from './components/bank-selection/bank-selecti
 import { NewBankComponent } from './components/new-bank/new-bank.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { UserTransactionListComponent } from './components/transaction/user-transaction-list/user-transaction-list.component';
+import { AtmComponent } from './components/atm/atm.component';
 const routes: Routes = [
-  { path: 'home', component: AppComponent },
+  { path: '', component: AtmComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'bank-selection', component: BankSelectionComponent },
@@ -25,4 +26,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

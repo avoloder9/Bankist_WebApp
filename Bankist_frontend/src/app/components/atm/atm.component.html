@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="atm">
+    <div class="heading">
+      <div class="screen">
+        <div class="stage1" *ngIf="true">
+          <p id="title">Welcome to Bankist ATM!</p>
+          <img src="../../../assets/logo.png" alt="" />
+          <p>Please insert your card number to proceed</p>
+        </div>
+        <div class="stage2" *ngIf="false">
+          <p>Please insert your pin!</p>
+          <img src="../../../assets/logo.png" alt="" />
+          <input
+            type="password"
+            name="pin"
+            placeholder="0000"
+            (input)="formatPin($event)"
+            [value]="pin"
+            maxlength="4"
+            autocomplete="off"
+          />
+        </div>
+        <div class="stage3" *ngIf="false">
+          <p>Select an option!</p>
+          <button>Check balance</button>
+          <button>Deposit</button>
+          <button>Withdrawal</button>
+        </div>
+        <div class="stageBalanceCheck" *ngIf="false">
+          <p>Your balance is?</p>
+        </div>
+        <div class="stageDeposit" *ngIf="false">
+          <p>How much would you like to deposit?</p>
+          <input
+            type="number"
+            name="cardNumber"
+            placeholder="0.00"
+            [value]="depositAmount"
+            maxlength="10"
+            autocomplete="off"
+          />
+        </div>
+        <div class="stageDeposit" *ngIf="false">
+          <p>How much would you like to deposit?</p>
+          <input
+            type="number"
+            name="cardNumber"
+            placeholder="0.00"
+            [value]="depositAmount"
+            maxlength="10"
+            autocomplete="off"
+          />
+        </div>
+        <div class="stageWithdrawal" *ngIf="false">
+          <p>How much would you like to withdraw?</p>
+          <input
+            type="number"
+            name="cardNumber"
+            placeholder="0.00"
+            [value]="withdrawalAmount"
+            maxlength="10"
+            autocomplete="off"
+          />
+        </div>
+        <div class="stage1" *ngIf="false">
+          <p id="title">Thank you for using Bankist ATM!</p>
+          <img src="../../../assets/logo.png" alt="" />
+        </div>
+      </div>
+      <div class="card-input">
+        <label for="cardNumber">Insert your card number</label>
+        <input
+          type="text"
+          name="cardNumber"
+          placeholder="0000 0000 0000 0000"
+          (input)="formatCardNumber($event)"
+          [value]="cardNumber"
+          maxlength="19"
+          autocomplete="off"
+        />
+        <button>Proceed</button>
+      </div>
+    </div>
+    <div class="inputs">
+      <div class="numbers-grid">
+        <div *ngFor="let n of inputs" class="input">{{ n }}</div>
+      </div>
+      <div class="specials">
+        <div *ngFor="let n of specials" class="input">{{ n }}</div>
+      </div>
+    </div>
+    <img src="../../../assets/logo.png" alt="" id="main-logo" />
+  </div>
+</div>
