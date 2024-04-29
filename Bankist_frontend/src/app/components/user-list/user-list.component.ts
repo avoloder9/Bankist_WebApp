@@ -8,6 +8,7 @@ interface BankGetUsersVM {
 }
 
 interface BankGetUsersVMDetails {
+  id: number,
   firstName: string;
   lastName: string;
   email: string;
@@ -25,6 +26,40 @@ interface BankGetUsersVMDetails {
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
+  isDeleteDiv: boolean = false;
+  selectedUserId: any;
+  deleteReason: string = '';
+  isAccountDeleted: boolean = false;
+
+  cancelDelete() {
+    this.isDeleteDiv = false;
+    this.selectedUserId = null;
+    this.deleteReason = '';
+  }
+  showDeleteDiv(userId: number) {
+    this.isDeleteDiv = true;
+    this.selectedUserId = userId;
+  }
+
+  deleteUser() {
+    if (this.selectedUserId) {
+      this.httpClient.delete(`${MyConfig.serverAddress}/Bank/delete-account?userId=${this.selectedUserId}&bankId=${this.bankId}&reason=${this.deleteReason}`, { responseType: 'text' }).subscribe(() => {
+        this.cancelDelete();
+        this.isAccountDeleted = true;
+        setTimeout(() => {
+          this.isAccountDeleted = false;
+        }, 1000);
+        this.getUsers();
+      },
+        (error) => {
+          console.error("Error deleting user", error);
+        });
+    }
+    else {
+      console.error("Selected userId not found");
+    }
+  }
+
 
   userList: BankGetUsersVMDetails[] | null = null;
   filterTable: string = '';
@@ -33,7 +68,9 @@ export class UserListComponent implements OnInit {
 
   constructor(private httpClient: HttpClient, private route: ActivatedRoute) { }
   ngOnInit(): void {
-
+    this.getUsers();
+  }
+  getUsers() {
     this.route.queryParams.subscribe((params) => {
       this.bankId = params['bankId'];
 
@@ -48,8 +85,8 @@ export class UserListComponent implements OnInit {
         console.error('Error fetching data:', error);
       }
     );
-  }
 
+  }
   showActualValue(event: MouseEvent, value: string): void {
     this.hoveredValue = value;
   }
@@ -66,12 +103,13 @@ export class UserListComponent implements OnInit {
       return this.userList;
     }
     const searchText = this.filterTable.toLowerCase();
+
+
     return this.userList.filter(user => {
-      const fullName = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`;
-      return user.firstName.toLowerCase().includes(searchText) ||
-        user.lastName.toLowerCase().includes(searchText) ||
-        fullName.includes(searchText) ||
-        user.cardNumber.toString().includes(searchText)
+      return `
+${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(searchText) || `${user.lastName.toLowerCase()} ${user.firstName.toLowerCase()}`.includes(searchText)
+        || user.cardNumber.toString().includes(searchText);
     });
   }
+
 }
