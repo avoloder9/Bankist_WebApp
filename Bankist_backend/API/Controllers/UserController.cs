@@ -100,7 +100,7 @@ namespace API.Controllers
                 password = request.password,
                 phone = request.phone,
                 birthDate = request.birthDate,
-                registrationDate = DateTime.Now
+                registrationDate = DateTime.Now                
             };
 
             _dbContext.User.Add(user);

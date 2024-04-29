@@ -18,7 +18,7 @@
     <tbody>
         <tr *ngFor="let transaction of filteredTransactions">
             <td>{{ transaction.transactionDate | date: 'dd-MM-yyyy' }}</td>
-            <td>{{ transaction.amount }} {{transaction.senderCard.currency.currencyCode}}</td>
+            <td>{{ transaction.amount.toFixed(2) }} {{transaction.senderCard.currency.currencyCode}}</td>
             <td>{{ transaction.type }}</td>
             <td>{{ transaction.status }}</td>
             <td>{{ transaction.senderCardId }}</td>
