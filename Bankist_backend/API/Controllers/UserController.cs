@@ -29,6 +29,11 @@ namespace API.Controllers
         [HttpGet("get")]
         public async Task<ActionResult<UserGetAllVM>> GetAllUsers()
         {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
             var users = await _dbContext.User.OrderByDescending(x => x.id)
                 .Select(x => new UserGetAllVMUser
                 {
@@ -95,7 +100,7 @@ namespace API.Controllers
                 password = request.password,
                 phone = request.phone,
                 birthDate = request.birthDate,
-                registrationDate = DateTime.Now
+                registrationDate = DateTime.Now                
             };
 
             _dbContext.User.Add(user);

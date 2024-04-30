@@ -2,6 +2,7 @@
 using API.Data.Models;
 using API.Helper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace API.Controllers
 {
@@ -25,6 +26,8 @@ namespace API.Controllers
             data.Add("cardTypes", _dbContext.CardType.Count());
             data.Add("Cards", _dbContext.Card.Count());
             data.Add("BankUserCard", _dbContext.BankUserCard.Count());
+            data.Add("Transaction", _dbContext.Transaction.Count());
+
             return Ok(data);
         }
         [HttpPost]
@@ -36,6 +39,7 @@ namespace API.Controllers
             var cardTypes = new List<CardType>();
             var cards = new List<Card>();
             var bankUserCard = new List<BanksUsersCards>();
+            var transactions = new List<Transaction>();
 
             banks.Add(new Bank { username = "Unicredit", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
             banks.Add(new Bank { username = "Raiffeisen", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
@@ -47,7 +51,10 @@ namespace API.Controllers
             banks.Add(new Bank { username = "BBI", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
             banks.Add(new Bank { username = "Sanpaolo", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
 
-            Random rnd = new Random();
+            users.Add(new User { firstName = "Adnan", lastName = "Voloder", email = "adnanvoloder@gmail.com", phone = "061312132", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "adnanv1", password = "Adnan123!" });
+            users.Add(new User { firstName = "Faris", lastName = "Dizdarevic", email = "farisdiz@gmail.com", phone = "061341232", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "farisDiz1", password = "Faris123!" });
+
+            Random random = new Random();
 
             for (int i = 0; i < 100; i++)
             {
@@ -70,14 +77,60 @@ namespace API.Controllers
 
             cardTypes.Add(new CardType { CardTypeId = "DEBIT", fees = 2, maxLimit = 100000 });
             cardTypes.Add(new CardType { CardTypeId = "CREDIT", fees = 2, maxLimit = 100000 });
+            
+            int startingCardNumber = 111111;
+            for (int i = 0; i < 100; i++)
+            {
+                CardType randomCardType = cardTypes[random.Next(cardTypes.Count)];
+                Currency randomCurrency = currencies[random.Next(currencies.Count)];
 
-            cards.Add(new Card { cardNumber = 111111, issueDate = new DateTime(2023, 1, 1), expirationDate = new DateTime(2024, 1, 1), amount = 1000.45f, cardType = cardTypes[0], currency = currencies[0] });
-            cards.Add(new Card { cardNumber = 111112, issueDate = new DateTime(2023, 1, 1), expirationDate = new DateTime(2024, 1, 1), amount = 1000.45f, cardType = cardTypes[1], currency = currencies[1] });
+                int cardNumber = startingCardNumber + i;
 
-            bankUserCard.Add(new BanksUsersCards { user = users[0], bank = banks[0], card = cards[0], accountIssueDate = cards[0].issueDate });
-            bankUserCard.Add(new BanksUsersCards { user = users[0], bank = banks[1], card = cards[1], accountIssueDate = cards[1].issueDate });
-            bankUserCard.Add(new BanksUsersCards { user = users[1], bank = banks[1], card = cards[1], accountIssueDate = cards[1].issueDate });
+                DateTime issueDate = DateTime.Now.AddDays(-random.Next(1, 365));
+                DateTime expirationDate = issueDate.AddYears(1);
 
+                float amount = (float)random.NextDouble() * 1000;
+
+                var card = new Card
+                {
+                    cardNumber = cardNumber,
+                    issueDate = issueDate,
+                    expirationDate = expirationDate,
+                    amount = amount,
+                    cardType = randomCardType,
+                    currency = randomCurrency
+                };
+                cards.Add(card);
+            }
+
+            foreach (var card in cards)
+            {
+                var randomUser = users[random.Next(users.Count)];
+                var randomBank = banks[random.Next(banks.Count)];
+
+                bankUserCard.Add(new BanksUsersCards { user = randomUser, bank = randomBank, card = card, accountIssueDate = card.issueDate });
+            }
+
+            for (int i = 0; i < 100; i++)
+            {
+                var senderCard = cards[random.Next(cards.Count)];
+                var receiverCard = cards[random.Next(cards.Count)];
+
+                while (senderCard.cardNumber == receiverCard.cardNumber)
+                {
+                    receiverCard = cards[random.Next(cards.Count)];
+                }
+
+                transactions.Add(new Transaction
+                {
+                    transactionDate = DateTime.Now,
+                    amount = (float)random.NextDouble() * 1000,
+                    type = TokenGenerator.GeneratePurpose(),
+                    status = "Completed",
+                    senderCard = senderCard,
+                    recieverCard = receiverCard
+                });
+            }
 
             _dbContext.AddRange(users);
             _dbContext.AddRange(banks);
@@ -85,7 +138,7 @@ namespace API.Controllers
             _dbContext.AddRange(cardTypes);
             _dbContext.AddRange(cards);
             _dbContext.AddRange(bankUserCard);
-
+            _dbContext.AddRange(transactions);
             _dbContext.SaveChanges();
             return Count();
         }

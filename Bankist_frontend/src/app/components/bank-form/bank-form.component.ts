@@ -49,14 +49,14 @@ export class BankFormComponent {
       type: this.selectedCard,
       currency: this.selectedCurrency,
     };
-    const headers = new HttpHeaders({
+    /*const headers = new HttpHeaders({
       Token: localStorage.getItem('token') ?? '',
-    });
+    });*/
     this.httpClient
       .post<any>(
         `${MyConfig.serverAddress}/Bank/new-account`,
-        newBankAccount,
-        { headers: headers }
+        newBankAccount/*,
+        { headers: headers }*/
       )
       .subscribe({
         next: (response: any) => {

@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
 import { ActivatedRoute } from '@angular/router';
+import { SignalRService } from 'src/app/services/signalR.service';
 
 interface Transaction {
   transactionId: number;
@@ -24,60 +25,72 @@ interface Bank {
 })
 
 export class UserTransactionListComponent implements OnInit {
+
   banks: Bank[] = [];
   transactions: Transaction[] | null = null;
   bankName: string | null = null;
   cardInfo: any;
   today: Date = new Date();
 
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute) { }
+  constructor(private httpClient: HttpClient, private route: ActivatedRoute, private signalRService: SignalRService) {
+
+    this.signalRService.reloadTransactions.subscribe(() => {
+      this.loadTransactions();
+    });
+  }
   ngOnInit(): void {
 
-    const headers = this.getHeaders();
+    /*const headers = this.getHeaders();
     console.log(headers);
-    this.route.params.subscribe((params) => {
-      this.bankName = params['bankName'];
-      if (this.bankName) {
-        this.getCardInfo();
+    */this.route.params.subscribe((params) => {
+    this.bankName = params['bankName'];
+    if (this.bankName) {
 
-        this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`, { headers: headers })
-          .subscribe(
-            (data) => {
+      this.loadTransactions();
+    }
+  });
 
-              this.transactions = data.map(transaction => {
-                if (transaction.senderCardId === this.cardInfo.cardNumber) {
-                  transaction.amount = -Math.abs(transaction.amount);
-                }
-                return transaction;
-              });
-              console.log(this.transactions);
-            },
-            (error) => {
-              console.error('Error fetching data:', error);
+  }
+  loadTransactions() {
+
+    this.getCardInfo();
+
+    this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`,/* { headers: headers }*/)
+      .subscribe(
+        (data) => {
+
+          this.transactions = data.map(transaction => {
+            if (transaction.senderCardId === this.cardInfo.cardNumber) {
+              transaction.amount = -Math.abs(transaction.amount);
             }
-          );
+            return transaction;
+          });
+          console.log(this.transactions);
+        },
+        (error) => {
+          console.error('Error fetching data:', error);
+        }
+      );
 
-      }
-    });
   }
 
   getCardInfo() {
-    const headers = this.getHeaders();
-    this.httpClient.get<any>(`${MyConfig.serverAddress}/Card/card-info?bankName=${this.bankName}`, { headers: headers })
+    /*const headers = this.getHeaders();*/
+    this.httpClient.get<any>(`${MyConfig.serverAddress}/Card/card-info?bankName=${this.bankName}`, /*{ headers: headers }*/)
       .subscribe(data => {
         this.cardInfo = data;
       }, error => {
         console.log('Error fetching data:', error);
       });
   }
-  getHeaders(): HttpHeaders {
+  /*getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') ?? '';
 
     const headers = new HttpHeaders({
       Token: token
     });
     return headers;
-  }
+  }*/
 }
 
 

@@ -7,24 +7,30 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
 using API.Helper.Auth;
+using Microsoft.AspNetCore.SignalR;
+using API.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-  
+
     public class TransactionController : ControllerBase
     {
 
         private readonly ApplicationDbContext _dbContext;
         private readonly MyAuthService _authService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public TransactionController(ApplicationDbContext dbContext, MyAuthService authService, IHttpContextAccessor httpContextAccessor)
+        private readonly IHubContext<SignalRHub> _hubContext;
+        private readonly IMemoryCache _cache;
+        public TransactionController(ApplicationDbContext dbContext, MyAuthService authService, IHttpContextAccessor httpContextAccessor, IHubContext<SignalRHub> hubContext, IMemoryCache cache)
         {
             _dbContext = dbContext;
             _authService = authService;
             _httpContextAccessor = httpContextAccessor;
+            _hubContext = hubContext;
+            _cache = cache;
         }
 
         [HttpGet("user-transaction")]
@@ -67,7 +73,7 @@ namespace API.Controllers
                .OrderBy(t => t.transactionId)
                .ToList();
 
-               
+
                 return Ok(transactions);
             }
             catch (Exception ex)
@@ -82,7 +88,7 @@ namespace API.Controllers
         {
             try
             {
-                var transactions = _dbContext.Transaction
+                var transactions = _dbContext.Transaction.Include(x => x.senderCard).ThenInclude(x => x.currency).Include(x => x.recieverCard).ThenInclude(x => x.currency)
                     .Where(t => _dbContext.BankUserCard
                                     .Where(buc => buc.bankId == bankId)
                                     .Select(buc => buc.cardId)
@@ -91,6 +97,7 @@ namespace API.Controllers
                                     .Where(buc => buc.bankId == bankId)
                                     .Select(buc => buc.cardId)
                                     .Contains(t.recieverCardId))
+
                     .OrderByDescending(t => t.transactionDate)
                     .ToList();
 
@@ -130,6 +137,7 @@ namespace API.Controllers
                 senderCard.amount -= request.amount;
                 receiverCard.amount += request.amount;
 
+
                 transactionRecord = new Transaction
                 {
                     transactionDate = DateTime.UtcNow,
@@ -141,13 +149,26 @@ namespace API.Controllers
                 };
 
                 _dbContext.Transaction.Add(transactionRecord);
-                
+
                 await _dbContext.SaveChangesAsync();
 
                 await Task.Delay(TimeSpan.FromSeconds(3));
                 transactionRecord.status = "Completed";
                 await _dbContext.SaveChangesAsync();
                 transaction.Commit();
+
+                var bankUserCard = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == receiverCard.cardNumber);
+                var receiverUser = await _dbContext.User.FirstOrDefaultAsync(u => u.id == bankUserCard.userId);
+                
+                var connectionId = _cache.Get<string>($"ConnectionId_{receiverUser.id}");
+
+                if (string.IsNullOrEmpty(connectionId))
+                {
+                    return BadRequest("Receiver user connection not found");
+                }
+
+                await _hubContext.Clients.Client(connectionId).SendAsync("message", "You received money: " + transactionRecord.amount);
+
             }
             catch (Exception ex)
             {
@@ -160,7 +181,6 @@ namespace API.Controllers
             });
 
         }
-
 
     }
 }

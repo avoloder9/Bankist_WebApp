@@ -100,6 +100,7 @@ namespace API.Controllers
 
             var response = bankUsers.Select(buc => new BankGetUsersVMDetails
             {
+                Id= buc.user.id,
                 FirstName = buc.user.firstName,
                 LastName = buc.user.lastName,
                 Email = buc.user.email,
@@ -205,7 +206,52 @@ namespace API.Controllers
 
             return StatusCode(503);
         }
+        [HttpDelete("delete-account")]
+        public ActionResult CloseUserAccount(int userId, int bankId, string reason)
+        {
+            var user = _dbContext.User.FirstOrDefault(x => x.id == userId);
 
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var userCard = _dbContext.BankUserCard.FirstOrDefault(x => x.userId == userId && x.bankId == bankId);
+
+            if (userCard == null)
+            {
+                return NotFound("User's card in this bank not found.");
+            }
+
+            try
+            {
+                var deletedUser = new DeletedUser
+                {
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    email = user.email,
+                    phone = user.phone,
+                    birthDate = user.birthDate,
+                    registrationDate = user.registrationDate,
+                    reason = reason,
+                    password= user.password,
+                    username= user.username,
+                    deletionDate=DateTime.Now
+                };
+                _dbContext.DeletedUser.Add(deletedUser);
+
+                _dbContext.BankUserCard.Remove(userCard);
+
+                _dbContext.SaveChanges();
+
+                return Ok("User's account has been successfully closed in the selected bank.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while closing user's account: {ex.Message}");
+            }
+
+        }
 
 
     }

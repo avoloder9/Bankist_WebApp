@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { SignalRService } from './services/signalR.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   buttonDisabled: boolean = false;
-  constructor(private dialogRef: MatDialog, private router: Router) {}
+  constructor(private dialogRef: MatDialog, private router: Router, private SignalRService: SignalRService) { }
+  ngOnInit(): void {
+    this.SignalRService.open_ws_connection();
+  }
+
   openDialog() {
     if (!this.buttonDisabled) {
       this.buttonDisabled = true;

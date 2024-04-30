@@ -10,7 +10,7 @@ namespace API.Endpoints.TransactionEndpoints.Execute
         public string type { get; set; }
 
         public int senderCardId { get; set; }
-        
+
         public int recieverCardId { get; set; }
-        }
+    }
 }

@@ -29,9 +29,8 @@ namespace API.Helper
             Random random = new Random();
 
             int numberOfDigits = random.Next(9, 11);
-
-            string phoneNumber = "";
-            for (int i = 0; i < numberOfDigits; i++)
+            string phoneNumber = "0"; 
+            for (int i = 1; i < numberOfDigits; i++)
             {
                 phoneNumber += random.Next(0, 10);
             }
@@ -142,5 +141,14 @@ namespace API.Helper
             var s = result.ToString();
             return "S" + result;
         }
+
+        public static string GeneratePurpose()
+        {
+            string[] purposes = { "Purchase", "Bills", "Bill Payment", "Money Transfer", "Donation", "Other" };
+            var random = new Random();
+            return purposes[random.Next(purposes.Length)];
+        }
+
     }
+    
 }
