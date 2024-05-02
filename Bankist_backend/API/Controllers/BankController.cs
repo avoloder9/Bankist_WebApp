@@ -34,6 +34,11 @@ namespace API.Controllers
         [HttpGet("get")]
         public async Task<ActionResult<BankGetAllVM>> GetBanks()
         {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
             var banks = await _dbContext.Bank
                 .OrderByDescending(x => x.id)
                 .Select(x => new BankGetAllVMBank()
@@ -92,6 +97,11 @@ namespace API.Controllers
         [HttpGet("get-bank-users")]
         public async Task<ActionResult<BankGetUsersVM>> GetBankUsers([FromQuery] BankUserVM request)
         {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
             var bankUsers = await _dbContext.BankUserCard
                    .Include(buc => buc.user)
                    .Include(buc => buc.card)
@@ -100,7 +110,7 @@ namespace API.Controllers
 
             var response = bankUsers.Select(buc => new BankGetUsersVMDetails
             {
-                Id= buc.user.id,
+                Id = buc.user.id,
                 FirstName = buc.user.firstName,
                 LastName = buc.user.lastName,
                 Email = buc.user.email,
@@ -209,6 +219,12 @@ namespace API.Controllers
         [HttpDelete("delete-account")]
         public ActionResult CloseUserAccount(int userId, int bankId, string reason)
         {
+
+            if (!_authService.IsLogin() && _authService.isBank())
+            {
+                return Unauthorized();
+            }
+
             var user = _dbContext.User.FirstOrDefault(x => x.id == userId);
 
             if (user == null)
@@ -234,9 +250,9 @@ namespace API.Controllers
                     birthDate = user.birthDate,
                     registrationDate = user.registrationDate,
                     reason = reason,
-                    password= user.password,
-                    username= user.username,
-                    deletionDate=DateTime.Now
+                    password = user.password,
+                    username = user.username,
+                    deletionDate = DateTime.Now
                 };
                 _dbContext.DeletedUser.Add(deletedUser);
 
