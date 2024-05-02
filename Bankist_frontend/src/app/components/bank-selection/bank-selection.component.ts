@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
 import { LoaderComponent } from '../loader/loader.component';
 
@@ -18,13 +18,19 @@ interface Bank {
 export class BankSelectionComponent implements OnInit {
   banks: Bank[] = [];
   isLoading: Boolean = false;
+  username: any;
 
-  constructor(private router: Router, private httpClient: HttpClient) { }
+  constructor(private router: Router, private httpClient: HttpClient, private route: ActivatedRoute) { }
 
   onImageClick(bankName: string) {
-    this.router.navigate(['/userTransactionList', bankName]);
+    this.router.navigate(['/userTransactionList', bankName, { username: this.username }]);
   }
   ngOnInit() {
+
+    this.route.params.subscribe((params) => {
+      this.username = params['username'];
+    });
+
     this.isLoading = true;
     /*const headers = new HttpHeaders({
       Token: localStorage.getItem('token') ?? '',
@@ -54,6 +60,6 @@ export class BankSelectionComponent implements OnInit {
     this.isLoading = false;
   }
   addNewBank() {
-    this.router.navigate(['/new-bank']);
+    this.router.navigate(['/new-bank', { username: this.username }]);
   }
 }

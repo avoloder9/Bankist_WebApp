@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MyConfig } from 'src/app/myConfig';
 import { LoaderComponent } from '../loader/loader.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface BankOption {
   name: string;
@@ -20,8 +20,14 @@ interface BankAccountVM {
   templateUrl: './bank-form.component.html',
   styleUrls: ['./bank-form.component.scss'],
 })
-export class BankFormComponent {
-  constructor(private router: Router, private httpClient: HttpClient) { }
+export class BankFormComponent implements OnInit {
+  username: any;
+  constructor(private router: Router, private httpClient: HttpClient, private route: ActivatedRoute) { }
+  ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      this.username = params['username'];
+    });
+  }
 
   @Output() event = new EventEmitter<string>();
   @Output() refresh = new EventEmitter<string>();
@@ -74,6 +80,6 @@ export class BankFormComponent {
       });
   }
   return() {
-    this.router.navigate(['/bank-selection']);
+    this.router.navigate(['/bank-selection', { username: this.username }]);
   }
 }

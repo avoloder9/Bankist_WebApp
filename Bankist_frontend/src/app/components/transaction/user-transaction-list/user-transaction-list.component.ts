@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SignalRService } from 'src/app/services/signalR.service';
 
 interface Transaction {
@@ -26,13 +26,16 @@ interface Bank {
 
 export class UserTransactionListComponent implements OnInit {
 
+  isDeleteDiv: boolean = false;
+  deleteReason: string = '';
+  isAccountDeleted: boolean = false;
   banks: Bank[] = [];
   transactions: Transaction[] | null = null;
   bankName: string | null = null;
   cardInfo: any;
   today: Date = new Date();
-
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute, private signalRService: SignalRService) {
+  username: any;
+  constructor(private httpClient: HttpClient, private route: ActivatedRoute, private signalRService: SignalRService, private router: Router) {
 
     this.signalRService.reloadTransactions.subscribe(() => {
       this.loadTransactions();
@@ -48,6 +51,7 @@ export class UserTransactionListComponent implements OnInit {
 
       this.loadTransactions();
     }
+    this.username = params['username'];
   });
 
   }
@@ -85,12 +89,42 @@ export class UserTransactionListComponent implements OnInit {
   }
   /*getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') ?? '';
-
+    
     const headers = new HttpHeaders({
       Token: token
     });
     return headers;
   }*/
+
+
+  closeAccount() {
+
+
+    this.httpClient.delete(`${MyConfig.serverAddress}/User/close-account?username=${this.username}&bankName=${this.bankName}&reason=${this.deleteReason}`,
+      { responseType: 'text' }).subscribe(() => {
+        this.cancelDelete();
+        this.isAccountDeleted = true;
+        setTimeout(() => {
+          this.isAccountDeleted = false;
+          this.router.navigate(['/bank-selection', { username: this.username }]);
+        }, 2000);
+
+      },
+        (error) => {
+          console.error("Error deleting user", error);
+        });
+  }
+
+  cancelDelete() {
+    this.isDeleteDiv = false;
+    this.deleteReason = '';
+  }
+
+  showDiv() {
+    this.isDeleteDiv = true;
+  }
+
+
 }
 
 
