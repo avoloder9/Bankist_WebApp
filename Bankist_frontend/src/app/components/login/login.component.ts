@@ -70,7 +70,7 @@ export class LoginComponent {
               this.isSending = false;
               this.store.dispatch(login());
               this.loginForm.reset();
-              this.router.navigate(['/bank-selection']);
+              this.router.navigate(['/bank-selection', { username: loginrequest.username }]);
             },
 
             error: (error) => {

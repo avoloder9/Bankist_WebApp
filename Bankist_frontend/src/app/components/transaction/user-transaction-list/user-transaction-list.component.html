@@ -38,8 +38,9 @@
     <div class="option">
         <button class="transfer" [routerLink]="['/transaction', cardInfo?.cardNumber]"> Transfer Money </button>
         <button class="loan"> Loan </button>
-        <button class="close"> Close account </button>
-        <button class="another_card" [routerLink]="['/bank-selection']"> Choose another card </button>
+        <button class="close" (click)="showDiv()"> Close account </button>
+        <button class="another_card" [routerLink]="['/bank-selection',{username:this.username}]"> Choose another card
+        </button>
     </div>
 
     <table id="transactionTable" *ngIf="transactions">
@@ -65,3 +66,22 @@
         </tbody>
     </table>
 </div>
+
+<div class="confirm" *ngIf="isDeleteDiv">
+    <span>Are you sure you want to close account?</span>
+    <div>
+        <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason">
+
+    </div>
+
+    <div class="buttons">
+        <button class="yes" (click)="closeAccount()">CONFIRM</button>
+        <button class="cancel" (click)="cancelDelete()">CANCEL</button>
+    </div>
+</div>
+
+<ng-container *ngIf="isAccountDeleted">
+    <div class="deleteAccount">
+        <p>Bank account successfully closed</p>
+    </div>
+</ng-container>

@@ -110,5 +110,58 @@ namespace API.Controllers
         }
 
 
+        [HttpDelete("close-account")]
+        public ActionResult CloseAccount(string username, string bankName, string reason)
+        {
+
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
+            var user = _dbContext.User.FirstOrDefault(x => x.username == username);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var userCard = _dbContext.BankUserCard.FirstOrDefault(x => x.user.username == username && x.bank.username == bankName);
+
+            if (userCard == null)
+            {
+                return NotFound("User's card in this bank not found.");
+            }
+
+            try
+            {
+                var deletedUser = new DeletedUser
+                {
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    email = user.email,
+                    phone = user.phone,
+                    birthDate = user.birthDate,
+                    registrationDate = user.registrationDate,
+                    reason = reason,
+                    password = user.password,
+                    username = user.username,
+                    deletionDate = DateTime.Now
+                };
+                _dbContext.DeletedUser.Add(deletedUser);
+
+                _dbContext.BankUserCard.Remove(userCard);
+
+                _dbContext.SaveChanges();
+
+                return Ok("User's account has been successfully closed in the selected bank.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while closing user's account: {ex.Message}");
+            }
+        }
+
+
     }
 }
