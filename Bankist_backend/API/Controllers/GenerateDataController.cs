@@ -79,12 +79,14 @@ namespace API.Controllers
             cardTypes.Add(new CardType { CardTypeId = "CREDIT", fees = 2, maxLimit = 100000 });
             
             int startingCardNumber = 111111;
+            int startingPinNumber = 1111;
             for (int i = 0; i < 100; i++)
             {
                 CardType randomCardType = cardTypes[random.Next(cardTypes.Count)];
                 Currency randomCurrency = currencies[random.Next(currencies.Count)];
 
                 int cardNumber = startingCardNumber + i;
+                int cardPin = startingPinNumber + i;
 
                 DateTime issueDate = DateTime.Now.AddDays(-random.Next(1, 365));
                 DateTime expirationDate = issueDate.AddYears(1);
@@ -98,7 +100,8 @@ namespace API.Controllers
                     expirationDate = expirationDate,
                     amount = amount,
                     cardType = randomCardType,
-                    currency = randomCurrency
+                    currency = randomCurrency,
+                    pin = cardPin
                 };
                 cards.Add(card);
             }

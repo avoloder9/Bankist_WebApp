@@ -1,5 +1,6 @@
 ﻿using API.Data;
 using API.Data.Models;
+using API.Endpoints.AuthEndpoints.Login;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -14,6 +15,34 @@ namespace API.Helper.Services
         {
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<MyAuthInfo> Login(AuthLoginVM request)
+        {
+            var loggedInAccount = await _dbContext.Account.FirstOrDefaultAsync(u => u.username == request.username);
+
+            if (loggedInAccount == null)
+            {
+                throw new UnauthorizedAccessException("Username not found.");
+            }
+
+            if (loggedInAccount.password != request.password)
+            {
+                throw new UnauthorizedAccessException("Incorrect password.");
+            }
+
+            string randomString = TokenGenerator.Generate(10);
+            var newToken = new AutentificationToken()
+            {
+                value = randomString,
+                ipAddress = "YourIPAddress",  // Modify this part as needed
+                account = loggedInAccount,
+                autentificationTimestamp = DateTime.Now
+            };
+            _dbContext.Add(newToken);
+            await _dbContext.SaveChangesAsync();
+
+            return new MyAuthInfo(newToken);
         }
 
         public bool IsLogin()

@@ -11,6 +11,8 @@ namespace API.Data.Models
         public DateTime expirationDate { get; set; }
         public DateTime issueDate { get; set; }
         public float amount { get; set; }
+        [Required]
+        public int pin {  get; set; }
 
         public string cardTypeId {  get; set; }
         [ForeignKey(nameof(cardTypeId))]

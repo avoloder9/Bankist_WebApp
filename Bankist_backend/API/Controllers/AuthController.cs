@@ -18,7 +18,7 @@ namespace API.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly MyAuthService _authService;
-       private readonly IHubContext<SignalRHub> _hubContext;
+        private readonly IHubContext<SignalRHub> _hubContext;
         private readonly IMemoryCache _cache;
         public AuthController(ApplicationDbContext dbContext, IHubContext<SignalRHub> hubContext, MyAuthService authService, IMemoryCache cache)
         {
@@ -31,32 +31,15 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<MyAuthInfo>> Login([FromBody] AuthLoginVM request)
         {
-            Account loggedInAccount = await _dbContext.Account.FirstOrDefaultAsync(u => u.username == request.username);
-
-            if (loggedInAccount == null)
-            {                
-                return NotFound("Username not found.");
-            }
-                       
-            if (loggedInAccount.password != request.password)
-            {                
-                return Unauthorized("Incorrect password.");
-            }
-
-            string randomString = TokenGenerator.Generate(10);
-            var newToken = new AutentificationToken()
+            try
             {
-                value = randomString,
-                ipAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString(),
-                account = loggedInAccount,
-                autentificationTimestamp = DateTime.Now
-            };
-            _dbContext.Add(newToken);
-            await _dbContext.SaveChangesAsync();
-
-            _cache.Set($"ConnectionId_{loggedInAccount.id}", request.SignalRConnectionID);
-
-            return Ok(new MyAuthInfo(newToken));
+                var authInfo = await _authService.Login(request);
+                return Ok(authInfo);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpPost("get")]
