@@ -81,31 +81,31 @@ namespace API.Controllers
         }
 
 
-        [HttpPost("check-card")]
+        [HttpGet("check-card")]
         public ActionResult CheckCardNumber([FromQuery] string cardNumber)
         {
             if (string.IsNullOrWhiteSpace(cardNumber))
             {
-                return BadRequest("Card number is required.");
+                return BadRequest(new { message = "Card number is required." });
             }
 
             if (!long.TryParse(cardNumber, out long cardNumberAsLong))
             {
-                return BadRequest("Invalid card number.");
+                return BadRequest(new { message = "Invalid card number." });
             }
 
             var card = _dbContext.Card.FirstOrDefault(card => card.cardNumber == cardNumberAsLong);
 
             if (card == null)
             {
-                return NotFound("Card not found.");
+                return NotFound(new { message = "Card not found." });
             }
 
-            return Ok("Card exists");
+            return Ok(new { message = "Card exists" });
         }
 
         [HttpPost("authenticate-card-owner")]
-        public async Task<ActionResult<CardAuthResponse>> AuthenticateCardOwner([FromQuery] CardPinVM cardPin)
+        public async Task<ActionResult<CardAuthResponse>> AuthenticateCardOwner(CardPinVM cardPin)
         {
             if (cardPin == null)
             {
@@ -121,7 +121,7 @@ namespace API.Controllers
 
             if (card.pin != cardPin.pin)
             {
-                return BadRequest("Incorrect pin");
+                return BadRequest(new { message = "Incorrect pin" });
             }
 
             var bankUserCard = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == card.cardNumber);
@@ -160,22 +160,22 @@ namespace API.Controllers
 
             if (string.IsNullOrWhiteSpace(cardNumber))
             {
-                return BadRequest("Card number is required.");
+                return BadRequest(new { message = "Card number is required." });
             }
 
             if (!long.TryParse(cardNumber, out long cardNumberAsLong))
             {
-                return BadRequest("Invalid card number.");
+                return BadRequest(new { message = "Invalid card number." });
             }
 
             var card = _dbContext.Card.FirstOrDefault(card => card.cardNumber == cardNumberAsLong);
 
             if (card == null)
             {
-                return NotFound("Card not found.");
+                return NotFound(new { message = "Card not found." });
             }
 
-            return Ok(card.amount);
+            return Ok(new { amount = card.amount });
         }
     }
 }

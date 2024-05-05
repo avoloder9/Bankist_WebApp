@@ -2,69 +2,69 @@
   <div class="atm">
     <div class="heading">
       <div class="screen">
-        <div class="stage1" *ngIf="true">
+        <div class="stage1" *ngIf="stage1">
           <p id="title">Welcome to Bankist ATM!</p>
           <img src="../../../assets/logo.png" alt="" />
           <p>Please insert your card number to proceed</p>
         </div>
-        <div class="stage2" *ngIf="false">
+        <div class="stage2" *ngIf="stage2">
           <p>Please insert your pin!</p>
           <img src="../../../assets/logo.png" alt="" />
-          <input
-            type="password"
-            name="pin"
-            placeholder="0000"
-            (input)="formatPin($event)"
-            [value]="pin"
-            maxlength="4"
-            autocomplete="off"
-          />
+          <form>
+            <input
+              type="password"
+              name="pin"
+              placeholder="0000"
+              [value]="pin"
+              maxlength="4"
+              autocomplete="off"
+            />
+          </form>
         </div>
-        <div class="stage3" *ngIf="false">
+        <div class="stage3" *ngIf="stage3">
           <p>Select an option!</p>
-          <button>Check balance</button>
-          <button>Deposit</button>
-          <button>Withdrawal</button>
+          <button (click)="showBalance()">Check balance</button>
+          <button (click)="showDeposit()">Deposit</button>
+          <button (click)="showWithdrawal()">Withdrawal</button>
         </div>
-        <div class="stageBalanceCheck" *ngIf="false">
-          <p>Your balance is?</p>
+        <div class="stageBalanceCheck" *ngIf="stageBalanceCheck">
+          <p>Your balance is</p>
+          <p>{{ balance }}</p>
+          <button (click)="return()">Return</button>
         </div>
-        <div class="stageDeposit" *ngIf="false">
+        <div class="stageDeposit" *ngIf="stageDeposit">
           <p>How much would you like to deposit?</p>
           <input
-            type="number"
-            name="cardNumber"
+            type="text"
+            name="depositAmount"
             placeholder="0.00"
             [value]="depositAmount"
             maxlength="10"
             autocomplete="off"
           />
         </div>
-        <div class="stageDeposit" *ngIf="false">
-          <p>How much would you like to deposit?</p>
-          <input
-            type="number"
-            name="cardNumber"
-            placeholder="0.00"
-            [value]="depositAmount"
-            maxlength="10"
-            autocomplete="off"
-          />
-        </div>
-        <div class="stageWithdrawal" *ngIf="false">
+        <div class="stageWithdrawal" *ngIf="stageWithdrawal">
           <p>How much would you like to withdraw?</p>
           <input
-            type="number"
-            name="cardNumber"
+            type="text"
+            name="withdrawalAmount"
             placeholder="0.00"
             [value]="withdrawalAmount"
             maxlength="10"
             autocomplete="off"
           />
         </div>
-        <div class="stage1" *ngIf="false">
+        <div class="stage1" *ngIf="stageThank">
+          <p>Operation successful!</p>
           <p id="title">Thank you for using Bankist ATM!</p>
           <img src="../../../assets/logo.png" alt="" />
+        </div>
+        <div class="stage1" *ngIf="stageError">
+          <p id="title">{{ errorMessage }}</p>
+          <img src="../../../assets/logo.png" alt="" />
+        </div>
+        <div class="visualization" *ngIf="stageTransaction">
+          <app-visualization [type]="transactionType"></app-visualization>
         </div>
       </div>
       <div class="card-input">
@@ -72,21 +72,28 @@
         <input
           type="text"
           name="cardNumber"
-          placeholder="0000 0000 0000 0000"
-          (input)="formatCardNumber($event)"
+          placeholder="00 00 00"
           [value]="cardNumber"
           maxlength="19"
           autocomplete="off"
         />
-        <button>Proceed</button>
+        <button (click)="checkCard()">Proceed</button>
       </div>
     </div>
     <div class="inputs">
       <div class="numbers-grid">
-        <div *ngFor="let n of inputs" class="input">{{ n }}</div>
+        <div *ngFor="let n of inputs" class="input" (click)="inputNumber(n)">
+          {{ n }}
+        </div>
       </div>
       <div class="specials">
-        <div *ngFor="let n of specials" class="input">{{ n }}</div>
+        <div
+          *ngFor="let n of specials"
+          class="input"
+          (click)="handleSpecial(n)"
+        >
+          {{ n }}
+        </div>
       </div>
     </div>
     <img src="../../../assets/logo.png" alt="" id="main-logo" />
