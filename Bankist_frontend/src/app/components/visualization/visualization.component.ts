@@ -1,12 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
 import * as PIXI from 'pixi.js';
 import { gsap } from 'gsap';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
@@ -17,16 +9,17 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
   styleUrls: ['./visualization.component.scss'],
 })
 export class VisualizationComponent implements OnInit {
-  @ViewChild('pixiCanvas', { static: true }) pixiCanvas: ElementRef;
+  @ViewChild('pixiCanvas', { static: true })
+  pixiCanvas!: ElementRef<HTMLCanvasElement>;
   @Input() type: string = '';
   sprite1: any;
   sprite2: any;
   cash: any;
-  @Output() animationComplete: EventEmitter<void> = new EventEmitter<void>();
-
   app: PIXI.Application;
 
   ngOnInit(): void {
+    const canvas = this.pixiCanvas.nativeElement;
+    const parent = canvas.parentElement as HTMLElement;
     this.app = new PIXI.Application({
       view: this.pixiCanvas.nativeElement,
       width: window.innerWidth / 2,
@@ -111,9 +104,8 @@ export class VisualizationComponent implements OnInit {
         path: path,
         align: 'self',
       },
-      onComplete: () => {
-        this.animationComplete.emit();
-      },
+      repeat: -1,
+      yoyo: false,
     });
   }
 }

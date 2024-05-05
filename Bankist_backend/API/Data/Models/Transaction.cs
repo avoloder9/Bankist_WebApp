@@ -12,9 +12,9 @@ namespace API.Data.Models
         public string type { get; set; }
         public string status { get; set; }
 
-        public int senderCardId { get; set; }
+        public int? senderCardId { get; set; }
         [ForeignKey(nameof(senderCardId))]
-        public Card senderCard { get; set; }
+        public Card? senderCard { get; set; }
 
         public int recieverCardId { get; set; }
         [ForeignKey(nameof(recieverCardId))]

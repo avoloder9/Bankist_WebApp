@@ -15,8 +15,9 @@ export class NavbarComponent {
 
   constructor(
     private store: Store<{ login: { loggedIn: boolean } }>,
-    private router: Router, private httpClient: HttpClient
-  ) { }
+    private router: Router,
+    private httpClient: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.store.select('login').subscribe((data) => {
@@ -25,14 +26,13 @@ export class NavbarComponent {
   }
 
   logout() {
-
-
-    this.httpClient.post(`${MyConfig.serverAddress}/Auth/logout`, {
-      signalRConnection: SignalRService.ConnectionId
-
-    }).subscribe(() => {
-      console.log("logout");
-    })
+    this.httpClient
+      .post(`${MyConfig.serverAddress}/Auth/logout`, {
+        signalRConnection: SignalRService.ConnectionId,
+      })
+      .subscribe(() => {
+        console.log('logout');
+      });
     localStorage.removeItem('token');
     this.router.navigate(['/']);
     this.store.dispatch(logout());

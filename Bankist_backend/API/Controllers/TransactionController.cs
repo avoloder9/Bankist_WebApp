@@ -10,6 +10,7 @@ using API.Helper.Auth;
 using Microsoft.AspNetCore.SignalR;
 using API.SignalR;
 using Microsoft.Extensions.Caching.Memory;
+using API.ViewModels;
 
 namespace API.Controllers
 {
@@ -59,20 +60,17 @@ namespace API.Controllers
                     return BadRequest($"User with ID {user.id} does not have an account in the bank with ID {bankName}.");
                 }
 
+                var userCardIds = _dbContext.BankUserCard
+                                   .Where(buc => buc.userId == user.id && buc.bank.username == bankName)
+                                   .Select(buc => buc.cardId)
+                                   .ToList();
+
                 var transactions = _dbContext.Transaction
-              .Where(t => (_dbContext.BankUserCard
-                              .Where(buc => buc.userId == user.id && buc.bank.username == bankName)
-                              .Select(buc => buc.cardId)
-                              .Contains(t.senderCardId) ||
-                           _dbContext.BankUserCard
-                              .Where(buc => buc.userId == user.id && buc.bank.username == bankName)
-                              .Select(buc => buc.cardId)
-                              .Contains(t.recieverCardId))
-                          )
-
-               .OrderBy(t => t.transactionId)
-               .ToList();
-
+                                   .Where(t =>
+                                       (t.senderCardId.HasValue && userCardIds.Contains(t.senderCardId.Value)) ||
+                                       userCardIds.Contains(t.recieverCardId))
+                                   .OrderBy(t => t.transactionId)
+                                   .ToList();
 
                 return Ok(transactions);
             }
@@ -88,18 +86,20 @@ namespace API.Controllers
         {
             try
             {
-                var transactions = _dbContext.Transaction.Include(x => x.senderCard).ThenInclude(x => x.currency).Include(x => x.recieverCard).ThenInclude(x => x.currency)
-                    .Where(t => _dbContext.BankUserCard
-                                    .Where(buc => buc.bankId == bankId)
-                                    .Select(buc => buc.cardId)
-                                    .Contains(t.senderCardId) ||
-                                _dbContext.BankUserCard
-                                    .Where(buc => buc.bankId == bankId)
-                                    .Select(buc => buc.cardId)
-                                    .Contains(t.recieverCardId))
+                var validCardIds = _dbContext.BankUserCard
+                                              .Where(buc => buc.bankId == bankId)
+                                              .Select(buc => buc.cardId)
+                                              .ToList();
 
-                    .OrderByDescending(t => t.transactionDate)
-                    .ToList();
+                var transactions = _dbContext.Transaction
+                                             .Include(x => x.senderCard)
+                                             .ThenInclude(x => x.currency)
+                                             .Include(x => x.recieverCard)
+                                             .ThenInclude(x => x.currency)
+                                             .Where(t => validCardIds.Contains(t.senderCardId ?? 0) ||
+                                                         validCardIds.Contains(t.recieverCardId))
+                                             .OrderByDescending(t => t.transactionDate)
+                                             .ToList();
 
                 if (!transactions.Any())
                 {
@@ -182,5 +182,55 @@ namespace API.Controllers
 
         }
 
+        [HttpPost("deposit-withdrawal")]
+        public async Task<ActionResult<TransactionExecuteDetailVM>> DepositOrWithdraw([FromBody] DepositWithdrawalVM request)
+        {
+            using var transaction = _dbContext.Database.BeginTransaction();
+            Transaction transactionRecord = null;
+            try
+            {
+                var receiverCard = await _dbContext.Card.Include(c => c.cardType).FirstOrDefaultAsync(c => c.cardNumber == request.recieverCardId);
+
+                if (receiverCard == null)
+                {
+                    return BadRequest(new { message = "Invalid card number" });
+                }
+
+                receiverCard.amount += request.amount;
+
+                if (receiverCard.amount < 0)
+                {
+                    return BadRequest(new { message = "Insufficient funds" });
+                }
+
+                transactionRecord = new Transaction
+                {
+                    transactionDate = DateTime.UtcNow,
+                    amount = Math.Abs(request.amount),
+                    type = request.type,
+                    status = "Pending",
+                    recieverCardId = request.recieverCardId
+                };
+
+                _dbContext.Transaction.Add(transactionRecord);
+                await _dbContext.SaveChangesAsync();
+
+                await Task.Delay(TimeSpan.FromSeconds(3));
+                transactionRecord.status = "Completed";
+                await _dbContext.SaveChangesAsync();
+                transaction.Commit();
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+
+            return Ok(new TransactionExecuteDetailVM
+            {
+                transactionId = transactionRecord?.transactionId ?? 0
+            });
+
+        }
     }
 }

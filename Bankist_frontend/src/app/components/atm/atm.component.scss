@@ -29,6 +29,9 @@
         width: 70%;
         background-color: rgb(247, 247, 247);
         border-radius: 10px;
+        .visualization {
+          height: 100%;
+        }
         .stage1 {
           height: 100%;
           display: flex;
@@ -114,6 +117,28 @@
             appearance: none;
             margin: 0;
           }
+          button {
+            height: 50px;
+            width: 170px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            color: $primaryColor;
+            font-size: 1.1rem;
+            outline: none;
+            background-image: $greenGradient;
+            &:hover {
+              transform: scale(1.1);
+              filter: brightness(1.1);
+            }
+          }
         }
       }
       .card-input {
@@ -132,6 +157,7 @@
           font-size: 1.5rem;
           text-align: center;
           border-radius: 20px;
+          width: 200px;
         }
         button {
           height: 40px;
@@ -169,8 +195,8 @@
         grid-template-columns: repeat(3, 0fr);
         gap: 10px;
         .input {
-          height: 6.8rem;
-          width: 6.8rem;
+          height: 80px;
+          width: 80px;
           background-color: yellow;
           border-radius: 10px;
           display: flex;
@@ -234,9 +260,9 @@
     }
     #main-logo {
       position: absolute;
-      height: 15rem;
-      right: 8rem;
-      bottom: 8rem;
+      height: 200px;
+      right: 100px;
+      bottom: 100px;
     }
   }
 }
