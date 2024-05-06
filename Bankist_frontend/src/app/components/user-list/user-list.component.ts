@@ -26,49 +26,24 @@ interface BankGetUsersVMDetails {
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
+
   isDeleteDiv: boolean = false;
   selectedUserId: any;
   deleteReason: string = '';
   isAccountDeleted: boolean = false;
-
-  cancelDelete() {
-    this.isDeleteDiv = false;
-    this.selectedUserId = null;
-    this.deleteReason = '';
-  }
-  showDeleteDiv(userId: number) {
-    this.isDeleteDiv = true;
-    this.selectedUserId = userId;
-  }
-
-  deleteUser() {
-    if (this.selectedUserId) {
-      this.httpClient.delete(`${MyConfig.serverAddress}/Bank/delete-account?userId=${this.selectedUserId}&bankId=${this.bankId}&reason=${this.deleteReason}`, { responseType: 'text' }).subscribe(() => {
-        this.cancelDelete();
-        this.isAccountDeleted = true;
-        setTimeout(() => {
-          this.isAccountDeleted = false;
-        }, 1000);
-        this.getUsers();
-      },
-        (error) => {
-          console.error("Error deleting user", error);
-        });
-    }
-    else {
-      console.error("Selected userId not found");
-    }
-  }
-
-
+  isBlockDiv: boolean = false;
+  isBlock: boolean = false;
   userList: BankGetUsersVMDetails[] | null = null;
   filterTable: string = '';
   bankId: any;
   hoveredValue: string | null = null;
-
+  blockedCardNumbers: any = [];
+  cardBlocked: boolean = false;
+  showMessage: any;
   constructor(private httpClient: HttpClient, private route: ActivatedRoute) { }
   ngOnInit(): void {
     this.getUsers();
+    this.getBlockedCards();
   }
   getUsers() {
     this.route.queryParams.subscribe((params) => {
@@ -107,9 +82,80 @@ export class UserListComponent implements OnInit {
 
     return this.userList.filter(user => {
       return `
-${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(searchText) || `${user.lastName.toLowerCase()} ${user.firstName.toLowerCase()}`.includes(searchText)
+      ${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(searchText) || `${user.lastName.toLowerCase()} ${user.firstName.toLowerCase()}`.includes(searchText)
         || user.cardNumber.toString().includes(searchText);
     });
   }
+
+  cancelDelete() {
+    this.isDeleteDiv = false;
+    this.selectedUserId = null;
+    this.deleteReason = '';
+  }
+  showDeleteDiv(userId: number) {
+    this.isDeleteDiv = true;
+    this.selectedUserId = userId;
+  }
+
+  deleteUser() {
+    if (this.selectedUserId) {
+      this.httpClient.delete(`${MyConfig.serverAddress}/Bank/delete-account?userId=${this.selectedUserId}&bankId=${this.bankId}&reason=${this.deleteReason}`, { responseType: 'text' }).subscribe(() => {
+        this.cancelDelete();
+        this.isAccountDeleted = true;
+        setTimeout(() => {
+          this.isAccountDeleted = false;
+        }, 1000);
+        this.getUsers();
+      },
+        (error) => {
+          console.error("Error deleting user", error);
+        });
+    }
+    else {
+      console.error("Selected userId not found");
+    }
+  }
+
+
+  showBlockDiv(userId: number) {
+    this.isBlockDiv = true;
+    this.selectedUserId = userId;
+  }
+
+  cancelBlock() {
+    this.isBlockDiv = false;
+  }
+
+  blockCard() {
+    if (this.selectedUserId) {
+      this.httpClient.put(`${MyConfig.serverAddress}/Bank/block-card?userId=${this.selectedUserId}&bankId=${this.bankId}`, {}, { responseType: 'text' }).subscribe(() => {
+        this.cancelBlock();
+        this.isBlock = true;
+        setTimeout(() => {
+          this.isBlock = false;
+        }, 1000);
+        this.getUsers();
+        this.getBlockedCards();
+      },
+        (error) => {
+          console.error("Error blocking card", error);
+        });
+    }
+    else {
+      console.error("Selected userId not found");
+    }
+  }
+
+  getBlockedCards() {
+    return this.httpClient.get(`${MyConfig.serverAddress}/Bank/get-blockedCards?bankId=${this.bankId}`).subscribe((data) => {
+      console.log(data);
+      this.blockedCardNumbers = data;
+    });
+  }
+
+  isCardBlocked(cardNumber: number): boolean {
+    return this.blockedCardNumbers.some((blockedCard: { card: { cardNumber: number } }) => blockedCard.card.cardNumber === cardNumber);
+  }
+
 
 }
