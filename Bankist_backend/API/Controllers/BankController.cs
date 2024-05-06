@@ -290,7 +290,7 @@ namespace API.Controllers
         }
 
 
-        [HttpPut("blockCard")]
+        [HttpPut("block-card")]
         public ActionResult BlockCard(int userId, int bankId)
         {
 
@@ -319,6 +319,13 @@ namespace API.Controllers
             userCard.isBlock = true;
             _dbContext.SaveChanges();
             return Ok("User's card has been successfully blocked.");
+        }
+
+        [HttpGet("get-blockedCards")]
+        public ActionResult GetBlockedCard([FromQuery]int bankId)
+        {
+            var cards = _dbContext.BankUserCard.Where(buc => buc.isBlock == true).Include(x => x.card).Where(buc=>buc.bankId==bankId);
+            return Ok(cards);
         }
     }
 }

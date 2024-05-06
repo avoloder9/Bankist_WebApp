@@ -15,10 +15,11 @@
             <th>Amount</th>
             <th>Registration date</th>
             <th>Delete account</th>
+            <th>Block card</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let user of filteredUsers">
+        <tr *ngFor="let user of filteredUsers" [ngClass]="{ 'blocked-card': isCardBlocked(user.cardNumber)}">
             <td>{{ user.firstName }}</td>
             <td>{{ user.lastName }}</td>
             <td>{{ user.email }}</td>
@@ -45,7 +46,7 @@
             <td style="
               display: flex;
               justify-content: center;
-              align-items: center;
+              align-items: center;              
             ">
                 <svg id="Icons" viewBox="0 0 24 24" height="33px" (click)="showDeleteDiv(user.id)">
                     <path class="cls-1"
@@ -53,9 +54,35 @@
                         fill="red" />
                 </svg>
             </td>
+            <td>
+                <div class="card-container" (mouseenter)="showMessage = isCardBlocked(user.cardNumber)"
+                    (mouseleave)="showMessage = false">
+                    <img src="https://cdn1.iconfinder.com/data/icons/credit-card-action-3/24/credit_card_bank_error-512.png"
+                        alt="Credit card" class="card_photo" (mouseenter)="showMessage = isCardBlocked(user.cardNumber)"
+                        (mouseleave)="showMessage = false"
+                        (click)=" !isCardBlocked(user.cardNumber) && showBlockDiv(user.id)">
+                    <div class="message" *ngIf="showMessage">
+                        This card is blocked
+                    </div>
+                </div>
+            </td>
         </tr>
     </tbody>
 </table>
+
+<div class="confirm" *ngIf="isBlockDiv">
+    <span>Are you sure you want to block card?</span>
+    <div class="buttons">
+        <button class="yes" (click)="blockCard()">CONFIRM</button>
+        <button class="cancel" (click)="cancelBlock()">CANCEL</button>
+    </div>
+</div>
+
+<ng-container *ngIf="isBlock">
+    <div class="deleteAccount">
+        <p>Card successfully blocked</p>
+    </div>
+</ng-container>
 
 
 <div class="confirm" *ngIf="isDeleteDiv">
