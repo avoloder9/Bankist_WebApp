@@ -21,5 +21,7 @@ namespace API.Data.Models
         public Card card { get; set; }
 
         public DateTime accountIssueDate { get; set; }
+
+        public bool isBlock { get; set; } 
     }
 }
