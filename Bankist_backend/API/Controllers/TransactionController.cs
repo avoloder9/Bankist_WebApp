@@ -134,9 +134,14 @@ namespace API.Controllers
                     return StatusCode(401, "Insufficient funds");
                 }
 
+                var blockedCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == senderCard.cardNumber);
+                if (blockedCard.isBlock == true)
+                {
+                    throw new Exception("Your card is blocked");
+                }
+
                 senderCard.amount -= request.amount;
                 receiverCard.amount += request.amount;
-
 
                 transactionRecord = new Transaction
                 {

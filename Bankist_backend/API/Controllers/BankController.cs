@@ -66,7 +66,11 @@ namespace API.Controllers
             {
                 return Unauthorized();
             }
-
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isUser))
+            {
+                throw new Exception("Access denied");
+            }
             string? authToken = _httpContextAccessor.HttpContext!.Request.Headers["Token"];
             var databaseToken = await _dbContext.AutentificationToken.FirstOrDefaultAsync(token => token.value == authToken);
 
@@ -101,7 +105,11 @@ namespace API.Controllers
             {
                 return Unauthorized();
             }
-
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isBank))
+            {
+                throw new Exception("Access denied");
+            }
             var bankUsers = await _dbContext.BankUserCard
                    .Include(buc => buc.user)
                    .Include(buc => buc.card)
@@ -135,7 +143,11 @@ namespace API.Controllers
             {
                 return Unauthorized();
             }
-
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isUser))
+            {
+                throw new Exception("Access denied");
+            }
             string? authToken = _httpContextAccessor.HttpContext!.Request.Headers["Token"];
             var databaseToken = _dbContext.AutentificationToken.FirstOrDefault(token => token.value == authToken);
 
@@ -168,7 +180,11 @@ namespace API.Controllers
             {
                 return Unauthorized("Unauthorized");
             }
-
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isUser))
+            {
+                throw new Exception("Access denied");
+            }
             string? authToken = _httpContextAccessor.HttpContext!.Request.Headers["Token"];
             var databaseToken = _dbContext.AutentificationToken.FirstOrDefault(token => token.value == authToken);
 
@@ -220,11 +236,15 @@ namespace API.Controllers
         public ActionResult CloseUserAccount(int userId, int bankId, string reason)
         {
 
-            if (!_authService.IsLogin() && _authService.isBank())
+            if (!_authService.IsLogin())
             {
                 return Unauthorized();
             }
-
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isBank))
+            {
+                throw new Exception("Access denied");
+            }
             var user = _dbContext.User.FirstOrDefault(x => x.id == userId);
 
             if (user == null)
@@ -270,5 +290,37 @@ namespace API.Controllers
         }
 
 
+        [HttpPut("blockCard")]
+        public ActionResult BlockCard(int userId, int bankId)
+        {
+
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isBank))
+            {
+                throw new Exception("Access denied");
+            }
+            var user = _dbContext.User.FirstOrDefault(x => x.id == userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var userCard = _dbContext.BankUserCard.FirstOrDefault(x => x.userId == userId && x.bankId == bankId);
+
+            if (userCard == null)
+            {
+                return NotFound("User's card in this bank not found.");
+            }
+            userCard.isBlock = true;
+            _dbContext.SaveChanges();
+            return Ok("User's card has been successfully blocked.");
+        }
     }
 }
+
+

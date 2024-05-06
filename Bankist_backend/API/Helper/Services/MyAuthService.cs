@@ -3,6 +3,7 @@ using API.Data.Models;
 using API.Endpoints.AuthEndpoints.Login;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json.Serialization;
 
 namespace API.Helper.Services
@@ -11,10 +12,13 @@ namespace API.Helper.Services
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public MyAuthService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+        private readonly IMemoryCache _cache;
+
+        public MyAuthService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
         {
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
+            _cache = cache;
         }
 
         public async Task<MyAuthInfo> Login(AuthLoginVM request)
@@ -41,6 +45,8 @@ namespace API.Helper.Services
             };
             _dbContext.Add(newToken);
             await _dbContext.SaveChangesAsync();
+
+            _cache.Set($"ConnectionId_{loggedInAccount.id}", request.SignalRConnectionID);
 
             return new MyAuthInfo(newToken);
         }
