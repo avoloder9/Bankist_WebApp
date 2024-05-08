@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 using API.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using API.ViewModels;
+using API.Helper;
 
 namespace API.Controllers
 {
@@ -65,7 +66,7 @@ namespace API.Controllers
                                    .Select(buc => buc.cardId)
                                    .ToList();
 
-                var transactions = _dbContext.Transaction
+                var transactions = _dbContext.Transaction.Include(t => t.senderCard.currency).Include(t => t.recieverCard.currency)
                                    .Where(t =>
                                        (t.senderCardId.HasValue && userCardIds.Contains(t.senderCardId.Value)) ||
                                        userCardIds.Contains(t.recieverCardId))
@@ -121,8 +122,8 @@ namespace API.Controllers
             Transaction transactionRecord = null;
             try
             {
-                var senderCard = await _dbContext.Card.Include(c => c.cardType).FirstOrDefaultAsync(c => c.cardNumber == request.senderCardId);
-                var receiverCard = await _dbContext.Card.Include(c => c.cardType).FirstOrDefaultAsync(c => c.cardNumber == request.recieverCardId);
+                var senderCard = await _dbContext.Card.Include(c => c.cardType).Include(c => c.currency).FirstOrDefaultAsync(c => c.cardNumber == request.senderCardId);
+                var receiverCard = await _dbContext.Card.Include(c => c.cardType).Include(c => c.currency).FirstOrDefaultAsync(c => c.cardNumber == request.recieverCardId);
 
                 if (senderCard == null || receiverCard == null)
                 {
@@ -139,9 +140,14 @@ namespace API.Controllers
                 {
                     throw new Exception("Your card is blocked");
                 }
-
+                float convertedAmount = 0;
+                var _currencyConverter = new CurrencyConverter();
+                if (senderCard.currency.currencyCode != receiverCard.currency.currencyCode)
+                {
+                    convertedAmount = _currencyConverter.ConvertAmount(request.amount, senderCard.currency.currencyCode, receiverCard.currency.currencyCode);
+                }
                 senderCard.amount -= request.amount;
-                receiverCard.amount += request.amount;
+                receiverCard.amount += convertedAmount;
 
                 transactionRecord = new Transaction
                 {
@@ -164,7 +170,7 @@ namespace API.Controllers
 
                 var bankUserCard = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == receiverCard.cardNumber);
                 var receiverUser = await _dbContext.User.FirstOrDefaultAsync(u => u.id == bankUserCard.userId);
-                
+
                 var connectionId = _cache.Get<string>($"ConnectionId_{receiverUser.id}");
 
                 if (string.IsNullOrEmpty(connectionId))
