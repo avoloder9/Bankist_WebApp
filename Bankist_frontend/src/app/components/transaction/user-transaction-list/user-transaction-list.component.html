@@ -57,7 +57,12 @@
         <tbody>
             <tr *ngFor="let transaction of transactions">
                 <td>{{ transaction.transactionDate | date : 'dd/MM/yyyy' }}</td>
-                <td>{{ transaction.amount.toFixed(2) }} {{cardInfo?.currencyId}}</td>
+                <td *ngIf="transaction.senderCardId === cardInfo.cardNumber">
+                    {{ transaction.amount.toFixed(2) }} {{ transaction.senderCard.currency.currencyCode }}
+                </td>
+                <td *ngIf="transaction.recieverCardId === cardInfo.cardNumber">
+                    {{ transaction.amount.toFixed(2) }} {{ transaction.senderCard.currency.currencyCode }}
+                </td>
                 <td>{{ transaction.type }}</td>
                 <td>{{ transaction.status }}</td>
                 <td>{{ transaction.senderCardId }}</td>

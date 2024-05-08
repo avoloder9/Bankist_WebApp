@@ -72,8 +72,8 @@ namespace API.Controllers
             }
 
             currencies.Add(new Currency { currencyCode = "BAM", currencyName = "Marks", symbol = "BAM", exchangeRate = 1 });
-            currencies.Add(new Currency { currencyCode = "EUR", currencyName = "Euro", symbol = "€", exchangeRate = 1.94f });
-            currencies.Add(new Currency { currencyCode = "USD", currencyName = "Dollar", symbol = "$", exchangeRate = 1.71f });
+            currencies.Add(new Currency { currencyCode = "EUR", currencyName = "Euro", symbol = "€", exchangeRate = 1.95f });
+            currencies.Add(new Currency { currencyCode = "USD", currencyName = "Dollar", symbol = "$", exchangeRate = 1.82f });
 
             cardTypes.Add(new CardType { CardTypeId = "DEBIT", fees = 2, maxLimit = 100000 });
             cardTypes.Add(new CardType { CardTypeId = "CREDIT", fees = 2, maxLimit = 100000 });

@@ -11,11 +11,30 @@ interface Transaction {
   type: string;
   status: string;
   senderCardId: number;
+  senderCard: Card;
   recieverCardId: number;
+  recieverCard: Card;
+  currency: Currency;
 }
 interface Bank {
   bankName: string;
   image: string;
+}
+interface Card {
+  cardNumber: number;
+  expirationDate: Date;
+  issueDate: Date;
+  amount: number;
+  pin: number;
+  currencyId: number;
+  currency: Currency;
+}
+interface Currency {
+  currencyId: number;
+  currencyCode: string;
+  currencyName: string;
+  symbol: string;
+  exchangeRate: number;
 }
 
 @Component({
@@ -66,6 +85,10 @@ export class UserTransactionListComponent implements OnInit {
           this.transactions = data.map(transaction => {
             if (transaction.senderCardId === this.cardInfo.cardNumber) {
               transaction.amount = -Math.abs(transaction.amount);
+              transaction.currency = transaction.senderCard.currency;
+            }
+            else if (transaction.recieverCardId === this.cardInfo.cardNumber) {
+              transaction.currency = transaction.recieverCard.currency;
             }
             return transaction;
           });
