@@ -40,11 +40,9 @@ interface Currency {
 @Component({
   selector: 'app-user-transaction-list',
   templateUrl: './user-transaction-list.component.html',
-  styleUrls: ['./user-transaction-list.component.scss']
+  styleUrls: ['./user-transaction-list.component.scss'],
 })
-
 export class UserTransactionListComponent implements OnInit {
-
   isDeleteDiv: boolean = false;
   deleteReason: string = '';
   isAccountDeleted: boolean = false;
@@ -54,40 +52,46 @@ export class UserTransactionListComponent implements OnInit {
   cardInfo: any;
   today: Date = new Date();
   username: any;
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute, private signalRService: SignalRService, private router: Router) {
-
+  constructor(
+    private httpClient: HttpClient,
+    private route: ActivatedRoute,
+    private signalRService: SignalRService,
+    private router: Router
+  ) {
     this.signalRService.reloadTransactions.subscribe(() => {
       this.loadTransactions();
     });
   }
   ngOnInit(): void {
-
     /*const headers = this.getHeaders();
     console.log(headers);
-    */this.route.params.subscribe((params) => {
-    this.bankName = params['bankName'];
-    if (this.bankName) {
-
-      this.loadTransactions();
-    }
-    this.username = params['username'];
-  });
-
+    */ this.route.params.subscribe((params) => {
+      this.bankName = params['bankName'];
+      if (this.bankName) {
+        this.loadTransactions();
+      }
+      this.username = params['username'];
+    });
   }
   loadTransactions() {
-
     this.getCardInfo();
 
-    this.httpClient.get<Transaction[]>(`${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}`,/* { headers: headers }*/)
+    this.httpClient
+      .get<Transaction[]>(
+        `${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}` /* { headers: headers }*/
+      )
       .subscribe(
         (data) => {
-
-          this.transactions = data.map(transaction => {
+          console.log(data);
+          this.transactions = data.map((transaction) => {
+            console.log(transaction);
+            console.log(this.cardInfo);
             if (transaction.senderCardId === this.cardInfo.cardNumber) {
               transaction.amount = -Math.abs(transaction.amount);
               transaction.currency = transaction.senderCard.currency;
-            }
-            else if (transaction.recieverCardId === this.cardInfo.cardNumber) {
+            } else if (
+              transaction.recieverCardId === this.cardInfo.cardNumber
+            ) {
               transaction.currency = transaction.recieverCard.currency;
             }
             return transaction;
@@ -98,17 +102,22 @@ export class UserTransactionListComponent implements OnInit {
           console.error('Error fetching data:', error);
         }
       );
-
   }
 
   getCardInfo() {
     /*const headers = this.getHeaders();*/
-    this.httpClient.get<any>(`${MyConfig.serverAddress}/Card/card-info?bankName=${this.bankName}`, /*{ headers: headers }*/)
-      .subscribe(data => {
-        this.cardInfo = data;
-      }, error => {
-        console.log('Error fetching data:', error);
-      });
+    this.httpClient
+      .get<any>(
+        `${MyConfig.serverAddress}/Card/card-info?bankName=${this.bankName}` /*{ headers: headers }*/
+      )
+      .subscribe(
+        (data) => {
+          this.cardInfo = data;
+        },
+        (error) => {
+          console.log('Error fetching data:', error);
+        }
+      );
   }
   /*getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') ?? '';
@@ -119,23 +128,28 @@ export class UserTransactionListComponent implements OnInit {
     return headers;
   }*/
 
-
   closeAccount() {
-
-
-    this.httpClient.delete(`${MyConfig.serverAddress}/User/close-account?username=${this.username}&bankName=${this.bankName}&reason=${this.deleteReason}`,
-      { responseType: 'text' }).subscribe(() => {
-        this.cancelDelete();
-        this.isAccountDeleted = true;
-        setTimeout(() => {
-          this.isAccountDeleted = false;
-          this.router.navigate(['/bank-selection', { username: this.username }]);
-        }, 2000);
-
-      },
+    this.httpClient
+      .delete(
+        `${MyConfig.serverAddress}/User/close-account?username=${this.username}&bankName=${this.bankName}&reason=${this.deleteReason}`,
+        { responseType: 'text' }
+      )
+      .subscribe(
+        () => {
+          this.cancelDelete();
+          this.isAccountDeleted = true;
+          setTimeout(() => {
+            this.isAccountDeleted = false;
+            this.router.navigate([
+              '/bank-selection',
+              { username: this.username },
+            ]);
+          }, 2000);
+        },
         (error) => {
-          console.error("Error deleting user", error);
-        });
+          console.error('Error deleting user', error);
+        }
+      );
   }
 
   cancelDelete() {
@@ -146,8 +160,4 @@ export class UserTransactionListComponent implements OnInit {
   showDiv() {
     this.isDeleteDiv = true;
   }
-
-
 }
-
-

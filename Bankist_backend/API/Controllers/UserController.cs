@@ -104,6 +104,15 @@ namespace API.Controllers
             };
 
             _dbContext.User.Add(user);
+
+            var userActivity = new UserActivity
+            {
+               user = user,
+               transactionsCount = 0,
+               accountStatus = "BRONZE"
+            };
+            _dbContext.UserActivity.Add(userActivity);
+
             await _dbContext.SaveChangesAsync();
 
             return Ok("Congratulations, your account has been successfully created");

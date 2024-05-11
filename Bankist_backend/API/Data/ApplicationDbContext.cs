@@ -18,6 +18,7 @@ namespace API.Data
         public DbSet<Loyalty> Loyalty { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<UserActivity> UserActivity { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
