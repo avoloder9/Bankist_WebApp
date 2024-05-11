@@ -26,6 +26,7 @@ namespace API.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHubContext<SignalRHub> _hubContext;
         private readonly IMemoryCache _cache;
+        private readonly LoyaltyService _loyaltyService;
         public TransactionController(ApplicationDbContext dbContext, MyAuthService authService, IHttpContextAccessor httpContextAccessor, IHubContext<SignalRHub> hubContext, IMemoryCache cache)
         {
             _dbContext = dbContext;
@@ -33,6 +34,7 @@ namespace API.Controllers
             _httpContextAccessor = httpContextAccessor;
             _hubContext = hubContext;
             _cache = cache;
+            _loyaltyService = new LoyaltyService(_dbContext);
         }
 
         [HttpGet("user-transaction")]
@@ -161,6 +163,14 @@ namespace API.Controllers
 
                 _dbContext.Transaction.Add(transactionRecord);
 
+                var sendingUser = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == senderCard.cardNumber);
+                var user = await _dbContext.User.FirstOrDefaultAsync(u => u.id == sendingUser.userId);
+
+                if (user != null)
+                {
+                    await _loyaltyService.TrackActivity(user);
+                }
+
                 await _dbContext.SaveChangesAsync();
 
                 await Task.Delay(TimeSpan.FromSeconds(3));
@@ -171,20 +181,20 @@ namespace API.Controllers
                 var bankUserCard = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == receiverCard.cardNumber);
                 var receiverUser = await _dbContext.User.FirstOrDefaultAsync(u => u.id == bankUserCard.userId);
 
+
                 var connectionId = _cache.Get<string>($"ConnectionId_{receiverUser.id}");
 
-                if (string.IsNullOrEmpty(connectionId))
+                if (!string.IsNullOrEmpty(connectionId))
                 {
-                    return BadRequest("Receiver user connection not found");
+                   await _hubContext.Clients.Client(connectionId).SendAsync("message", "You received money: " + transactionRecord.amount);
                 }
-
-                await _hubContext.Clients.Client(connectionId).SendAsync("message", "You received money: " + transactionRecord.amount);
 
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the transaction");
             }
+
 
             return Ok(new TransactionExecuteDetailVM
             {

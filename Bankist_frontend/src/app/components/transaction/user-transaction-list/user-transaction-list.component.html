@@ -1,92 +1,110 @@
 <nav id="navbar">
-    <div>
-        <a class="options" href="#" routerLink="/userTransactionList">List of Transactions</a>
-        <a class="options" href="#" routerLink="/transaction">Transaction</a>
-        <a class="options" href="#">Settings</a>
-    </div>
-
+  <div>
+    <a class="options" href="#" routerLink="/userTransactionList"
+      >List of Transactions</a
+    >
+    <a class="options" href="#" routerLink="/transaction">Transaction</a>
+    <a class="options" href="#">Settings</a>
+  </div>
 </nav>
 
 <div class="imageWrapper">
-    <h2>Payment information</h2>
-    <img src="../../assets/images/bankist_card.jpg" class="image">
+  <h2>Payment information</h2>
+  <img src="../../assets/images/bankist_card.jpg" class="image" />
 
-    <div class="textWrapper">
-        <p> {{ cardInfo?.cardTypeId }} <b>{{ cardInfo?.cardNumber}}</b></p>
-        <p>Exp. date:<b id="expirationDate"> {{ cardInfo?.expirationDate | date : 'MM/yyyy' }}</b></p>
-    </div>
-
+  <div class="textWrapper">
+    <p>
+      {{ cardInfo?.cardTypeId }} <b>{{ cardInfo?.cardNumber }}</b>
+    </p>
+    <p>
+      Exp. date:<b id="expirationDate">
+        {{ cardInfo?.expirationDate | date : "MM/yyyy" }}</b
+      >
+    </p>
+  </div>
 </div>
 
 <div class="balance" *ngIf="cardInfo">
-    <div class="balance__detail">
-        <p class="balance__bank">{{ cardInfo.bankId }}</p>
-        <p class="balance__label">Current balance: {{ cardInfo.amount.toFixed(2) }} {{ cardInfo?.currencyId }}</p>
+  <div class="balance__detail">
+    <p class="balance__bank">{{ cardInfo.bankId }}</p>
+    <p class="balance__label">
+      Current balance: {{ cardInfo.amount.toFixed(2) }}
+      {{ cardInfo?.currencyId }}
+    </p>
 
-        <p class="balance__date">
-            <span class="date">{{ today | date : 'dd/MM/yyyy' }}</span>
-        </p>
-    </div>
+    <p class="balance__date">
+      <span class="date">{{ today | date : "dd/MM/yyyy" }}</span>
+    </p>
+  </div>
 </div>
 
 <div *ngIf="!cardInfo">
-    <p>Card information not available</p>
+  <p>Card information not available</p>
 </div>
 
-
 <div class="container">
-    <div class="option">
-        <button class="transfer" [routerLink]="['/transaction', cardInfo?.cardNumber]"> Transfer Money </button>
-        <button class="loan"> Loan </button>
-        <button class="close" (click)="showDiv()"> Close account </button>
-        <button class="another_card" [routerLink]="['/bank-selection',{username:this.username}]"> Choose another card
-        </button>
-    </div>
+  <div class="option">
+    <button
+      class="transfer"
+      [routerLink]="['/transaction', cardInfo?.cardNumber]"
+    >
+      Transfer Money
+    </button>
+    <button class="loan">Loan</button>
+    <button class="close" (click)="showDiv()">Close account</button>
+    <button
+      class="another_card"
+      [routerLink]="['/bank-selection', { username: this.username }]"
+    >
+      Choose another card
+    </button>
+  </div>
 
-    <table id="transactionTable" *ngIf="transactions">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Purpose</th>
-                <th>Status</th>
-                <th>Sender Card</th>
-                <th>Receiver Card</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let transaction of transactions">
-                <td>{{ transaction.transactionDate | date : 'dd/MM/yyyy' }}</td>
-                <td *ngIf="transaction.senderCardId === cardInfo.cardNumber">
-                    {{ transaction.amount.toFixed(2) }} {{ transaction.senderCard.currency.currencyCode }}
-                </td>
-                <td *ngIf="transaction.recieverCardId === cardInfo.cardNumber">
-                    {{ transaction.amount.toFixed(2) }} {{ transaction.senderCard.currency.currencyCode }}
-                </td>
-                <td>{{ transaction.type }}</td>
-                <td>{{ transaction.status }}</td>
-                <td>{{ transaction.senderCardId }}</td>
-                <td>{{ transaction.recieverCardId }}</td>
-            </tr>
-        </tbody>
-    </table>
+  <table id="transactionTable" *ngIf="transactions">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Purpose</th>
+        <th>Status</th>
+        <th>Sender Card</th>
+        <th>Receiver Card</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let transaction of transactions">
+        <td>{{ transaction.transactionDate | date : "dd/MM/yyyy" }}</td>
+        <td *ngIf="transaction.senderCardId === cardInfo.cardNumber">
+          {{ transaction.amount.toFixed(2) }}
+          {{ transaction.currency.currencyCode }}
+        </td>
+        <td *ngIf="transaction.recieverCardId === cardInfo.cardNumber">
+          {{ transaction.amount.toFixed(2) }}
+          {{ transaction.currency.currencyCode }}
+        </td>
+        <td>{{ transaction.type }}</td>
+        <td>{{ transaction.status }}</td>
+        <td>{{ transaction.senderCardId ?? "-" }}</td>
+        <td>{{ transaction.recieverCardId }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <div class="confirm" *ngIf="isDeleteDiv">
-    <span>Are you sure you want to close account?</span>
-    <div>
-        <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason">
+  <span>Are you sure you want to close account?</span>
+  <div>
+    <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason" />
+  </div>
 
-    </div>
-
-    <div class="buttons">
-        <button class="yes" (click)="closeAccount()">CONFIRM</button>
-        <button class="cancel" (click)="cancelDelete()">CANCEL</button>
-    </div>
+  <div class="buttons">
+    <button class="yes" (click)="closeAccount()">CONFIRM</button>
+    <button class="cancel" (click)="cancelDelete()">CANCEL</button>
+  </div>
 </div>
 
 <ng-container *ngIf="isAccountDeleted">
-    <div class="deleteAccount">
-        <p>Bank account successfully closed</p>
-    </div>
+  <div class="deleteAccount">
+    <p>Bank account successfully closed</p>
+  </div>
 </ng-container>

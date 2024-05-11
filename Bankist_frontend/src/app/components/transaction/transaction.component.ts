@@ -11,8 +11,6 @@ import { SignalRService } from 'src/app/services/signalR.service';
   styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent implements OnInit {
-
-
   senderCardId: string;
   goBack() {
     this.location.back();
@@ -24,29 +22,32 @@ export class TransactionComponent implements OnInit {
   insufficientFunds: boolean = false;
   transactionSuccessful: boolean = false;
   receiverConnectionId: string | null = null;
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private location: Location, private route: ActivatedRoute, private signalRService: SignalRService) {
-
-  }
+  constructor(
+    private fb: FormBuilder,
+    private httpClient: HttpClient,
+    private location: Location,
+    private route: ActivatedRoute,
+    private signalRService: SignalRService
+  ) {}
 
   ngOnInit(): void {
-
-
     this.transactionForm = this.fb.group({
       senderCardId: ['', Validators.required],
       recieverCardId: ['', Validators.required],
       amount: ['', [Validators.required, Validators.min(1)]],
       type: ['', Validators.required],
     });
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.transactionForm.patchValue({
-
-        senderCardId: params['cardNumber']
+        senderCardId: params['cardNumber'],
       });
       this.signalRService.open_ws_connection();
 
-      this.signalRService.onConnectionIdChange.subscribe((connectionId: string) => {
-        this.receiverConnectionId = connectionId;
-      });
+      this.signalRService.onConnectionIdChange.subscribe(
+        (connectionId: string) => {
+          this.receiverConnectionId = connectionId;
+        }
+      );
     });
   }
   onSubmit() {
@@ -54,14 +55,12 @@ export class TransactionComponent implements OnInit {
       this.reset();
       this.isExecute = true;
       const formData = {
-        ...this.transactionForm.value, senderCardId: this.route.snapshot.params['cardNumber'],
+        ...this.transactionForm.value,
+        senderCardId: this.route.snapshot.params['cardNumber'],
         receiverConnectionId: this.receiverConnectionId,
       };
       this.httpClient
-        .post<any>(
-          `${MyConfig.serverAddress}/Transaction/execute`,
-          formData
-        )
+        .post<any>(`${MyConfig.serverAddress}/Transaction/execute`, formData)
         .subscribe({
           next: (response: any) => {
             this.isExecute = false;
@@ -73,6 +72,7 @@ export class TransactionComponent implements OnInit {
           },
           error: (error) => {
             this.isExecute = false;
+            console.log(error);
             if (error.status === 500) {
               this.unexpectedError = false;
               this.insufficientFunds = true;
@@ -89,7 +89,6 @@ export class TransactionComponent implements OnInit {
     this.transactionSuccessful = false;
   }
   reloadTransactions() {
-
     this.signalRService.emitReloadTransactions();
   }
 }

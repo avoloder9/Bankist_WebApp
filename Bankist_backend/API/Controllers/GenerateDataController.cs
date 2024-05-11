@@ -27,6 +27,7 @@ namespace API.Controllers
             data.Add("Cards", _dbContext.Card.Count());
             data.Add("BankUserCard", _dbContext.BankUserCard.Count());
             data.Add("Transaction", _dbContext.Transaction.Count());
+            data.Add("UserActivities", _dbContext.UserActivity.Count());
 
             return Ok(data);
         }
@@ -40,6 +41,7 @@ namespace API.Controllers
             var cards = new List<Card>();
             var bankUserCard = new List<BanksUsersCards>();
             var transactions = new List<Transaction>();
+            var userActivities = new List<UserActivity>();
 
             banks.Add(new Bank { username = "Unicredit", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
             banks.Add(new Bank { username = "Raiffeisen", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
@@ -135,6 +137,16 @@ namespace API.Controllers
                 });
             }
 
+            for (int i = 0; i < users.Count; i++)
+            {
+                userActivities.Add(new UserActivity
+                {
+                    user = users[i],
+                    accountStatus = "BRONZE",
+                    transactionsCount = 0
+                });
+            }
+
             _dbContext.AddRange(users);
             _dbContext.AddRange(banks);
             _dbContext.AddRange(currencies);
@@ -142,6 +154,7 @@ namespace API.Controllers
             _dbContext.AddRange(cards);
             _dbContext.AddRange(bankUserCard);
             _dbContext.AddRange(transactions);
+            _dbContext.AddRange(userActivities);
             _dbContext.SaveChanges();
             return Count();
         }
