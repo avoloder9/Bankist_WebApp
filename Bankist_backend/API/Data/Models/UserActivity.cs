@@ -14,5 +14,6 @@ namespace API.Data.Models
 
         public int transactionsCount { get; set; }
         public string accountStatus {  get; set; }
+        public int awardsReceived { get; set; } = 0;
     }
 }

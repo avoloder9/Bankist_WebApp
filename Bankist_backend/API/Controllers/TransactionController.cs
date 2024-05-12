@@ -34,7 +34,7 @@ namespace API.Controllers
             _httpContextAccessor = httpContextAccessor;
             _hubContext = hubContext;
             _cache = cache;
-            _loyaltyService = new LoyaltyService(_dbContext);
+            _loyaltyService = new LoyaltyService(_dbContext, _hubContext);
         }
 
         [HttpGet("user-transaction")]
@@ -165,10 +165,12 @@ namespace API.Controllers
 
                 var sendingUser = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == senderCard.cardNumber);
                 var user = await _dbContext.User.FirstOrDefaultAsync(u => u.id == sendingUser.userId);
+                var senderConnectionString = _cache.Get<string>($"ConnectionId_{sendingUser.id}");
+
 
                 if (user != null)
                 {
-                    await _loyaltyService.TrackActivity(user);
+                    await _loyaltyService.TrackActivity(user, senderCard, senderConnectionString);
                 }
 
                 await _dbContext.SaveChangesAsync();
@@ -180,7 +182,6 @@ namespace API.Controllers
 
                 var bankUserCard = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == receiverCard.cardNumber);
                 var receiverUser = await _dbContext.User.FirstOrDefaultAsync(u => u.id == bankUserCard.userId);
-
 
                 var connectionId = _cache.Get<string>($"ConnectionId_{receiverUser.id}");
 
