@@ -165,7 +165,7 @@ namespace API.Controllers
 
                 var sendingUser = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == senderCard.cardNumber);
                 var user = await _dbContext.User.FirstOrDefaultAsync(u => u.id == sendingUser.userId);
-                var senderConnectionString = _cache.Get<string>($"ConnectionId_{sendingUser.id}");
+                var senderConnectionString = _cache.Get<string>($"ConnectionId_{user.id}");
 
 
                 if (user != null)

@@ -10,9 +10,9 @@ import { SignalRService } from './services/signalR.service';
 })
 export class AppComponent implements OnInit {
   buttonDisabled: boolean = false;
-  constructor(private dialogRef: MatDialog, private router: Router, private SignalRService: SignalRService) { }
+  constructor(private dialogRef: MatDialog, private router: Router) { }
   ngOnInit(): void {
-    this.SignalRService.open_ws_connection();
+
   }
 
   openDialog() {

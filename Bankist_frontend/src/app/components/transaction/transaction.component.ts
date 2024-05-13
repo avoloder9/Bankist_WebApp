@@ -28,7 +28,7 @@ export class TransactionComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private signalRService: SignalRService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.transactionForm = this.fb.group({
@@ -41,7 +41,7 @@ export class TransactionComponent implements OnInit {
       this.transactionForm.patchValue({
         senderCardId: params['cardNumber'],
       });
-      this.signalRService.open_ws_connection();
+      // this.signalRService.open_ws_connection();
 
       this.signalRService.onConnectionIdChange.subscribe(
         (connectionId: string) => {

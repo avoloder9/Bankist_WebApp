@@ -47,7 +47,9 @@ export class LoginComponent {
   onSubmit() {
     console.log(this.loginForm);
     if (this.loginForm.valid) {
+
       this.signalRService.open_ws_connection();
+
       this.signalRService.onConnectionIdChange.subscribe((connectionId: string) => {
         let loginrequest: AuthLoginVM = {
           username: this.loginForm.value.username,
@@ -63,8 +65,8 @@ export class LoginComponent {
             next: (response: any) => {
               this.myAuthService.setLoginAccount(response.autentificationToken);
               /*  if (this.myAuthService.isBank()) {
-                  this.router.navigate(['/bank-view']);
-                }*/
+                this.router.navigate(['/bank-view']);
+              }*/
 
               localStorage.setItem('token', response.autentificationToken.value);
               this.isSending = false;
