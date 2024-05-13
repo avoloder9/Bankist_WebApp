@@ -1,8 +1,6 @@
 <nav id="navbar">
   <div>
-    <a class="options" href="#" routerLink="/userTransactionList"
-      >List of Transactions</a
-    >
+    <a class="options" href="#" routerLink="/userTransactionList">List of Transactions</a>
     <a class="options" href="#" routerLink="/transaction">Transaction</a>
     <a class="options" href="#">Settings</a>
   </div>
@@ -18,8 +16,7 @@
     </p>
     <p>
       Exp. date:<b id="expirationDate">
-        {{ cardInfo?.expirationDate | date : "MM/yyyy" }}</b
-      >
+        {{ cardInfo?.expirationDate | date : "MM/yyyy" }}</b>
     </p>
   </div>
 </div>
@@ -44,18 +41,12 @@
 
 <div class="container">
   <div class="option">
-    <button
-      class="transfer"
-      [routerLink]="['/transaction', cardInfo?.cardNumber]"
-    >
+    <button class="transfer" [routerLink]="['/transaction', cardInfo?.cardNumber]">
       Transfer Money
     </button>
     <button class="loan">Loan</button>
     <button class="close" (click)="showDiv()">Close account</button>
-    <button
-      class="another_card"
-      [routerLink]="['/bank-selection', { username: this.username }]"
-    >
+    <button class="another_card" [routerLink]="['/bank-selection', { username: this.username }]">
       Choose another card
     </button>
   </div>
@@ -76,11 +67,11 @@
         <td>{{ transaction.transactionDate | date : "dd/MM/yyyy" }}</td>
         <td *ngIf="transaction.senderCardId === cardInfo.cardNumber">
           {{ transaction.amount.toFixed(2) }}
-          {{ transaction.currency.currencyCode }}
+          {{ transaction.senderCard.currency.currencyCode }}
         </td>
         <td *ngIf="transaction.recieverCardId === cardInfo.cardNumber">
           {{ transaction.amount.toFixed(2) }}
-          {{ transaction.currency.currencyCode }}
+          {{ transaction.senderCard.currency.currencyCode }}
         </td>
         <td>{{ transaction.type }}</td>
         <td>{{ transaction.status }}</td>

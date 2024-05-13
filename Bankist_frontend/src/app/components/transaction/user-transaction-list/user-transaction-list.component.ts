@@ -66,12 +66,12 @@ export class UserTransactionListComponent implements OnInit {
     /*const headers = this.getHeaders();
     console.log(headers);
     */ this.route.params.subscribe((params) => {
-      this.bankName = params['bankName'];
-      if (this.bankName) {
-        this.loadTransactions();
-      }
-      this.username = params['username'];
-    });
+    this.bankName = params['bankName'];
+    if (this.bankName) {
+      this.loadTransactions();
+    }
+    this.username = params['username'];
+  });
   }
   loadTransactions() {
     this.getCardInfo();
