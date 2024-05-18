@@ -43,15 +43,15 @@ namespace API.Controllers
             var transactions = new List<Transaction>();
             var userActivities = new List<UserActivity>();
 
-            banks.Add(new Bank { username = "Unicredit", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "Raiffeisen", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "Ziraat", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "ASA", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "ProCredit", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "Sparkasse", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "Addiko", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "BBI", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
-            banks.Add(new Bank { username = "Sanpaolo", password = TokenGenerator.GeneratePassword(), totalCapital = 0, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Unicredit", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Raiffeisen", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Ziraat", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "ASA", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "ProCredit", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Sparkasse", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Addiko", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "BBI", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
+            banks.Add(new Bank { username = "Sanpaolo", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
 
             users.Add(new User { firstName = "Adnan", lastName = "Voloder", email = "adnanvoloder@gmail.com", phone = "061312132", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "adnanv1", password = "Adnan123!" });
             users.Add(new User { firstName = "Faris", lastName = "Dizdarevic", email = "farisdiz@gmail.com", phone = "061341232", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "farisDiz1", password = "Faris123!" });

@@ -142,13 +142,32 @@ namespace API.Controllers
                 {
                     throw new Exception("Your card is blocked");
                 }
+
+                var senderBank = await _dbContext.BankUserCard.Include(buc => buc.bank).FirstOrDefaultAsync(buc => buc.cardId == senderCard.cardNumber);
+                var receiverBank = await _dbContext.BankUserCard.Include(buc => buc.bank).FirstOrDefaultAsync(buc => buc.cardId == receiverCard.cardNumber);
+
+                if (senderBank == null || receiverBank == null)
+                {
+                    return BadRequest("Bank information not found for one or both cards");
+                }
+
+                bool sameBank = senderBank.bankId == receiverBank.bankId;
+                float transactionFee = 0.0f;
+                if (!sameBank)
+                {
+                    transactionFee = request.amount * 0.03f;
+                    var bank = senderBank.bank;
+                    bank.totalCapital += transactionFee;
+                }
+
+
                 float convertedAmount = 0;
                 var _currencyConverter = new CurrencyConverter();
                 if (senderCard.currency.currencyCode != receiverCard.currency.currencyCode)
                 {
                     convertedAmount = _currencyConverter.ConvertAmount(request.amount, senderCard.currency.currencyCode, receiverCard.currency.currencyCode);
                 }
-                senderCard.amount -= request.amount;
+                senderCard.amount -= request.amount + transactionFee;
                 receiverCard.amount += convertedAmount;
 
                 transactionRecord = new Transaction
@@ -187,7 +206,7 @@ namespace API.Controllers
 
                 if (!string.IsNullOrEmpty(connectionId))
                 {
-                   await _hubContext.Clients.Client(connectionId).SendAsync("message", "You received money: " + transactionRecord.amount);
+                    await _hubContext.Clients.Client(connectionId).SendAsync("message", "You received money: " + transactionRecord.amount);
                 }
 
             }
