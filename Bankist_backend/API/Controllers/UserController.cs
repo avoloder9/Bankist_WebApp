@@ -5,6 +5,7 @@ using API.Endpoints.UserEndpoints.GetAll;
 using API.Endpoints.UserEndpoints.Post;
 using API.Helper;
 using API.Helper.Services;
+using API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,6 +57,39 @@ namespace API.Controllers
             return Ok(new UserGetAllVM { Users = users });
         }
 
+        [HttpGet("getById")]
+        public async Task<ActionResult<UserGetAllVM>> GetUserById(int id)
+        {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
+            var users = await _dbContext.User.OrderByDescending(x => x.id).Where(x => x.id == id)
+                .Select(x => new UserGetAllVMUser
+                {
+                    userId = x.id,
+                    userName = x.username,
+                    firstName = x.firstName,
+                    lastName = x.lastName,
+                    password = x.password,
+                    email = x.email,
+                    phone = x.phone,
+                    birthDate = x.birthDate,
+                    registrationDate = x.registrationDate
+                })
+                .ToListAsync();
+
+            if (users == null || users.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(new UserGetAllVM { Users = users });
+        }
+
+
+
         [HttpPost("check")]
         public IActionResult CheckUserExists([FromBody] UserCheckVM request)
         {
@@ -100,16 +134,16 @@ namespace API.Controllers
                 password = request.password,
                 phone = request.phone,
                 birthDate = request.birthDate,
-                registrationDate = DateTime.Now                
+                registrationDate = DateTime.Now
             };
 
             _dbContext.User.Add(user);
 
             var userActivity = new UserActivity
             {
-               user = user,
-               transactionsCount = 0,
-               accountStatus = "BRONZE"
+                user = user,
+                transactionsCount = 0,
+                accountStatus = "BRONZE"
             };
             _dbContext.UserActivity.Add(userActivity);
 
@@ -171,6 +205,22 @@ namespace API.Controllers
             }
         }
 
+
+        [HttpPut("edit")]
+        public async Task<ActionResult> EditUser(UserEditVM user)
+        {
+
+            var newUser = await _dbContext.User.FindAsync(user.Id);
+            if (newUser == null)
+                return NotFound("User not found");
+            newUser.firstName = user.firstName;
+            newUser.lastName = user.lastName;
+            newUser.email = user.email;
+            newUser.password = user.password;
+            newUser.username = user.userName;
+            _dbContext.SaveChanges();
+            return Ok();
+        }
 
     }
 }

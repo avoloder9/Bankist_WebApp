@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SignalRService } from 'src/app/services/signalR.service';
+import { UserService } from 'src/app/services/UserService';
 
 interface Transaction {
   transactionId: number;
@@ -52,11 +53,13 @@ export class UserTransactionListComponent implements OnInit {
   cardInfo: any;
   today: Date = new Date();
   username: any;
+  userId: any;
   constructor(
     private httpClient: HttpClient,
     private route: ActivatedRoute,
     private signalRService: SignalRService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
     this.signalRService.reloadTransactions.subscribe(() => {
       this.loadTransactions();
@@ -66,15 +69,16 @@ export class UserTransactionListComponent implements OnInit {
     /*const headers = this.getHeaders();
     console.log(headers);
     */ this.route.params.subscribe((params) => {
-    this.bankName = params['bankName'];
-    if (this.bankName) {
-      this.loadTransactions();
-    }
-    this.username = params['username'];
-  });
+      this.bankName = params['bankName'];
+      if (this.bankName) {
+        this.loadTransactions();
+        this.getCardInfo();
+      }
+      this.username = params['username'];
+    });
   }
   loadTransactions() {
-    this.getCardInfo();
+    //   this.getCardInfo();
 
     this.httpClient
       .get<Transaction[]>(
@@ -113,6 +117,9 @@ export class UserTransactionListComponent implements OnInit {
       .subscribe(
         (data) => {
           this.cardInfo = data;
+          this.userId = this.cardInfo.userId;
+          this.userService.setUserId(this.userId);
+          console.log(this.userId);
         },
         (error) => {
           console.log('Error fetching data:', error);

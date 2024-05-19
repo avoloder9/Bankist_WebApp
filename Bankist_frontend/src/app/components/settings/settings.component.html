@@ -1,0 +1,69 @@
+<html>
+<head>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings">
+            <div class="limits-container">
+                <div class="setting">
+                    <label>First name</label>
+                    <input type="text" [ngModel]="userData?.users[0]?.firstName" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].firstName = $event)"/>
+                </div>
+                <div class="setting">
+                    <label>Last name</label>
+                    <input type="text" [ngModel]="userData?.users[0]?.lastName" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].lastName = $event)"/>
+                </div>
+                <div class="setting">
+                    <label>Transaction Limit</label>
+                    <input type="number" value="0.00" />
+                </div>
+                <div class="setting">
+                    <label>ATM limit</label>
+                    <input type="number" value="0.00" />
+                </div>
+                <div class="setting">
+                    <label>Negative limit</label>
+                    <input type="number" value="0.00" />
+                </div>            
+  
+            </div>
+            <div class="account-settings">
+                <div class="setting">
+                    <label >Username</label>
+                    <input type="text" [ngModel]="userData && userData.users && userData.users[0] ? userData.users[0].userName : ''" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].userName = $event)"/>
+                </div>
+                <div class="setting">
+                    <label>Email</label>
+                    <input type="text" [ngModel]="userData && userData.users && userData.users[0] ? userData.users[0].email : ''" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].email = $event)"/>
+                </div>
+                <div class="setting">
+                    <label>Current password</label>
+                    <input type="password" [ngModel]="userData && userData.users && userData.users[0] ? userData.users[0].password : ''" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].password = $event)"/>
+                </div>
+                
+                <div class="setting">
+                    <label>Change password</label>
+                    <input type="password" [(ngModel)]="newPassword"/>
+                </div>
+                <div class="setting">
+                    <label>Confrim password</label>
+                    <input type="password"[(ngModel)]="confirmPassword"/>
+                    </div>
+            </div>
+            <div class="save-container">
+                <div class="save" [ngClass]="{ 'loading': isSuccess }">
+                    <p (click)="editUser()">Save</p>
+                </div>
+                <div class="info">
+                    <span *ngIf="isSuccess && isSame">Data saved successfully!</span>
+                    <span *ngIf="!isSuccess && isSame && (newPassword !== '' && confirmPassword !== '')">Cannot save data!</span>                
+                    <span *ngIf="!isPasswordMatching && confirmPassword !== '' && !isSame">Passwords do not match!</span> 
+                </div>
+             
+               <span class="loader" *ngIf="isSuccess"></span>
+           
+            </div>
+        </div>
+    </div>
+</body>
+</html>
