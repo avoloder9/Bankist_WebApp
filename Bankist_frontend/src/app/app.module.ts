@@ -23,6 +23,7 @@ import { MyAuthInterceptor } from './helpers/auth/myAuthInterceptor';
 import { AuthorizationGuard } from './helpers/auth/authorizationGuardService';
 import { BankViewComponent } from './components/bank-view/bank-view.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { SettingsComponent } from './components/settings/settings.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +40,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
     AtmComponent,
     BankViewComponent,
     UserListComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,

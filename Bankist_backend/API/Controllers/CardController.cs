@@ -39,7 +39,7 @@ namespace API.Controllers
             {
                 var userId = databaseToken.accountId;
 
-                var banksUsersCard = _dbContext.BankUserCard.Include(x=>x.user).Include(x => x.card).Include(x => x.bank).Include(x => x.card.cardType).Include(x => x.card.currency)
+                var banksUsersCard = _dbContext.BankUserCard.Include(x => x.user).Include(x => x.card).Include(x => x.bank).Include(x => x.card.cardType).Include(x => x.card.currency)
         .FirstOrDefault(buc => buc.bank.username == bankName && buc.userId == userId);
 
                 if (banksUsersCard != null)
@@ -52,8 +52,10 @@ namespace API.Controllers
                             return Ok(new
                             {
                                 Id = banksUsersCard.id,
-                                BankId = banksUsersCard.bank.username,
-                                UserId = userName,
+                                //BankId = banksUsersCard.bank.username,
+                                Bank = banksUsersCard.bank.username,
+                                User = userName.ToString(),
+                                UserId = userId,
                                 CardNumber = banksUsersCard.card.cardNumber,
                                 ExpirationDate = banksUsersCard.card.expirationDate,
                                 IssueDate = banksUsersCard.card.issueDate,

@@ -12,6 +12,8 @@
         public string lastName { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
+        public string password { get; set; }
+
         public DateTime birthDate { get; set; }
         public DateTime registrationDate { get; set; }
     }
