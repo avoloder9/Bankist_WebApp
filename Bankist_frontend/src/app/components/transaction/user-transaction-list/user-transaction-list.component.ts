@@ -86,21 +86,17 @@ export class UserTransactionListComponent implements OnInit {
       )
       .subscribe(
         (data) => {
-          console.log(data);
           this.transactions = data.map((transaction) => {
-            console.log(transaction);
-            console.log(this.cardInfo);
-            if (transaction.senderCardId === this.cardInfo.cardNumber) {
+            if (transaction.senderCardId === this.cardInfo?.cardNumber) {
               transaction.amount = -Math.abs(transaction.amount);
-              transaction.currency = transaction.senderCard.currency;
+              transaction.currency = transaction.recieverCard.currency;
             } else if (
-              transaction.recieverCardId === this.cardInfo.cardNumber
+              transaction.recieverCardId === this.cardInfo?.cardNumber
             ) {
               transaction.currency = transaction.recieverCard.currency;
             }
             return transaction;
           });
-          console.log(this.transactions);
         },
         (error) => {
           console.error('Error fetching data:', error);
@@ -166,5 +162,11 @@ export class UserTransactionListComponent implements OnInit {
 
   showDiv() {
     this.isDeleteDiv = true;
+  }
+
+  getStatus() {
+    return `../../../../assets/images/${
+      this.cardInfo?.status.toLowerCase() ?? 'bronze'
+    }_status.png`;
   }
 }
