@@ -89,7 +89,7 @@ export class UserTransactionListComponent implements OnInit {
           this.transactions = data.map((transaction) => {
             if (transaction.senderCardId === this.cardInfo?.cardNumber) {
               transaction.amount = -Math.abs(transaction.amount);
-              transaction.currency = transaction.recieverCard.currency;
+              transaction.currency = transaction.senderCard.currency;
             } else if (
               transaction.recieverCardId === this.cardInfo?.cardNumber
             ) {
