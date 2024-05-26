@@ -18,7 +18,7 @@ export class SignalRService {
       this.reloadTransactions.emit();
       setTimeout(() => {
         alert(p);
-      }, 5000);
+      }, 2000);
     });
 
     connection.start().then(() => {

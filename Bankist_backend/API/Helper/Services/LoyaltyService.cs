@@ -30,21 +30,29 @@ namespace API.Helper.Services
             }
 
             userActivity.transactionsCount += 1;
-            
+            Bank bank = null;
             if (userActivity.transactionsCount >= 5)
             {
                 userActivity.accountStatus = "SILVER";
+                var awardAmount = 50;
                 if (userActivity.awardsReceived == 0)
                 {
                     _dbContext.Transaction.Add(new Transaction
                     {
                         transactionDate = DateTime.Now,
-                        amount = 50,
+                        amount = awardAmount,
                         type = "Silver status award",
                         status = "Completed",
                         senderCard = null,
                         recieverCard = senderCard
                     });
+
+                    bank = await _dbContext.BankUserCard.Include(buc => buc.bank)
+                       .Where(buc => buc.cardId == senderCard.cardNumber).Select(buc => buc.bank).FirstOrDefaultAsync();
+                    bank.totalCapital -= awardAmount;
+
+                    senderCard.amount += awardAmount;
+
                     userActivity.awardsReceived++;
                     if (!string.IsNullOrEmpty(connectionId))
                     {
@@ -56,17 +64,24 @@ namespace API.Helper.Services
             if (userActivity.transactionsCount >= 10)
             {
                 userActivity.accountStatus = "GOLD";
+                var awardAmount = 100;
+
                 if (userActivity.awardsReceived == 1)
                 {
                     _dbContext.Transaction.Add(new Transaction
                     {
                         transactionDate = DateTime.Now,
-                        amount = 100,
+                        amount = awardAmount,
                         type = "Gold status award",
                         status = "Completed",
                         senderCard = null,
                         recieverCard = senderCard
                     });
+                    bank = await _dbContext.BankUserCard.Include(buc => buc.bank)
+                     .Where(buc => buc.cardId == senderCard.cardNumber).Select(buc => buc.bank).FirstOrDefaultAsync();
+                    bank.totalCapital -= awardAmount;
+
+                    senderCard.amount += awardAmount;
                     userActivity.awardsReceived++;
                     if (!string.IsNullOrEmpty(connectionId))
                     {
@@ -78,17 +93,24 @@ namespace API.Helper.Services
             if (userActivity.transactionsCount >= 15)
             {
                 userActivity.accountStatus = "PLATINUM";
-                if (userActivity.awardsReceived >= 2 &&  userActivity.transactionsCount % 15 == 0)
+                var awardAmount = 150;
+
+                if (userActivity.awardsReceived >= 2 && userActivity.transactionsCount % 15 == 0)
                 {
                     _dbContext.Transaction.Add(new Transaction
                     {
                         transactionDate = DateTime.Now,
-                        amount = 150,
+                        amount = awardAmount,
                         type = "Platinum status award",
                         status = "Completed",
                         senderCard = null,
                         recieverCard = senderCard
                     });
+                    bank = await _dbContext.BankUserCard.Include(buc => buc.bank)
+                     .Where(buc => buc.cardId == senderCard.cardNumber).Select(buc => buc.bank).FirstOrDefaultAsync();
+                    bank.totalCapital -= awardAmount;
+
+                    senderCard.amount += awardAmount;
                     userActivity.awardsReceived++;
                     if (!string.IsNullOrEmpty(connectionId))
                     {

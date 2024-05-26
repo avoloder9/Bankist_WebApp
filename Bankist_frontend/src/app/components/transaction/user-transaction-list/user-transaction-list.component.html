@@ -83,8 +83,14 @@
         <td>{{ transaction.transactionDate | date : "dd/MM/yyyy" }}</td>
         <td>
           {{ transaction.amount.toFixed(2) }}
-          {{ transaction.currency.currencyCode }}
+          <span *ngIf="transaction.type !== 'Silver status award' && transaction.type !== 'Gold status award' && transaction.type !== 'Platinum status award'">
+            {{ transaction.senderCard.currency.currencyCode }}
+          </span>
+          <span *ngIf="transaction.type === 'Silver status award' || transaction.type === 'Gold status award' || transaction.type === 'Platinum status award'">
+            {{ transaction.recieverCard.currency.currencyCode }}
+          </span>
         </td>
+        
         <td>{{ transaction.type }}</td>
         <td>{{ transaction.status }}</td>
         <td>{{ transaction?.senderCardId ?? "-" }}</td>
