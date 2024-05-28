@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class LoanController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
@@ -40,9 +42,9 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var senderCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == request.senderCardId);
+            var userCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == request.userCard);
 
-            if (senderCard == null) {
+            if (userCard == null) {
                 return BadRequest(new { message = "Card not found!" });
             }
 
@@ -74,7 +76,7 @@ namespace API.Controllers
                 totalAmountPayed = 0,
                 remainingAmount = request.amount + request.amount * 0.10f,
                 status = "PENDING",
-                cardId = senderCard.cardId,
+                cardId = userCard.cardId,
                 loanType = loanType,
             };
 
@@ -110,6 +112,24 @@ namespace API.Controllers
             {
                 return BadRequest(new { message = "Invalid bankId: must be a numeric value." });
             }
+        }
+
+        [HttpGet("get-loan-types")]
+        public ActionResult GetLoanTypes()
+        {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
+            var loanTypes = _dbContext.LoanType.ToList();
+
+            if (loanTypes == null)
+            {
+                return NotFound(new { message = "No types found" });
+            }
+
+            return Ok(loanTypes);
         }
     }
 }

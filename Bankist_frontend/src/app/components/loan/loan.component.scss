@@ -1,0 +1,115 @@
+@import "src/styles.scss";
+
+.loan-wrapper {
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .message {
+    height: 300px;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 2px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    color: white;
+  }
+  .success {
+    background-image: $greenGradient;
+  }
+  .failure {
+    background-image: $redGradient;
+  }
+  .loader-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .loan {
+    height: 430px;
+    width: 60%;
+    background-image: $orangeGradient;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    border-radius: 20px;
+    gap: 30px;
+    h1 {
+      letter-spacing: 2px;
+      color: white;
+    }
+    .row {
+      display: flex;
+      gap: 20px;
+      form {
+        div {
+          margin-top: 5px;
+          font-size: 17px;
+          color: red;
+          text-align: center;
+        }
+      }
+      label {
+        font-size: 20px;
+        color: white;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+      input {
+        font-size: 20px;
+        border-radius: 10px;
+        padding: 2px 4px;
+        width: 100px;
+        text-align: center;
+        font-weight: bold;
+        color: black;
+      }
+      select {
+        font-size: 20px;
+        border-radius: 10px;
+        padding: 2px 4px;
+        width: 130px;
+        text-align: center;
+        font-weight: bold;
+        color: black;
+        option {
+          width: 100px;
+        }
+      }
+      button {
+        height: 50px;
+        width: 170px;
+        background-color: #a2b06d;
+        border-radius: 20px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 500;
+        transition: all 0.3s;
+        cursor: pointer;
+        color: $primaryColor;
+        font-size: 1rem;
+        &:hover {
+          transform: scale(1.1);
+          filter: brightness(1.1);
+          cursor: pointer;
+        }
+      }
+      .cancel {
+        background-image: $redGradient;
+      }
+      .proceed {
+        background-image: $greenGradient;
+      }
+    }
+  }
+}

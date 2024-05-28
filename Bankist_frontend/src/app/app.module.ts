@@ -24,6 +24,7 @@ import { AuthorizationGuard } from './helpers/auth/authorizationGuardService';
 import { BankViewComponent } from './components/bank-view/bank-view.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { LoanComponent } from './components/loan/loan.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +42,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     BankViewComponent,
     UserListComponent,
     SettingsComponent,
+    LoanComponent,
   ],
   imports: [
     BrowserModule,
