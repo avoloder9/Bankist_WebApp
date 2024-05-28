@@ -1,0 +1,91 @@
+<div class="loan-wrapper">
+  <div class="message success" *ngIf="!isLoading && isSuccess">
+    {{ responseMessage }}
+  </div>
+  <div class="message failure" *ngIf="!isLoading && isError">
+    {{ responseMessage }}
+  </div>
+  <div class="loader-wrapper" *ngIf="isLoading">
+    <app-loader></app-loader>
+  </div>
+  <div class="loan" *ngIf="!isLoading && !isSuccess && !isError">
+    <h1>Loan options</h1>
+    <div class="row">
+      <label for="">Your card: </label>
+      <input type="text" placeholder="111111" disabled [(ngModel)]="userCard" />
+    </div>
+    <div class="row">
+      <label for="">Loan type: </label>
+      <select [(ngModel)]="activeOption">
+        <option *ngFor="let item of options" [ngValue]="item">
+          {{ item.name }}
+        </option>
+      </select>
+    </div>
+    <div class="row">
+      <form [formGroup]="amountForm">
+        <label for="">Loan amount: </label>
+        <input
+          type="number"
+          formControlName="loanAmountInput"
+          placeholder="10000"
+        />
+        <div
+          *ngIf="
+            amountForm.get('loanAmountInput')?.invalid &&
+            (amountForm.get('loanAmountInput')?.dirty ||
+              amountForm.get('loanAmountInput')?.touched)
+          "
+          class="error"
+        >
+          <div
+            *ngIf="
+              (amountForm.get('loanAmountInput')?.errors ?? {})['required']
+            "
+          >
+            Loan amount is required.
+          </div>
+          <div *ngIf="(amountForm.get('loanAmountInput')?.errors ?? {})['min']">
+            Minimum value is 1000.
+          </div>
+          <div *ngIf="(amountForm.get('loanAmountInput')?.errors ?? {})['max']">
+            Maximum value is 50000.
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <form [formGroup]="form">
+        <label for="">Number of rates: </label>
+        <input type="number" formControlName="numberInput" placeholder="12" />
+        <div
+          *ngIf="
+            form.get('numberInput')?.invalid &&
+            (form.get('numberInput')?.dirty || form.get('numberInput')?.touched)
+          "
+          class="error"
+        >
+          <div *ngIf="(form.get('numberInput')?.errors ?? {})['required']">
+            Number of rates is required.
+          </div>
+          <div *ngIf="(form.get('numberInput')?.errors ?? {})['min']">
+            Minimum value is 1.
+          </div>
+          <div *ngIf="(form.get('numberInput')?.errors ?? {})['max']">
+            Maximum value is 30.
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <button class="cancel" (click)="return()">Cancel</button>
+      <button
+        class="proceed"
+        (click)="submitForm()"
+        [disabled]="form.invalid || amountForm.invalid"
+      >
+        Proceed
+      </button>
+    </div>
+  </div>
+</div>

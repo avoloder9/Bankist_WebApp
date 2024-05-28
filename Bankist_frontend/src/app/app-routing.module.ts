@@ -13,6 +13,7 @@ import { AuthorizationGuard } from './helpers/auth/authorizationGuardService';
 import { BankViewComponent } from './components/bank-view/bank-view.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { LoanComponent } from './components/loan/loan.component';
 const routes: Routes = [
   { path: '', component: AtmComponent },
   { path: 'register', component: RegistrationComponent },
@@ -40,6 +41,11 @@ const routes: Routes = [
   { path: 'bank-view', component: BankViewComponent },
   { path: 'user-list', component: UserListComponent },
   { path: 'settings', component: SettingsComponent },
+  {
+    path: 'loan/:cardNumber',
+    component: LoanComponent,
+    canActivate: [AuthorizationGuard],
+  },
 ];
 
 @NgModule({

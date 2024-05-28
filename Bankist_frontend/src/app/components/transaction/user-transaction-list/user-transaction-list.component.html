@@ -57,7 +57,9 @@
     >
       Transfer Money
     </button>
-    <button class="loan">Loan</button>
+    <button class="loan" [routerLink]="['/loan', cardInfo?.cardNumber]">
+      Loan
+    </button>
     <button class="close" (click)="showDiv()">Close account</button>
     <button
       class="another_card"
@@ -83,14 +85,26 @@
         <td>{{ transaction.transactionDate | date : "dd/MM/yyyy" }}</td>
         <td>
           {{ transaction.amount.toFixed(2) }}
-          <span *ngIf="transaction.type !== 'Silver status award' && transaction.type !== 'Gold status award' && transaction.type !== 'Platinum status award'">
+          <span
+            *ngIf="
+              transaction.type !== 'Silver status award' &&
+              transaction.type !== 'Gold status award' &&
+              transaction.type !== 'Platinum status award'
+            "
+          >
             {{ transaction.senderCard.currency.currencyCode }}
           </span>
-          <span *ngIf="transaction.type === 'Silver status award' || transaction.type === 'Gold status award' || transaction.type === 'Platinum status award'">
+          <span
+            *ngIf="
+              transaction.type === 'Silver status award' ||
+              transaction.type === 'Gold status award' ||
+              transaction.type === 'Platinum status award'
+            "
+          >
             {{ transaction.recieverCard.currency.currencyCode }}
           </span>
         </td>
-        
+
         <td>{{ transaction.type }}</td>
         <td>{{ transaction.status }}</td>
         <td>{{ transaction?.senderCardId ?? "-" }}</td>
