@@ -5,6 +5,6 @@
         public int loanTypeId { get; set; }
         public string name {  get; set; }
         public float maxLoanAmount {  get; set; }
-        public DateTime repaymentTerm { get; set; }
+        public int maximumRepaymentMonths { get; set; }
     }
 }

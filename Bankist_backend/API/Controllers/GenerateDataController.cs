@@ -28,6 +28,7 @@ namespace API.Controllers
             data.Add("BankUserCard", _dbContext.BankUserCard.Count());
             data.Add("Transaction", _dbContext.Transaction.Count());
             data.Add("UserActivities", _dbContext.UserActivity.Count());
+            data.Add("LoanTypes", _dbContext.LoanType.Count());
 
             return Ok(data);
         }
@@ -42,6 +43,7 @@ namespace API.Controllers
             var bankUserCard = new List<BanksUsersCards>();
             var transactions = new List<Transaction>();
             var userActivities = new List<UserActivity>();
+            var loanTypes = new List<LoanType>();
 
             banks.Add(new Bank { username = "Unicredit", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
             banks.Add(new Bank { username = "Raiffeisen", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
@@ -70,6 +72,18 @@ namespace API.Controllers
                     registrationDate = DateTime.Now,
                     username = TokenGenerator.GenerateName(5),
                     password = TokenGenerator.GeneratePassword()
+                });
+            }
+
+            var types = new List<string> { "Personal", "Home", "Auto", "Student", "Business" };
+
+            for (int i = 0; i < types.Count; i++)
+            {
+                loanTypes.Add(new LoanType
+                {
+                    name = types[i],
+                    maxLoanAmount = 10000 + 10000 * i,
+                    maximumRepaymentMonths = 6 * (i + 1),
                 });
             }
 
@@ -155,6 +169,7 @@ namespace API.Controllers
             _dbContext.AddRange(bankUserCard);
             _dbContext.AddRange(transactions);
             _dbContext.AddRange(userActivities);
+            _dbContext.AddRange(loanTypes);
             _dbContext.SaveChanges();
             return Count();
         }
