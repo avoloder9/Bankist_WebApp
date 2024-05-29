@@ -1,0 +1,33 @@
+<div class="loan-wrapper">
+  <div class="loader-wrapper" *ngIf="isLoading">
+    <app-loader></app-loader>
+  </div>
+  <div class="loan-list-wrapper" *ngIf="!isLoading">
+    <h1>Loan list</h1>
+    <div class="loan-list">
+      <div class="loan" *ngFor="let loan of loans">
+        <div class="status" [class]="activeClass(loan?.status)">
+          {{ loan?.status }}
+        </div>
+        <div class="type"><span>Type : </span>{{ loan?.loanType?.name }}</div>
+        <div class="amount">
+          <span>Amount : </span> {{ loan?.amount.toFixed(2) }}
+        </div>
+        <button *ngIf="isPending(loan?.status)">
+          <svg height="16" viewBox="0 0 16 16" width="16">
+            <polygon
+              fill-rule="evenodd"
+              points="8 9.414 3.707 13.707 2.293 12.293 6.586 8 2.293 3.707 3.707 2.293 8 6.586 12.293 2.293 13.707 3.707 9.414 8 13.707 12.293 12.293 13.707 8 9.414"
+              fill="red"
+            />
+          </svg>
+        </button>
+        <div *ngIf="!isPending(loan?.status)"></div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button (click)="return()">return</button>
+      <button [routerLink]="['/loan', cardNumber]">new loan</button>
+    </div>
+  </div>
+</div>

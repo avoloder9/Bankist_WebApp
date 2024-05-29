@@ -25,6 +25,7 @@ import { BankViewComponent } from './components/bank-view/bank-view.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { LoanComponent } from './components/loan/loan.component';
+import { ActiveLoansComponent } from './components/active-loans/active-loans.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,6 +44,7 @@ import { LoanComponent } from './components/loan/loan.component';
     UserListComponent,
     SettingsComponent,
     LoanComponent,
+    ActiveLoansComponent,
   ],
   imports: [
     BrowserModule,

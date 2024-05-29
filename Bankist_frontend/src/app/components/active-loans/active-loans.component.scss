@@ -1,0 +1,152 @@
+@import "src/styles.scss";
+
+.loan-wrapper {
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .loan-list-wrapper {
+    height: 600px;
+    width: 60%;
+    background-image: $orangeGradient;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    border-radius: 20px;
+    gap: 30px;
+    .loan-list {
+      width: 90%;
+      background-color: white;
+      height: 100%;
+      border-radius: 10px;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      .loan {
+        width: 100%;
+        height: 60px;
+        background-color: rgb(192, 192, 192);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 15px;
+        border-bottom: 1px solid white;
+        .status {
+          height: 30px;
+          width: 120px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-transform: uppercase;
+          font-weight: bold;
+          color: white;
+          letter-spacing: 1px;
+        }
+
+        .canceled {
+          background-color: gray;
+        }
+
+        .pending {
+          background-color: rgb(214, 214, 0);
+        }
+
+        .approved {
+          background: $greenGradient;
+        }
+
+        .finished {
+          background-color: rgb(0, 68, 255);
+        }
+
+        button {
+          height: 40px;
+          width: 40px;
+          background-color: #e9e9e9;
+          border-radius: 5px;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          font-weight: 500;
+          transition: all 0.3s;
+          cursor: pointer;
+          color: $primaryColor;
+          font-size: 1rem;
+          border: 5px solid red;
+          svg {
+            height: 30px;
+            width: 30px;
+          }
+          &:hover {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+            cursor: pointer;
+          }
+        }
+
+        .type {
+          font-size: 18px;
+          font-weight: bold;
+          color: white;
+          span {
+            text-transform: uppercase;
+          }
+        }
+        .amount {
+          font-size: 18px;
+          font-weight: bold;
+          color: white;
+          span {
+            text-transform: uppercase;
+          }
+        }
+      }
+      :nth-child(1) {
+        border-radius: 10px 10px 0 0px;
+      }
+    }
+
+    .loan-list::-webkit-scrollbar {
+      width: 0px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      button {
+        height: 50px;
+        width: 170px;
+        background-color: #a2b06d;
+        border-radius: 20px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 500;
+        transition: all 0.3s;
+        cursor: pointer;
+        color: $primaryColor;
+        font-size: 1rem;
+        &:hover {
+          transform: scale(1.1);
+          filter: brightness(1.1);
+          cursor: pointer;
+        }
+      }
+      :nth-child(1) {
+        background: $redGradient;
+      }
+      :nth-child(2) {
+        background: $greenGradient;
+      }
+    }
+  }
+}

@@ -131,5 +131,32 @@ namespace API.Controllers
 
             return Ok(loanTypes);
         }
+
+        [HttpGet("get-user-loans")]
+        public async Task<ActionResult> GetUserLoans([FromQuery] string cardNumber)
+        {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
+
+            int cardId;
+            if (int.TryParse(cardNumber, out cardId))
+            {
+                var card = await _dbContext.BankUserCard.FirstOrDefaultAsync(buc => buc.cardId == cardId);
+
+                if (card == null)
+                {
+                    return NotFound(new { message = "Card not found" });
+                }
+
+                var loans = await _dbContext.Loan.Where(loan => loan.cardId == cardId).Include(loan => loan.loanType).ToListAsync();
+
+                return Ok(loans);
+            }
+
+            return BadRequest(new { message = "Invalid card number" });
+        }
     }
 }
