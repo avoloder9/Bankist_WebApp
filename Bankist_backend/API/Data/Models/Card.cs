@@ -12,14 +12,18 @@ namespace API.Data.Models
         public DateTime issueDate { get; set; }
         public float amount { get; set; }
         [Required]
-        public int pin {  get; set; }
+        public int pin { get; set; }
 
-        public string cardTypeId {  get; set; }
+        public string cardTypeId { get; set; }
         [ForeignKey(nameof(cardTypeId))]
         public CardType cardType { get; set; }
 
         public int currencyId { get; set; }
         [ForeignKey(nameof(currencyId))]
         public Currency currency { get; set; }
+
+        public float transactionLimit { get; set; }
+        public float atmLimit { get; set; }
+        public float negativeLimit { get; set; }
     }
 }

@@ -20,6 +20,9 @@ interface UserEditVM {
   lastName?: string;
   email?: string;
   password?: string;
+  transactionLimit: number;
+  atmLimit: number;
+  negativeLimit: number;
 }
 
 @Component({
@@ -36,13 +39,22 @@ export class SettingsComponent implements OnInit {
   isSuccess: boolean = false;
   isSame: boolean = false;
   isPasswordMatching: boolean = true;
+  transactionLimit: number = 0;
+  atmLimit: number = 0;
+  negativeLimit: number = 0;
+
   constructor(
     private httpClient: HttpClient,
     private userService: UserService
   ) {}
   ngOnInit(): void {
     this.userId = this.userService.getUserId();
-    this.user = { id: this.userId };
+    this.user = {
+      id: this.userId,
+      transactionLimit: 0,
+      atmLimit: 0,
+      negativeLimit: 0,
+    };
     console.log('UserID:', this.userId);
     this.getUserId();
   }
@@ -53,6 +65,17 @@ export class SettingsComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.userData = data;
+          if (
+            this.userData &&
+            this.userData.users &&
+            this.userData.users[0] &&
+            this.userData.users[0].card
+          ) {
+            this.transactionLimit =
+              this.userData.users[0].card.transactionLimit;
+            this.atmLimit = this.userData.users[0].card.atmLimit;
+            this.negativeLimit = this.userData.users[0].card.negativeLimit;
+          }
           console.log(this.userData);
         },
         (error: any) => {
@@ -69,6 +92,9 @@ export class SettingsComponent implements OnInit {
       lastName: this.userData.users[0].lastName,
       email: this.userData.users[0].email,
       password: this.userData.users[0].password,
+      transactionLimit: this.transactionLimit,
+      atmLimit: this.atmLimit,
+      negativeLimit: this.negativeLimit,
     };
 
     if (this.newPassword !== '' && this.confirmPassword !== '') {

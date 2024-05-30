@@ -8,5 +8,9 @@
         public string? lastName { get; set; }
         public string? email { get; set; }
         public string? password { get; set; }
+        public float transactionLimit { get; set; }
+        public float atmLimit { get; set; }
+        public float negativeLimit { get; set; }
+        
     }
 }
