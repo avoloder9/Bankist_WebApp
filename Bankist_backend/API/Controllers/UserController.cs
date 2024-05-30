@@ -58,37 +58,49 @@ namespace API.Controllers
         }
 
         [HttpGet("getById")]
-        public async Task<ActionResult<UserGetAllVM>> GetUserById(int id)
+        public async Task<ActionResult<UserGetAllByIdVM>> GetUserById(int id)
         {
             if (!_authService.IsLogin())
             {
                 return Unauthorized();
             }
 
-            var users = await _dbContext.User.OrderByDescending(x => x.id).Where(x => x.id == id)
-                .Select(x => new UserGetAllVMUser
-                {
-                    userId = x.id,
-                    userName = x.username,
-                    firstName = x.firstName,
-                    lastName = x.lastName,
-                    password = x.password,
-                    email = x.email,
-                    phone = x.phone,
-                    birthDate = x.birthDate,
-                    registrationDate = x.registrationDate
-                })
-                .ToListAsync();
+            var userCardData = await _dbContext.BankUserCard
+                .Include(buc => buc.user)
+                .Include(buc => buc.card)
+                .Where(buc => buc.userId == id)
+                .OrderByDescending(buc => buc.id)
+                .FirstOrDefaultAsync();
 
-            if (users == null || users.Count == 0)
+            if (userCardData == null)
             {
                 return NotFound();
             }
 
-            return Ok(new UserGetAllVM { Users = users });
+            var userVM = new UserGetAllByIdVM
+            {
+                Users = new List<UserGetAllByIdVMUser>
+                {
+                    new UserGetAllByIdVMUser
+                    {
+                        userId = userCardData.user.id,
+                        userName = userCardData.user.username,
+                        firstName = userCardData.user.firstName,
+                        lastName = userCardData.user.lastName,
+                        email = userCardData.user.email,
+                        phone = userCardData.user.phone,
+                        password = userCardData.user.password,
+                        birthDate = userCardData.user.birthDate,
+                        registrationDate = userCardData.user.registrationDate,
+                        transactionLimit = userCardData.card.transactionLimit,
+                        atmLimit = userCardData.card.atmLimit,
+                        negativeLimit = userCardData.card.negativeLimit
+                    }
+                }
+            };
+
+            return Ok(userVM);
         }
-
-
 
         [HttpPost("check")]
         public IActionResult CheckUserExists([FromBody] UserCheckVM request)
@@ -97,8 +109,6 @@ namespace API.Controllers
 
             return Ok(new { Exists = userExists });
         }
-
-
 
         [HttpPost("add")]
         public async Task<ActionResult<User>> AddUser([FromBody] UserAddVM request)
@@ -213,12 +223,21 @@ namespace API.Controllers
             var newUser = await _dbContext.User.FindAsync(user.Id);
             if (newUser == null)
                 return NotFound("User not found");
+
+            var userCard = await _dbContext.BankUserCard.Include(x => x.card).FirstOrDefaultAsync(buc => buc.userId == user.Id);
+            if (userCard != null)
+            {
+                var card = userCard.card;
+                card.transactionLimit = user.transactionLimit;
+                card.atmLimit = user.atmLimit;
+                card.negativeLimit = user.negativeLimit;
+            }
             newUser.firstName = user.firstName;
             newUser.lastName = user.lastName;
             newUser.email = user.email;
             newUser.password = user.password;
             newUser.username = user.userName;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Ok();
         }
 

@@ -15,15 +15,15 @@
                 </div>
                 <div class="setting">
                     <label>Transaction Limit</label>
-                    <input type="number" value="0.00" />
+                    <input type="number" [(ngModel)]="transactionLimit"/>
                 </div>
                 <div class="setting">
                     <label>ATM limit</label>
-                    <input type="number" value="0.00" />
+                    <input type="number"[(ngModel)]="atmLimit" />
                 </div>
                 <div class="setting">
                     <label>Negative limit</label>
-                    <input type="number" value="0.00" />
+                    <input type="number" [(ngModel)]="negativeLimit" />
                 </div>            
   
             </div>
@@ -51,9 +51,8 @@
                     </div>
             </div>
             <div class="save-container">
-                <div class="save" [ngClass]="{ 'loading': isSuccess }">
-                    <p (click)="editUser()">Save</p>
-                </div>
+                    <button class="save" (click)="editUser()" [ngClass]="{ 'loading': isSuccess }">Save</button>
+                
                 <div class="info">
                     <span *ngIf="isSuccess && isSame">Data saved successfully!</span>
                     <span *ngIf="!isSuccess && isSame && (newPassword !== '' && confirmPassword !== '')">Cannot save data!</span>                

@@ -2,11 +2,11 @@
 
 namespace API.Endpoints.UserEndpoints.GetAll
 {
-    public class UserGetAllVM
+    public class UserGetAllByIdVM
     {
-        public List<UserGetAllVMUser> Users { get; set; }
+        public List<UserGetAllByIdVMUser> Users { get; set; }
     }
-    public class UserGetAllVMUser
+    public class UserGetAllByIdVMUser
     {
         public int userId { get; set; }
         public string userName { get; set; }
@@ -18,5 +18,8 @@ namespace API.Endpoints.UserEndpoints.GetAll
 
         public DateTime birthDate { get; set; }
         public DateTime registrationDate { get; set; }
+        public float transactionLimit { get; set; }
+        public float atmLimit { get; set; }
+        public float negativeLimit { get; set; }
     }
 }
