@@ -5,6 +5,7 @@ namespace API.Endpoints.UserEndpoints.GetAll
     public class UserGetAllByIdVM
     {
         public List<UserGetAllByIdVMUser> Users { get; set; }
+        public string bankName { get; set; }
     }
     public class UserGetAllByIdVMUser
     {

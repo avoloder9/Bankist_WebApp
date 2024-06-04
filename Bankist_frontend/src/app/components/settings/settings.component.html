@@ -54,7 +54,7 @@
                     <button class="save" (click)="editUser()" [ngClass]="{ 'loading': isSuccess }">Save</button>
                 
                 <div class="info">
-                    <span *ngIf="isSuccess && isSame">Data saved successfully!</span>
+                    <span *ngIf="isSuccess">Data saved successfully!</span>
                     <span *ngIf="!isSuccess && isSame && (newPassword !== '' && confirmPassword !== '')">Cannot save data!</span>                
                     <span *ngIf="!isPasswordMatching && confirmPassword !== '' && !isSame">Passwords do not match!</span> 
                 </div>

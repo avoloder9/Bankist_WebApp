@@ -4,6 +4,7 @@ import { MyConfig } from 'src/app/myConfig';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SignalRService } from 'src/app/services/signalR.service';
 import { UserService } from 'src/app/services/UserService';
+import { DataService } from 'src/app/data.service';
 
 interface Transaction {
   transactionId: number;
@@ -59,6 +60,7 @@ export class UserTransactionListComponent implements OnInit {
     private route: ActivatedRoute,
     private signalRService: SignalRService,
     private router: Router,
+    private dataService: DataService,
     private userService: UserService
   ) {
     this.signalRService.reloadTransactions.subscribe(() => {
@@ -70,6 +72,7 @@ export class UserTransactionListComponent implements OnInit {
     console.log(headers);
     */ this.route.params.subscribe((params) => {
       this.bankName = params['bankName'];
+      this.dataService.changeBankName(this.bankName);
       if (this.bankName) {
         this.loadTransactions();
         this.getCardInfo();

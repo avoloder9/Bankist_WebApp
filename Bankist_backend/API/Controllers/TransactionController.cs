@@ -136,6 +136,10 @@ namespace API.Controllers
                 {
                     return StatusCode(401, "Insufficient funds");
                 }
+                if (request.amount > senderCard.transactionLimit)
+                {
+                    return StatusCode(403,"Transaction amount exceeds transaction limit");
+                }
 
                 var blockedCard = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == senderCard.cardNumber);
                 if (blockedCard.isBlock == true)
@@ -236,7 +240,10 @@ namespace API.Controllers
                 {
                     return BadRequest(new { message = "Invalid card number" });
                 }
-
+                if (Math.Abs(request.amount) > receiverCard.atmLimit)
+                {
+                    return BadRequest(new { message = "Amount exceeds ATM limit" });
+                }
                 receiverCard.amount += request.amount;
 
                 if (receiverCard.amount < 0)

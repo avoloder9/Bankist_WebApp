@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
 import { UserService } from 'src/app/services/UserService';
+import { DataService } from 'src/app/data.service';
 
 interface Users {
   userId: number;
@@ -39,42 +40,37 @@ export class SettingsComponent implements OnInit {
   isSuccess: boolean = false;
   isSame: boolean = false;
   isPasswordMatching: boolean = true;
-  transactionLimit: number = 0;
-  atmLimit: number = 0;
-  negativeLimit: number = 0;
+  transactionLimit: number;
+  atmLimit: number;
+  negativeLimit: number;
+  bankName: string | null = null;
 
   constructor(
     private httpClient: HttpClient,
-    private userService: UserService
+    private userService: UserService,
+    private dataService: DataService
   ) {}
   ngOnInit(): void {
+    this.dataService.currentBankName.subscribe(
+      (bankName) => (this.bankName = bankName)
+    );
     this.userId = this.userService.getUserId();
-    this.user = {
-      id: this.userId,
-      transactionLimit: 0,
-      atmLimit: 0,
-      negativeLimit: 0,
-    };
     console.log('UserID:', this.userId);
     this.getUserId();
   }
 
   getUserId() {
     this.httpClient
-      .get(`${MyConfig.serverAddress}/User/getById?id=${this.userId}`)
+      .get(
+        `${MyConfig.serverAddress}/User/getById?id=${this.userId}&bankName=${this.bankName}`
+      )
       .subscribe(
         (data: any) => {
           this.userData = data;
-          if (
-            this.userData &&
-            this.userData.users &&
-            this.userData.users[0] &&
-            this.userData.users[0].card
-          ) {
-            this.transactionLimit =
-              this.userData.users[0].card.transactionLimit;
-            this.atmLimit = this.userData.users[0].card.atmLimit;
-            this.negativeLimit = this.userData.users[0].card.negativeLimit;
+          if (this.userData) {
+            this.transactionLimit = this.userData.users[0].transactionLimit;
+            this.atmLimit = this.userData.users[0].atmLimit;
+            this.negativeLimit = this.userData.users[0].negativeLimit;
           }
           console.log(this.userData);
         },
@@ -111,9 +107,15 @@ export class SettingsComponent implements OnInit {
 
   editUser() {
     this.getEditData();
-    if (this.user && this.isSame) {
+    if (
+      this.user &&
+      (this.isSame || (this.newPassword === '' && this.confirmPassword === ''))
+    ) {
       this.httpClient
-        .put(`${MyConfig.serverAddress}/User/edit`, this.user)
+        .put(
+          `${MyConfig.serverAddress}/User/edit?bankName=${this.bankName}`,
+          this.user
+        )
         .subscribe((x) => {
           this.isSuccess = true;
           setTimeout(() => {
