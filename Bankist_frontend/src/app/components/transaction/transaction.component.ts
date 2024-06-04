@@ -12,6 +12,7 @@ import { SignalRService } from 'src/app/services/signalR.service';
 })
 export class TransactionComponent implements OnInit {
   senderCardId: string;
+  transactionLimit: boolean = false;
   goBack() {
     this.location.back();
   }
@@ -28,7 +29,7 @@ export class TransactionComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private signalRService: SignalRService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.transactionForm = this.fb.group({
@@ -77,6 +78,8 @@ export class TransactionComponent implements OnInit {
               this.unexpectedError = false;
               this.insufficientFunds = true;
               this.transactionSuccessful = false;
+            } else if (error.status === 403) {
+              this.transactionLimit = true;
             } else this.unexpectedError = true;
           },
         });

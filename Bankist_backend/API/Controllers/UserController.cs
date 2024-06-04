@@ -58,7 +58,7 @@ namespace API.Controllers
         }
 
         [HttpGet("getById")]
-        public async Task<ActionResult<UserGetAllByIdVM>> GetUserById(int id)
+        public async Task<ActionResult<UserGetAllByIdVM>> GetUserById(int id, string bankName)
         {
             if (!_authService.IsLogin())
             {
@@ -68,7 +68,9 @@ namespace API.Controllers
             var userCardData = await _dbContext.BankUserCard
                 .Include(buc => buc.user)
                 .Include(buc => buc.card)
+                .Include(buc => buc.bank)
                 .Where(buc => buc.userId == id)
+                .Where(buc => buc.bank.username == bankName)
                 .OrderByDescending(buc => buc.id)
                 .FirstOrDefaultAsync();
 
@@ -96,7 +98,10 @@ namespace API.Controllers
                         atmLimit = userCardData.card.atmLimit,
                         negativeLimit = userCardData.card.negativeLimit
                     }
-                }
+
+                },
+                bankName = userCardData.bank.username
+
             };
 
             return Ok(userVM);
@@ -217,14 +222,14 @@ namespace API.Controllers
 
 
         [HttpPut("edit")]
-        public async Task<ActionResult> EditUser(UserEditVM user)
+        public async Task<ActionResult> EditUser(UserEditVM user, string bankName)
         {
 
             var newUser = await _dbContext.User.FindAsync(user.Id);
             if (newUser == null)
                 return NotFound("User not found");
 
-            var userCard = await _dbContext.BankUserCard.Include(x => x.card).FirstOrDefaultAsync(buc => buc.userId == user.Id);
+            var userCard = await _dbContext.BankUserCard.Include(x => x.card).Where(x=>x.bank.username==bankName).FirstOrDefaultAsync(buc => buc.userId == user.Id);
             if (userCard != null)
             {
                 var card = userCard.card;

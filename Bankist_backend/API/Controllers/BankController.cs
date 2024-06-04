@@ -201,6 +201,7 @@ namespace API.Controllers
 
                 var user = databaseToken.account.User;
                 var maxCardNumber = _dbContext.Card.Max(c => (int?)c.cardNumber) ?? 0;
+                var lastPin = _dbContext.Card.OrderByDescending(c => c.pin).FirstOrDefault()?.pin ?? 0;
 
                 var card = new Card
                 {
@@ -209,7 +210,8 @@ namespace API.Controllers
                     expirationDate = DateTime.Now.AddYears(1),
                     amount = request.amount,
                     cardType = _dbContext.CardType.FirstOrDefault(type => type.CardTypeId == request.type),
-                    currency = _dbContext.Currency.FirstOrDefault(currency => currency.currencyCode == request.currency)
+                    currency = _dbContext.Currency.FirstOrDefault(currency => currency.currencyCode == request.currency),
+                    pin = lastPin + 1,
                 };
                 _dbContext.Card.Add(card);
 
@@ -322,9 +324,9 @@ namespace API.Controllers
         }
 
         [HttpGet("get-blockedCards")]
-        public ActionResult GetBlockedCard([FromQuery]int bankId)
+        public ActionResult GetBlockedCard([FromQuery] int bankId)
         {
-            var cards = _dbContext.BankUserCard.Where(buc => buc.isBlock == true).Include(x => x.card).Where(buc=>buc.bankId==bankId);
+            var cards = _dbContext.BankUserCard.Where(buc => buc.isBlock == true).Include(x => x.card).Where(buc => buc.bankId == bankId);
             return Ok(cards);
         }
     }
