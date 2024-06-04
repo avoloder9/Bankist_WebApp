@@ -158,5 +158,68 @@ namespace API.Controllers
 
             return BadRequest(new { message = "Invalid card number" });
         }
+
+        [HttpPut("approve-loan")]
+        public ActionResult ApproveLoan(int loanId)
+        {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isBank))
+            {
+                return Unauthorized(new { message = "Access denied" });
+            }
+
+            var loan = _dbContext.Loan.FirstOrDefault(loan => loan.loanId == loanId);
+
+            if (loan == null)
+            {
+                return NotFound(new { message = "Loan not found" });
+            }
+
+            if (loan.status != "PENDING")
+            {
+                return BadRequest(new { message = "Loan already approved!" });
+            }
+
+            loan.status = "APPROVED";
+            _dbContext.SaveChanges();
+
+            return Ok(loan);
+        }
+        [HttpPut("reject-loan")]
+        public ActionResult RejectLoan(int loanId)
+        {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
+            Account account = _authService.GetAuthInfo().account!;
+            if (!(account.isBank))
+            {
+                return Unauthorized(new { message = "Access denied" });
+            }
+
+            var loan = _dbContext.Loan.FirstOrDefault(loan => loan.loanId == loanId);
+
+            if (loan == null)
+            {
+                return NotFound(new { message = "Loan not found" });
+            }
+
+            if (loan.status != "PENDING")
+            {
+                return BadRequest(new { message = "Cannot reject approved loan!" });
+            }
+
+            loan.status = "REJECTED";
+            _dbContext.SaveChanges();
+
+            return Ok(loan);
+        }
     }
 }
