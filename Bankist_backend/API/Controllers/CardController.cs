@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.Data.Models;
 using API.Endpoints.AuthEndpoints.Login;
+using API.Helper.Auth;
 using API.Helper.Services;
 using API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace API.Controllers
         public MyAuthInfo Token { get; set; }
         public Card CardInfo { get; set; }
     }
-
+    [MyAuthorization]
     [ApiController]
     [Route("[controller]")]
     public class CardController : ControllerBase
