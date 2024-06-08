@@ -4,6 +4,7 @@ using API.Endpoints.UserEndpoints.CheckExists;
 using API.Endpoints.UserEndpoints.GetAll;
 using API.Endpoints.UserEndpoints.Post;
 using API.Helper;
+using API.Helper.Auth;
 using API.Helper.Services;
 using API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [MyAuthorization]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -229,7 +231,7 @@ namespace API.Controllers
             if (newUser == null)
                 return NotFound("User not found");
 
-            var userCard = await _dbContext.BankUserCard.Include(x => x.card).Where(x=>x.bank.username==bankName).FirstOrDefaultAsync(buc => buc.userId == user.Id);
+            var userCard = await _dbContext.BankUserCard.Include(x => x.card).Where(x => x.bank.username == bankName).FirstOrDefaultAsync(buc => buc.userId == user.Id);
             if (userCard != null)
             {
                 var card = userCard.card;

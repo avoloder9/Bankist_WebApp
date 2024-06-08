@@ -15,6 +15,7 @@ using API.Helper;
 
 namespace API.Controllers
 {
+    [MyAuthorization]
     [ApiController]
     [Route("[controller]")]
 
