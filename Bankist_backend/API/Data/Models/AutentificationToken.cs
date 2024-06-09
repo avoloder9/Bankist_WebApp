@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace API.Data.Models
 {
@@ -17,5 +18,9 @@ namespace API.Data.Models
 
         public DateTime autentificationTimestamp { get; set; }
         public string? ipAddress { get; set; }
+
+        [JsonIgnore]
+        public string? TwoFKey { get; set; }
+        public bool Is2FAUnlocked { get; set; }
     }
 }
