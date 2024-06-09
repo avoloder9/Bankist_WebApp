@@ -1,0 +1,114 @@
+@import "src/styles.scss";
+
+.root{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 45px 70px;
+    box-shadow: 0px 7px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 0 15px;
+    background-image: linear-gradient(to top left, $primaryGreen, #9be15d);
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+}
+.img {
+    width: 100%;
+}
+
+.circle{
+    align-items: center;
+    background-color: var(--auth-sendcode-circle);
+    border-radius: 40px;
+    display: flex;
+    height: 80px;
+    justify-content: center;
+    width: 80px;
+    margin: 0 auto;
+}
+
+.message{
+    color: var(--auth-sendcode-text);
+    font-size: 16px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    text-align: center;
+}
+.title{
+    color: var(--auth-sendcode-text);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    text-align: center;
+}
+
+.numInputContainer{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.numInput{
+    padding: 3px;
+    background-color: $primaryColor;
+    border: 1px solid;
+    border-radius: 5px;
+    color: var(--light-blue);
+    margin: 5px;
+    text-align: center;
+    width: 35px;
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+}
+
+.numInput:focus{
+    outline: none;
+}
+
+.btn{
+    padding: 7px 20px;
+    margin: 5px -10px;
+    width: calc(100% + 20px);
+    background-color: transparent;
+    background-color: $primaryColor;
+    color: var(--auth-submit-btn-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.btn:hover{
+    transform: scale(1.1);
+}
+.backArrow{
+    align-items: center;
+    color:  var(--light-blue);
+    border: none;
+    background-color: initial;
+    height: 50px;
+    width: 50px;
+    font-size: 2.5rem;
+    display: flex;
+    justify-content: center;
+    margin-left: -40px;
+    margin-top: -10px;
+}
+.backArrow:hover{
+    transform: scale(1.05);
+}
+.error{
+     text-align: center;
+    font-size: 18px;    
+    padding-top: 10px;
+    color: var(--auth-sendcode-text);
+}

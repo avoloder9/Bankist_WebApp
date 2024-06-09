@@ -29,7 +29,7 @@ namespace API.Helper
             Random random = new Random();
 
             int numberOfDigits = random.Next(9, 11);
-            string phoneNumber = "0"; 
+            string phoneNumber = "0";
             for (int i = 1; i < numberOfDigits; i++)
             {
                 phoneNumber += random.Next(0, 10);
@@ -96,7 +96,7 @@ namespace API.Helper
         }
         public static string GenerateRandomEmail()
         {
-            string[] domains = { "gmail.com", "yahoo.com", "outlook.com", "hotmail.com"};
+            string[] domains = { "gmail.com", "yahoo.com", "outlook.com", "hotmail.com" };
 
             Random random = new Random();
             string username = GenerateName(8);
@@ -110,7 +110,7 @@ namespace API.Helper
 
             int years = random.Next(18, 81);
 
-            int day = random.Next(1, 29); 
+            int day = random.Next(1, 29);
 
             int month = random.Next(1, 13);
 
@@ -148,7 +148,26 @@ namespace API.Helper
             var random = new Random();
             return purposes[random.Next(purposes.Length)];
         }
+        public static string GenerateRandomKey()
+        {
+            Random random = new Random();
 
+            int[] randomNumbers = new int[6];
+            for (int i = 0; i < randomNumbers.Length; i++)
+            {
+                randomNumbers[i] = random.Next(0, 10);
+            }
+
+            char[] charArray = new char[randomNumbers.Length];
+            for (int i = 0; i < randomNumbers.Length; i++)
+            {
+                charArray[i] = Convert.ToChar(randomNumbers[i] + '0');
+            }
+
+            string randomKey = new string(charArray);
+
+            return randomKey;
+        }
     }
-    
+
 }

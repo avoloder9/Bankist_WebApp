@@ -55,8 +55,8 @@ namespace API.Controllers
             banks.Add(new Bank { username = "BBI", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
             banks.Add(new Bank { username = "Sanpaolo", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
 
-            users.Add(new User { firstName = "Adnan", lastName = "Voloder", email = "adnanvoloder@gmail.com", phone = "061312132", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "adnanv1", password = "Adnan123!" });
-            users.Add(new User { firstName = "Faris", lastName = "Dizdarevic", email = "farisdiz@gmail.com", phone = "061341232", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "farisDiz1", password = "Faris123!" });
+            users.Add(new User { Is2FActive = true, firstName = "Adnan", lastName = "Voloder", email = "adnanvoloder@gmail.com", phone = "061312132", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "adnanv1", password = "Adnan123!" });
+            users.Add(new User { Is2FActive = true, firstName = "Faris", lastName = "Dizdarevic", email = "farisdiz@gmail.com", phone = "061341232", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "farisDiz1", password = "Faris123!" });
 
             Random random = new Random();
 
@@ -93,7 +93,7 @@ namespace API.Controllers
 
             cardTypes.Add(new CardType { CardTypeId = "DEBIT", fees = 2, maxLimit = 100000 });
             cardTypes.Add(new CardType { CardTypeId = "CREDIT", fees = 2, maxLimit = 100000 });
-            
+
             int startingCardNumber = 111111;
             int startingPinNumber = 1111;
             for (int i = 0; i < 100; i++)

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace API.Controllers
 {
     [Route("Auth")]
-    public class AuthController: ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly MyAuthService _authService;
@@ -62,12 +62,33 @@ namespace API.Controllers
             if (autentificationToken == null)
             {
                 return NotFound();
-            }          
+            }
             _dbContext.Remove(autentificationToken);
             await _dbContext.SaveChangesAsync();
 
             return Ok(new NoResponse());
         }
+        [HttpPost("2fKey")]
+        public async Task<ActionResult<NoResponse>> Unlocked([FromBody] Auth2FRequest request)
+        {
+            if (!_authService.GetAuthInfo().isLogin)
+            {
+                throw new Exception("User is not logged in");
+            }
+            var token = _authService.GetAuthInfo().autentificationToken;
+            if (token == null)
+                return BadRequest("Authentication token is null.");
 
+            if (request.key == token.TwoFKey)
+            {
+                token.Is2FAUnlocked = true;
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                return BadRequest("not valid key");
+            }
+            return Ok(new NoResponse());
+        }
     }
 }

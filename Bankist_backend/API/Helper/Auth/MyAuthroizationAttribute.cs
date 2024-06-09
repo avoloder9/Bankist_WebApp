@@ -20,11 +20,18 @@ namespace API.Helper.Auth
 
             if (!authService.IsLogin())
             {
-                context.Result = new UnauthorizedObjectResult("niste logirani na sistem");
+                context.Result = new UnauthorizedObjectResult("Not logged");
                 return;
             }
 
             MyAuthInfo myAuthInfo = authService.GetAuthInfo();
+
+            if (myAuthInfo.account!.Is2FActive && !myAuthInfo.autentificationToken!.Is2FAUnlocked)
+            {
+                context.Result = new UnauthorizedObjectResult("You haven't unlocked 2FA");
+                return;
+            }
+
             await actionLogService.Create(context.HttpContext);
             await next();
         }
