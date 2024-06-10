@@ -22,6 +22,7 @@ namespace API.Data.Models
 
         public bool isBank => Bank != null;
         public bool isUser => User != null;
+        public bool Is2FActive { get; set; }
 
     }
 }

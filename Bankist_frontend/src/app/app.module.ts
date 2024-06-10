@@ -27,6 +27,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { LoanComponent } from './components/loan/loan.component';
 import { ActiveLoansComponent } from './components/active-loans/active-loans.component';
 import { LoanListComponent } from './components/loan-list/loan-list.component';
+import { TwoFactorAuthenticationComponent } from './components/two-factor-authentication/two-factor-authentication.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,6 +48,7 @@ import { LoanListComponent } from './components/loan-list/loan-list.component';
     LoanComponent,
     ActiveLoansComponent,
     LoanListComponent,
+    TwoFactorAuthenticationComponent,
   ],
   imports: [
     BrowserModule,

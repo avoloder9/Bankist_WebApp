@@ -13,12 +13,14 @@ namespace API.Helper.Services
         private readonly ApplicationDbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _cache;
+        private readonly MyEmailSenderService _emailSenderService;
 
-        public MyAuthService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
+        public MyAuthService(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, IMemoryCache cache, MyEmailSenderService emailSenderService)
         {
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;
+            _emailSenderService = emailSenderService;
         }
 
         public async Task<MyAuthInfo> Login(AuthLoginVM request)
@@ -34,6 +36,13 @@ namespace API.Helper.Services
             {
                 throw new UnauthorizedAccessException("Incorrect password.");
             }
+            string? twoFKey = null;
+
+            if (loggedInAccount.Is2FActive)
+            {
+                twoFKey = TokenGenerator.GenerateRandomKey();
+                _emailSenderService.Send("adnan.voloder9@gmail.com", "2f", $"Your 2f key is {twoFKey}", false);
+            }
 
             string randomString = TokenGenerator.Generate(10);
             var newToken = new AutentificationToken()
@@ -41,7 +50,8 @@ namespace API.Helper.Services
                 value = randomString,
                 ipAddress = "YourIPAddress",  // Modify this part as needed
                 account = loggedInAccount,
-                autentificationTimestamp = DateTime.Now
+                autentificationTimestamp = DateTime.Now,
+                TwoFKey = twoFKey,
             };
             _dbContext.Add(newToken);
             await _dbContext.SaveChangesAsync();

@@ -3,6 +3,7 @@ using API.Data.Models;
 using API.Endpoints.BankEndpoints.GetActiveBanks;
 using API.Endpoints.BankEndpoints.GetAll;
 using API.Endpoints.BankEndpoints.GetUnactiveBanks;
+using API.Helper.Auth;
 using API.Helper.Services;
 using API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace API.Controllers
     {
         public string message { get; set; }
     }
-
+    [MyAuthorization]
     [ApiController]
     [Route("[controller]")]
     public class BankController : ControllerBase

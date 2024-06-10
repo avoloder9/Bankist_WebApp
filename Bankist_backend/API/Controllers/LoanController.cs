@@ -11,10 +11,15 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
 using Azure.Core;
+=======
+using API.Helper.Auth;
+>>>>>>> f62034c22a1cf523dfcb26f9fcfa1712bd25453d
 
 namespace API.Controllers
 {
+    [MyAuthorization]
     [ApiController]
     [Route("[controller]")]
     public class LoanController : ControllerBase

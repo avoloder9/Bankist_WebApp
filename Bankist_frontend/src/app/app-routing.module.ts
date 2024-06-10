@@ -16,6 +16,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { LoanComponent } from './components/loan/loan.component';
 import { ActiveLoansComponent } from './components/active-loans/active-loans.component';
 import { LoanListComponent } from './components/loan-list/loan-list.component';
+import { TwoFactorAuthenticationComponent } from './components/two-factor-authentication/two-factor-authentication.component';
 const routes: Routes = [
   { path: '', component: AtmComponent },
   { path: 'register', component: RegistrationComponent },
@@ -53,6 +54,10 @@ const routes: Routes = [
     path: 'active-loans/:cardNumber',
     component: ActiveLoansComponent,
     canActivate: [AuthorizationGuard],
+  },
+  {
+    path: '2f-authentication',
+    component: TwoFactorAuthenticationComponent,
   },
 ];
 

@@ -2,6 +2,7 @@ using API.Data;
 using API.Helper.Auth;
 using API.Helper.Services;
 using API.SignalR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using static API.Helper.Services.IUserService;
 
@@ -35,6 +36,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSwaggerGen(x => x.OperationFilter<AuthorizationSwaggerHeader>());
 builder.Services.AddTransient<MyAuthService>();
+builder.Services.AddTransient<MyActionLogService>();
+builder.Services.AddTransient<MyEmailSenderService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
 builder.Services.AddSignalR();
@@ -51,7 +54,7 @@ app.UseCors("AllowAllOrigins");
 
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -47,51 +47,68 @@ export class LoginComponent {
   onSubmit() {
     console.log(this.loginForm);
     if (this.loginForm.valid) {
-
       this.signalRService.open_ws_connection();
 
-      this.signalRService.onConnectionIdChange.subscribe((connectionId: string) => {
-        let loginrequest: AuthLoginVM = {
-          username: this.loginForm.value.username,
-          password: this.loginForm.value.password,
-          signalRConnectionID: connectionId
-        };
-        this.reset();
-        this.isSending = true;
+      this.signalRService.onConnectionIdChange.subscribe(
+        (connectionId: string) => {
+          let loginrequest: AuthLoginVM = {
+            username: this.loginForm.value.username,
+            password: this.loginForm.value.password,
+            signalRConnectionID: connectionId,
+          };
+          this.reset();
+          this.isSending = true;
 
-        this.httpClient
-          .post<AuthLoginResponse>(`${MyConfig.serverAddress}/Auth/login`, loginrequest)
-          .subscribe({
-            next: (response: any) => {
-              this.myAuthService.setLoginAccount(response.autentificationToken);
-              /*  if (this.myAuthService.isBank()) {
-                this.router.navigate(['/bank-view']);
-              }*/
+          this.httpClient
+            .post<AuthLoginResponse>(
+              `${MyConfig.serverAddress}/Auth/login`,
+              loginrequest
+            )
+            .subscribe({
+              next: (response: any) => {
+                this.myAuthService.setLoginAccount(
+                  response.autentificationToken
+                );
 
-              localStorage.setItem('token', response.autentificationToken.value);
-              this.isSending = false;
-              this.store.dispatch(login());
-              this.loginForm.reset();
-              this.router.navigate(['/bank-selection', { username: loginrequest.username }]);
-            },
+                localStorage.setItem(
+                  'token',
+                  response.autentificationToken.value
+                );
+                this.isSending = false;
+                this.store.dispatch(login());
+                this.loginForm.reset();
+                if (this.myAuthService.is2FActive()) {
+                  this.router.navigate([
+                    '/2f-authentication',
+                    {
+                      username: loginrequest.username,
+                    },
+                  ]);
+                } else
+                  this.router.navigate([
+                    '/bank-selection',
+                    { username: loginrequest.username },
+                  ]);
+              },
 
-            error: (error) => {
-              this.isSending = false;
-              console.log(error);
-              console.error(error.message);
-              switch (error.status) {
-                case 401:
-                  this.unauthorized = true;
-                  break;
-                case 404:
-                  this.userNotFound = true;
-                  break;
-                default:
-                  this.unexpectedError = true;
-              }
-            },
-          });
-      });
+              error: (error) => {
+                this.isSending = false;
+                console.log(error);
+                console.error(error.message);
+                switch (error.status) {
+                  case 401:
+                    this.unauthorized = true;
+                    break;
+                  case 404:
+                    this.userNotFound = true;
+                    break;
+                  default:
+                    this.unexpectedError = true;
+                }
+              },
+            });
+        }
+      );
     }
   }
   reset() {
@@ -100,5 +117,4 @@ export class LoginComponent {
     this.unauthorized = false;
     this.unexpectedError = false;
   }
-
 }

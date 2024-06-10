@@ -6,14 +6,7 @@
     placeholder="Enter first name, last name or card number"
   />
   <button [routerLink]="['/bank-view']" [queryParams]="{ bankId: bankId }">
-    Users
-  </button>
-  <button
-    [routerLink]="['/loan-list']"
-    [queryParams]="{ bankId: bankId }"
-    style="margin-left: 10px"
-  >
-    Loans
+    Transactions
   </button>
 </div>
 <table>

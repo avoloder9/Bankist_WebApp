@@ -10,22 +10,31 @@ namespace API.Helper.Auth
         {
         }
     }
-        public class MyAuthorizationAsyncActionFilter : IAsyncActionFilter
+    public class MyAuthorizationAsyncActionFilter : IAsyncActionFilter
+    {
+        public async Task OnActionExecutionAsync(
+            ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            public async Task OnActionExecutionAsync(
-                ActionExecutingContext context, ActionExecutionDelegate next)
+            var authService = context.HttpContext.RequestServices.GetService<MyAuthService>()!;
+            var actionLogService = context.HttpContext.RequestServices.GetService<MyActionLogService>()!;
+
+            if (!authService.IsLogin())
             {
-                var authService = context.HttpContext.RequestServices.GetService<MyAuthService>()!;
-               
-                if (!authService.IsLogin())
-                {
-                    context.Result = new UnauthorizedObjectResult("niste logirani na sistem");
-                    return;
-                }
-
-                MyAuthInfo myAuthInfo = authService.GetAuthInfo();
-
+                context.Result = new UnauthorizedObjectResult("Not logged");
+                return;
             }
+
+            MyAuthInfo myAuthInfo = authService.GetAuthInfo();
+
+            if (myAuthInfo.account!.Is2FActive && !myAuthInfo.autentificationToken!.Is2FAUnlocked)
+            {
+                context.Result = new UnauthorizedObjectResult("You haven't unlocked 2FA");
+                return;
+            }
+
+            await actionLogService.Create(context.HttpContext);
+            await next();
         }
-    
+    }
+
 }
