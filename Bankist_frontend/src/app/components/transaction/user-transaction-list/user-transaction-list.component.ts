@@ -118,7 +118,6 @@ export class UserTransactionListComponent implements OnInit {
           this.cardInfo = data;
           this.userId = this.cardInfo.userId;
           this.userService.setUserId(this.userId);
-          console.log(this.userId);
         },
         (error) => {
           console.log('Error fetching data:', error);

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Azure.Core;
 
 namespace API.Controllers
 {
@@ -94,25 +95,50 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            int numericBankId;
-            if (int.TryParse(bankId, out numericBankId))
-            {
-                var cards = await _dbContext.BankUserCard.Where(buc => buc.bankId == numericBankId).Select(buc => buc.cardId).ToListAsync();
-
-                if (cards == null)
-                {
-                    return NotFound(new { message = "No cards found" });
-                }
-
-                var loans = await _dbContext.Loan.Where(loan => cards.Contains(loan.cardId)).Include(loan => loan.card).ToListAsync();
-
-                return Ok(loans);
-            }
-            else
+            if (!int.TryParse(bankId, out int numericBankId))
             {
                 return BadRequest(new { message = "Invalid bankId: must be a numeric value." });
             }
+
+            var cards = await _dbContext.BankUserCard
+                .Where(buc => buc.bankId == numericBankId)
+                .Select(buc => buc.cardId)
+                .ToListAsync();
+
+            if (cards == null || !cards.Any())
+            {
+                return NotFound(new { message = "No cards found" });
+            }
+
+            var loans = await _dbContext.Loan
+                .Where(loan => cards.Contains(loan.cardId))
+                .Include(loan => loan.card)
+                .Include(loan => loan.loanType)
+                .ToListAsync();
+
+            var loanUserDtos = new List<LoanUserDto>();
+
+            foreach (var loan in loans)
+            {
+                var buc = await _dbContext.BankUserCard
+                    .FirstOrDefaultAsync(buc => buc.cardId == loan.cardId);
+
+                if (buc != null)
+                {
+                    var user = await _dbContext.User
+                        .FirstOrDefaultAsync(user => user.id == buc.userId);
+
+                    loanUserDtos.Add(new LoanUserDto
+                      {
+                         Loan = loan,
+                         User = user
+                      });
+                }
+            }
+
+            return Ok(loanUserDtos);
         }
+
 
         [HttpGet("get-loan-types")]
         public ActionResult GetLoanTypes()
@@ -185,7 +211,42 @@ namespace API.Controllers
                 return BadRequest(new { message = "Loan already approved!" });
             }
 
+            var buc = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == loan.cardId);
+
+            if (buc == null)
+            {
+                return BadRequest(new { message = "Bank cannot process!" });
+            }
+
+            var bank = _dbContext.Bank.FirstOrDefault(b => b.id == buc.bankId);
+
+            if (bank.totalCapital < loan.amount)
+            {
+                return BadRequest(new { message = "Bank is bankrupt!" });
+            }
+
+            var transaction = new Transaction
+            {
+                transactionDate = DateTime.UtcNow,
+                amount = Math.Abs(loan.amount),
+                type = "Loan",
+                status = "Completed",
+                recieverCardId = loan.cardId
+            };
+
+            _dbContext.Transaction.Add(transaction);
+            bank.totalCapital -= loan.amount;
             loan.status = "APPROVED";
+
+            var card = _dbContext.Card.FirstOrDefault(c => c.cardNumber == loan.cardId);
+
+            if (card == null)
+            {
+                return BadRequest(new { message = "Invalid card !" });
+            }
+
+            card.amount += loan.amount;
+
             _dbContext.SaveChanges();
 
             return Ok(loan);
@@ -221,5 +282,35 @@ namespace API.Controllers
 
             return Ok(loan);
         }
+        [HttpPut("cancel-loan")]
+        public ActionResult CancelLoan(int loanId)
+        {
+            if (!_authService.IsLogin())
+            {
+                return Unauthorized();
+            }
+
+            var loan = _dbContext.Loan.FirstOrDefault(loan => loan.loanId == loanId);
+
+            if (loan == null)
+            {
+                return NotFound(new { message = "Loan not found" });
+            }
+
+            if (loan.status != "PENDING")
+            {
+                return BadRequest(new { message = "Cannot reject approved loan!" });
+            }
+
+            loan.status = "CANCELED";
+            _dbContext.SaveChanges();
+
+            return Ok(loan);
+        }
+    }
+    public class LoanUserDto
+    {
+        public Loan Loan { get; set; }
+        public User User { get; set; }
     }
 }

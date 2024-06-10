@@ -89,7 +89,8 @@
             *ngIf="
               transaction.type !== 'Silver status award' &&
               transaction.type !== 'Gold status award' &&
-              transaction.type !== 'Platinum status award'
+              transaction.type !== 'Platinum status award' &&
+              transaction.type !== 'Loan'
             "
           >
             {{ transaction.senderCard.currency.currencyCode }}
@@ -98,7 +99,8 @@
             *ngIf="
               transaction.type === 'Silver status award' ||
               transaction.type === 'Gold status award' ||
-              transaction.type === 'Platinum status award'
+              transaction.type === 'Platinum status award' ||
+              transaction.type === 'Loan'
             "
           >
             {{ transaction.recieverCard.currency.currencyCode }}

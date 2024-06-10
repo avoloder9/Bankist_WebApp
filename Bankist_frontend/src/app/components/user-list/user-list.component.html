@@ -1,105 +1,132 @@
 <div class="container">
-
-    <label>Search: </label>
-    <input type="text" [(ngModel)]="filterTable" placeholder="Enter first name, last name or card number">
-    <button [routerLink]="['/bank-view']" [queryParams]="{bankId:bankId}">Users</button>
+  <label>Search: </label>
+  <input
+    type="text"
+    [(ngModel)]="filterTable"
+    placeholder="Enter first name, last name or card number"
+  />
+  <button [routerLink]="['/bank-view']" [queryParams]="{ bankId: bankId }">
+    Users
+  </button>
+  <button
+    [routerLink]="['/loan-list']"
+    [queryParams]="{ bankId: bankId }"
+    style="margin-left: 10px"
+  >
+    Loans
+  </button>
 </div>
 <table>
-    <thead>
-        <tr>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Card number</th>
-            <th>Amount</th>
-            <th>Registration date</th>
-            <th>Delete account</th>
-            <th>Block card</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let user of filteredUsers" [ngClass]="{ 'blocked-card': isCardBlocked(user.cardNumber)}">
-            <td>{{ user.firstName }}</td>
-            <td>{{ user.lastName }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.phone }}</td>
+  <thead>
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Card number</th>
+      <th>Amount</th>
+      <th>Registration date</th>
+      <th>Delete account</th>
+      <th>Block card</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let user of filteredUsers"
+      [ngClass]="{ 'blocked-card': isCardBlocked(user.cardNumber) }"
+    >
+      <td>{{ user.firstName }}</td>
+      <td>{{ user.lastName }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.phone }}</td>
 
-            <td (mouseenter)="showActualValue($event, user.cardNumber.toString())" (mouseleave)="hideActualValue()">
-                <ng-template [ngIf]="hoveredValue !== user.cardNumber.toString()">
-                    <span class="masked">******</span>
-                </ng-template>
-                <ng-template [ngIf]="hoveredValue === user.cardNumber.toString()">
-                    <span>{{ user.cardNumber }}</span>
-                </ng-template>
-            </td>
-            <td (mouseenter)="showActualValue($event, user.amount.toString())" (mouseleave)="hideActualValue()">
-                <ng-template [ngIf]="hoveredValue !== user.amount.toString()">
-                    <span class="masked">******</span>
-                </ng-template>
-                <ng-template [ngIf]="hoveredValue === user.amount.toString()">
-                    <span>{{ user.amount.toFixed(2) }}</span>
-                </ng-template>
-            </td>
+      <td
+        (mouseenter)="showActualValue($event, user.cardNumber.toString())"
+        (mouseleave)="hideActualValue()"
+      >
+        <ng-template [ngIf]="hoveredValue !== user.cardNumber.toString()">
+          <span class="masked">******</span>
+        </ng-template>
+        <ng-template [ngIf]="hoveredValue === user.cardNumber.toString()">
+          <span>{{ user.cardNumber }}</span>
+        </ng-template>
+      </td>
+      <td
+        (mouseenter)="showActualValue($event, user.amount.toString())"
+        (mouseleave)="hideActualValue()"
+      >
+        <ng-template [ngIf]="hoveredValue !== user.amount.toString()">
+          <span class="masked">******</span>
+        </ng-template>
+        <ng-template [ngIf]="hoveredValue === user.amount.toString()">
+          <span>{{ user.amount.toFixed(2) }}</span>
+        </ng-template>
+      </td>
 
-            <td>{{ user.registrationDate | date: 'dd-MM-yyyy'}}</td>
-            <td style="
-              display: flex;
-              justify-content: center;
-              align-items: center;              
-            ">
-                <svg id="Icons" viewBox="0 0 24 24" height="33px" (click)="showDeleteDiv(user.id)">
-                    <path class="cls-1"
-                        d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm4.707,14.293a1,1,0,1,1-1.414,1.414L12,13.414,8.707,16.707a1,1,0,1,1-1.414-1.414L10.586,12,7.293,8.707A1,1,0,1,1,8.707,7.293L12,10.586l3.293-3.293a1,1,0,1,1,1.414,1.414L13.414,12Z"
-                        fill="red" />
-                </svg>
-            </td>
-            <td>
-                <div class="card-container" (mouseenter)="showMessage = isCardBlocked(user.cardNumber)"
-                    (mouseleave)="showMessage = false">
-                    <img src="https://cdn1.iconfinder.com/data/icons/credit-card-action-3/24/credit_card_bank_error-512.png"
-                        alt="Credit card" class="card_photo" (mouseenter)="showMessage = isCardBlocked(user.cardNumber)"
-                        (mouseleave)="showMessage = false"
-                        (click)=" !isCardBlocked(user.cardNumber) && showBlockDiv(user.id)">
-                    <div class="message" *ngIf="showMessage">
-                        This card is blocked
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </tbody>
+      <td>{{ user.registrationDate | date : "dd-MM-yyyy" }}</td>
+      <td style="display: flex; justify-content: center; align-items: center">
+        <svg
+          id="Icons"
+          viewBox="0 0 24 24"
+          height="33px"
+          (click)="showDeleteDiv(user.id)"
+        >
+          <path
+            class="cls-1"
+            d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm4.707,14.293a1,1,0,1,1-1.414,1.414L12,13.414,8.707,16.707a1,1,0,1,1-1.414-1.414L10.586,12,7.293,8.707A1,1,0,1,1,8.707,7.293L12,10.586l3.293-3.293a1,1,0,1,1,1.414,1.414L13.414,12Z"
+            fill="red"
+          />
+        </svg>
+      </td>
+      <td>
+        <div
+          class="card-container"
+          (mouseenter)="showMessage = isCardBlocked(user.cardNumber)"
+          (mouseleave)="showMessage = false"
+        >
+          <img
+            src="https://cdn1.iconfinder.com/data/icons/credit-card-action-3/24/credit_card_bank_error-512.png"
+            alt="Credit card"
+            class="card_photo"
+            (mouseenter)="showMessage = isCardBlocked(user.cardNumber)"
+            (mouseleave)="showMessage = false"
+            (click)="!isCardBlocked(user.cardNumber) && showBlockDiv(user.id)"
+          />
+          <div class="message" *ngIf="showMessage">This card is blocked</div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 <div class="confirm" *ngIf="isBlockDiv">
-    <span>Are you sure you want to block card?</span>
-    <div class="buttons">
-        <button class="yes" (click)="blockCard()">CONFIRM</button>
-        <button class="cancel" (click)="cancelBlock()">CANCEL</button>
-    </div>
+  <span>Are you sure you want to block card?</span>
+  <div class="buttons">
+    <button class="yes" (click)="blockCard()">CONFIRM</button>
+    <button class="cancel" (click)="cancelBlock()">CANCEL</button>
+  </div>
 </div>
 
 <ng-container *ngIf="isBlock">
-    <div class="deleteAccount">
-        <p>Card successfully blocked</p>
-    </div>
+  <div class="deleteAccount">
+    <p>Card successfully blocked</p>
+  </div>
 </ng-container>
 
-
 <div class="confirm" *ngIf="isDeleteDiv">
-    <span>Are you sure you want to delete user?</span>
-    <div>
-        <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason">
+  <span>Are you sure you want to delete user?</span>
+  <div>
+    <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason" />
+  </div>
 
-    </div>
-
-    <div class="buttons">
-        <button class="yes" (click)="deleteUser()">CONFIRM</button>
-        <button class="cancel" (click)="cancelDelete()">CANCEL</button>
-    </div>
+  <div class="buttons">
+    <button class="yes" (click)="deleteUser()">CONFIRM</button>
+    <button class="cancel" (click)="cancelDelete()">CANCEL</button>
+  </div>
 </div>
 
 <ng-container *ngIf="isAccountDeleted">
-    <div class="deleteAccount">
-        <p>Bank account successfully deleted</p>
-    </div>
+  <div class="deleteAccount">
+    <p>Bank account successfully deleted</p>
+  </div>
 </ng-container>

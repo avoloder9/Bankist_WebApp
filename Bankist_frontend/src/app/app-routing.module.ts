@@ -15,6 +15,7 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { LoanComponent } from './components/loan/loan.component';
 import { ActiveLoansComponent } from './components/active-loans/active-loans.component';
+import { LoanListComponent } from './components/loan-list/loan-list.component';
 const routes: Routes = [
   { path: '', component: AtmComponent },
   { path: 'register', component: RegistrationComponent },
@@ -41,6 +42,7 @@ const routes: Routes = [
   },
   { path: 'bank-view', component: BankViewComponent },
   { path: 'user-list', component: UserListComponent },
+  { path: 'loan-list', component: LoanListComponent },
   { path: 'settings', component: SettingsComponent },
   {
     path: 'loan/:cardNumber',

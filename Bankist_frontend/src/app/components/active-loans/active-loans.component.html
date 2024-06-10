@@ -13,7 +13,11 @@
         <div class="amount">
           <span>Amount : </span> {{ loan?.amount.toFixed(2) }}
         </div>
-        <button *ngIf="isPending(loan?.status)">
+        <button
+          *ngIf="isPending(loan?.status)"
+          (click)="cancelLoan(loan.loanId)"
+          class="cancel"
+        >
           <svg height="16" viewBox="0 0 16 16" width="16">
             <polygon
               fill-rule="evenodd"
@@ -22,7 +26,7 @@
             />
           </svg>
         </button>
-        <div *ngIf="!isPending(loan?.status)"></div>
+        <button class="empty" *ngIf="!isPending(loan?.status)"></button>
       </div>
     </div>
     <div class="buttons">

@@ -24,6 +24,25 @@ export class ActiveLoansComponent {
     this.location.back();
   }
 
+  cancelLoan(loanId: number) {
+    this.httpClient
+      .put<any>(
+        `${MyConfig.serverAddress}/Loan/cancel-loan?loanId=${loanId}`,
+        {}
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            console.log(response);
+            this.getLoans();
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+  }
+
   getLoans() {
     this.isLoading = true;
     this.httpClient
