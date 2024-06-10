@@ -1,0 +1,106 @@
+<div class="container">
+  <label>Search: </label>
+  <input
+    type="text"
+    [(ngModel)]="filterTable"
+    placeholder="Enter first name, last name or card number"
+  />
+  <button [routerLink]="['/user-list']" [queryParams]="{ bankId: bankId }">
+    Users
+  </button>
+  <button
+    [routerLink]="['/bank-view']"
+    [queryParams]="{ bankId: bankId }"
+    style="margin-left: 10px"
+  >
+    Loans
+  </button>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Card number</th>
+      <th>Request date</th>
+      <th>Amount</th>
+      <th>Rates</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let loan of filteredLoans">
+      <td>{{ loan.user.firstName }}</td>
+      <td>{{ loan.user.lastName }}</td>
+      <td>{{ loan.cardId }}</td>
+      <td>{{ loan.issueDate }}</td>
+      <td>{{ loan.amount }}</td>
+      <td>{{ loan.rate }}</td>
+      <td>{{ loan.status.toUpperCase() }}</td>
+      <td class="options">
+        <div *ngIf="loanPending(loan.status)">
+          <div class="approve" (click)="approveLoan(loan.loanId)">
+            <svg viewBox="0 0 128 128">
+              <g><circle class="st0" cx="64" cy="64" r="64" fill="green" /></g>
+              <g>
+                <path
+                  class="st1"
+                  d="M54.3,97.2L24.8,67.7c-0.4-0.4-0.4-1,0-1.4l8.5-8.5c0.4-0.4,1-0.4,1.4,0L55,78.1l38.2-38.2   c0.4-0.4,1-0.4,1.4,0l8.5,8.5c0.4,0.4,0.4,1,0,1.4L55.7,97.2C55.3,97.6,54.7,97.6,54.3,97.2z"
+                  fill="white"
+                />
+              </g>
+            </svg>
+          </div>
+          <div class="reject" (click)="rejectLoan(loan.loanId)">
+            <svg
+              class="bi bi-x-circle-fill"
+              fill="currentColor"
+              height="40"
+              viewBox="0 0 16 16"
+              width="40"
+            >
+              <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                fill="red"
+              />
+            </svg>
+          </div>
+        </div>
+        <div *ngIf="!loanPending(loan.status)">-</div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="confirm" *ngIf="isBlockDiv">
+  <span>Are you sure you want to block card?</span>
+  <div class="buttons">
+    <button class="yes">CONFIRM</button>
+    <button class="cancel">CANCEL</button>
+  </div>
+</div>
+
+<ng-container *ngIf="isBlock">
+  <div class="deleteAccount">
+    <p>Card successfully blocked</p>
+  </div>
+</ng-container>
+
+<div class="confirm" *ngIf="isDeleteDiv">
+  <span>Are you sure you want to delete user?</span>
+  <div>
+    <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason" />
+  </div>
+
+  <div class="buttons">
+    <button class="yes">CONFIRM</button>
+    <button class="cancel">CANCEL</button>
+  </div>
+</div>
+
+<ng-container *ngIf="isAccountDeleted">
+  <div class="deleteAccount">
+    <p>Bank account successfully deleted</p>
+  </div>
+</ng-container>
