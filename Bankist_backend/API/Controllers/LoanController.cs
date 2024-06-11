@@ -27,14 +27,18 @@ namespace API.Controllers
         private readonly IHubContext<SignalRHub> _hubContext;
         private readonly IMemoryCache _cache;
         private readonly LoyaltyService _loyaltyService;
-        public LoanController(ApplicationDbContext dbContext, MyAuthService authService, IHttpContextAccessor httpContextAccessor, IHubContext<SignalRHub> hubContext, IMemoryCache cache)
+        private readonly LoanService _loanService;
+        private readonly IServiceScopeFactory _scopeFactory;
+        public LoanController(IServiceScopeFactory scopeFactory, ApplicationDbContext dbContext, MyAuthService authService, IHttpContextAccessor httpContextAccessor, IHubContext<SignalRHub> hubContext, IMemoryCache cache)
         {
             _dbContext = dbContext;
             _authService = authService;
             _httpContextAccessor = httpContextAccessor;
             _hubContext = hubContext;
             _cache = cache;
+            _scopeFactory = scopeFactory;
             _loyaltyService = new LoyaltyService(_dbContext, _hubContext);
+            _loanService = new LoanService(_scopeFactory, _hubContext, _cache);
         }
 
         [HttpPost("request-loan")]
@@ -72,7 +76,8 @@ namespace API.Controllers
             {
                 amount = request.amount,
                 interest = request.amount * 0.10f,
-                rate = request.amount / request.rates,
+                rate = (request.amount + request.amount * 0.10f) / request.rates,
+                rateCount = request.rates,
                 issueDate = DateTime.UtcNow,
                 dueDate = DateTime.UtcNow.AddMonths(request.rates),
                 totalAmount = request.amount + request.amount * 0.10f,
@@ -85,6 +90,12 @@ namespace API.Controllers
 
             _dbContext.Loan.Add(newLoan);
             _dbContext.SaveChanges();
+
+            var connectionId = _cache.Get<string>($"ConnectionId_{userCard.bankId}");
+            if (!string.IsNullOrEmpty(connectionId))
+            {
+                await _hubContext.Clients.Client(connectionId).SendAsync("loan", "You have a new loan request");
+            }
 
             return Ok(new { message = "Loan request successful!" });
         }
@@ -240,7 +251,7 @@ namespace API.Controllers
             bank.totalCapital -= loan.amount;
             loan.status = "APPROVED";
 
-            var card = _dbContext.Card.FirstOrDefault(c => c.cardNumber == loan.cardId);
+            var card = _dbContext.Card.Include(card => card.currency).FirstOrDefault(c => c.cardNumber == loan.cardId);
 
             if (card == null)
             {
@@ -250,6 +261,8 @@ namespace API.Controllers
             card.amount += loan.amount;
 
             _dbContext.SaveChanges();
+
+            _loanService?.RatePay(loan, card, bank);
 
             return Ok(loan);
         }
