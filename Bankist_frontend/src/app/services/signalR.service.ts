@@ -8,6 +8,7 @@ export class SignalRService {
   public onConnectionIdChange: EventEmitter<string> =
     new EventEmitter<string>();
   public reloadTransactions: EventEmitter<void> = new EventEmitter<void>();
+  public reloadLoans: EventEmitter<void> = new EventEmitter<void>();
 
   open_ws_connection() {
     let connection = new signalR.HubConnectionBuilder()
@@ -21,6 +22,16 @@ export class SignalRService {
       }, 2000);
     });
 
+    connection.on('rate', (p) => {
+      this.reloadTransactions.emit();
+      alert(p);
+    });
+
+    connection.on('loan', (p) => {
+      this.reloadLoans.emit();
+      alert(p);
+    });
+
     connection.start().then(() => {
       SignalRService.ConnectionId = connection.connectionId;
       if (connection.connectionId) {
@@ -31,5 +42,8 @@ export class SignalRService {
   }
   emitReloadTransactions() {
     this.reloadTransactions.emit();
+  }
+  emitReloadLoans() {
+    this.reloadLoans.emit();
   }
 }

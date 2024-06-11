@@ -62,8 +62,12 @@
           background: $greenGradient;
         }
 
-        .finished {
+        .active {
           background-color: rgb(0, 68, 255);
+        }
+
+        .completed {
+          background: rgb(190, 25, 255);
         }
 
         .cancel {

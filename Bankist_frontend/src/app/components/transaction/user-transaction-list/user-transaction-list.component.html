@@ -1,13 +1,3 @@
-<nav id="navbar">
-  <div>
-    <a class="options" href="#" routerLink="/userTransactionList"
-      >List of Transactions</a
-    >
-    <a class="options" href="#" routerLink="/transaction">Transaction</a>
-    <a class="options" href="#">Settings</a>
-  </div>
-</nav>
-
 <div class="imageWrapper">
   <div class="account-status">
     <p>Account status:</p>
@@ -90,7 +80,8 @@
               transaction.type !== 'Silver status award' &&
               transaction.type !== 'Gold status award' &&
               transaction.type !== 'Platinum status award' &&
-              transaction.type !== 'Loan'
+              transaction.type !== 'Loan' &&
+              transaction.type !== 'Rate'
             "
           >
             {{ transaction.senderCard.currency.currencyCode }}
@@ -100,7 +91,8 @@
               transaction.type === 'Silver status award' ||
               transaction.type === 'Gold status award' ||
               transaction.type === 'Platinum status award' ||
-              transaction.type === 'Loan'
+              transaction.type === 'Loan' ||
+              transaction.type === 'Rate'
             "
           >
             {{ transaction.recieverCard.currency.currencyCode }}
