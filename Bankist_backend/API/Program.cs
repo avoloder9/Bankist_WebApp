@@ -37,6 +37,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSwaggerGen(x => x.OperationFilter<AuthorizationSwaggerHeader>());
 builder.Services.AddTransient<MyAuthService>();
 builder.Services.AddTransient<MyActionLogService>();
+builder.Services.AddScoped<LoanService>();
+
 builder.Services.AddTransient<MyEmailSenderService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddMemoryCache();
