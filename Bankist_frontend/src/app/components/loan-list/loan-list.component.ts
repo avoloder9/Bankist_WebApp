@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
-
+import { SignalRService } from 'src/app/services/signalR.service';
 @Component({
   selector: 'app-loan-list',
   templateUrl: './loan-list.component.html',
@@ -22,7 +22,15 @@ export class LoanListComponent {
   blockedCardNumbers: any = [];
   cardBlocked: boolean = false;
   showMessage: any;
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute) {}
+  constructor(
+    private httpClient: HttpClient,
+    private route: ActivatedRoute,
+    private signalRService: SignalRService
+  ) {
+    this.signalRService.reloadLoans.subscribe(() => {
+      this.getLoans();
+    });
+  }
   ngOnInit(): void {
     this.getLoans();
   }
