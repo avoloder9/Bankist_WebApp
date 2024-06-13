@@ -4,6 +4,7 @@ import { MyConfig } from 'src/app/myConfig';
 import { MyAuthService } from 'src/app/services/MyAuthService';
 import { SignalRService } from 'src/app/services/signalR.service';
 import { VisualizationComponent } from '../visualization/visualization.component';
+import { TranslationService } from 'src/app/services/TranslationService';
 interface CardPinVM {
   cardNumber: number;
   pin: number;
@@ -43,11 +44,17 @@ export class AtmComponent {
   depositAmount: string = '';
   withdrawalAmount: string = '';
   transactionType: string = '';
+  translations: any;
 
   constructor(
     private httpClient: HttpClient,
-    private myAuthService: MyAuthService
+    private myAuthService: MyAuthService,
+    private translationService: TranslationService
   ) {}
+
+  ngOnInit() {
+    this.translations = this.translationService.getTranslations();
+  }
 
   inputNumber(x: number) {
     if (this.stage1) {
@@ -154,6 +161,7 @@ export class AtmComponent {
           }, 4000);
         },
         (error) => {
+          console.log(error);
           this.stageTransaction = false;
           this.stageDeposit = false;
           this.stageError = true;

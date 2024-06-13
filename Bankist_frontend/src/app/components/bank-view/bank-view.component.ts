@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
-
+import { TranslationService } from 'src/app/services/TranslationService';
 interface Transaction {
   transactionId: number;
   transactionDate: string;
@@ -26,9 +26,15 @@ export class BankViewComponent implements OnInit {
   sortedTransactions: Transaction[] | null = null;
   bankId: any;
   filterTable: string = '';
-
-  constructor(private httpClient: HttpClient, private route: ActivatedRoute) {}
+  translations: any;
+  constructor(
+    private httpClient: HttpClient,
+    private route: ActivatedRoute,
+    private translationService: TranslationService
+  ) {}
   ngOnInit(): void {
+    this.translations = this.translationService.getTranslations();
+
     this.route.queryParams.subscribe(
       (params) => {
         this.bankId = params['bankId'];

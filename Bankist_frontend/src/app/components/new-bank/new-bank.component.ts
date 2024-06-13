@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
 import { LoaderComponent } from '../loader/loader.component';
+import { TranslationService } from 'src/app/services/TranslationService';
 interface BankOption {
   name: string;
   image: string;
@@ -20,10 +21,16 @@ export class NewBankComponent {
   isLoading: boolean = false;
   selectedBank: BankOption;
   banks: BankOption[] = [];
+  translations: any;
 
-  constructor(private router: Router, private httpClient: HttpClient) { }
+  constructor(
+    private router: Router,
+    private httpClient: HttpClient,
+    private translationService: TranslationService
+  ) {}
 
   ngOnInit() {
+    this.translations = this.translationService.getTranslations();
     this.getBanks();
   }
 
@@ -35,10 +42,12 @@ export class NewBankComponent {
      });
      */
     this.httpClient
-      .get<any>(`${MyConfig.serverAddress}/Bank/unactive-banks`,
-      /* {
+      .get<any>(
+        `${MyConfig.serverAddress}/Bank/unactive-banks`
+        /* {
         headers: headers,
-      }*/)
+      }*/
+      )
       .subscribe({
         next: (response: any) => {
           console.log(response);

@@ -1,26 +1,26 @@
 <div class="container">
-  <label>Search: </label>
+  <label>{{ translations.search_label }}</label>
   <input
     type="text"
     [(ngModel)]="filterTable"
-    placeholder="Enter first name, last name or card number"
+    placeholder="{{ translations.search_placeholder }}"
   />
   <button [routerLink]="['/bank-view']" [queryParams]="{ bankId: bankId }">
-    Transactions
+    {{ translations.transactions_button }}
   </button>
 </div>
 <table>
   <thead>
     <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Card number</th>
-      <th>Amount</th>
-      <th>Registration date</th>
-      <th>Delete account</th>
-      <th>Block card</th>
+      <th>{{ translations.table_headers.first_name }}</th>
+      <th>{{ translations.table_headers.last_name }}</th>
+      <th>{{ translations.table_headers.email }}</th>
+      <th>{{ translations.table_headers.phone }}</th>
+      <th>{{ translations.table_headers.card_number }}</th>
+      <th>{{ translations.table_headers.amount }}</th>
+      <th>{{ translations.table_headers.registration_date }}</th>
+      <th>{{ translations.table_headers.delete_account }}</th>
+      <th>{{ translations.table_headers.block_card }}</th>
     </tr>
   </thead>
   <tbody>
@@ -32,7 +32,6 @@
       <td>{{ user.lastName }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.phone }}</td>
-
       <td
         (mouseenter)="showActualValue($event, user.cardNumber.toString())"
         (mouseleave)="hideActualValue()"
@@ -55,7 +54,6 @@
           <span>{{ user.amount.toFixed(2) }}</span>
         </ng-template>
       </td>
-
       <td>{{ user.registrationDate | date : "dd-MM-yyyy" }}</td>
       <td style="display: flex; justify-content: center; align-items: center">
         <svg
@@ -85,7 +83,9 @@
             (mouseleave)="showMessage = false"
             (click)="!isCardBlocked(user.cardNumber) && showBlockDiv(user.id)"
           />
-          <div class="message" *ngIf="showMessage">This card is blocked</div>
+          <div class="message" *ngIf="showMessage">
+            {{ translations.card_blocked_message }}
+          </div>
         </div>
       </td>
     </tr>
@@ -93,33 +93,44 @@
 </table>
 
 <div class="confirm" *ngIf="isBlockDiv">
-  <span>Are you sure you want to block card?</span>
+  <span>{{ translations.confirm_block_message }}</span>
   <div class="buttons">
-    <button class="yes" (click)="blockCard()">CONFIRM</button>
-    <button class="cancel" (click)="cancelBlock()">CANCEL</button>
+    <button class="yes" (click)="blockCard()">
+      {{ translations.confirm_block_button }}
+    </button>
+    <button class="cancel" (click)="cancelBlock()">
+      {{ translations.cancel_block_button }}
+    </button>
   </div>
 </div>
 
 <ng-container *ngIf="isBlock">
   <div class="deleteAccount">
-    <p>Card successfully blocked</p>
+    <p>{{ translations.card_blocked_success }}</p>
   </div>
 </ng-container>
 
 <div class="confirm" *ngIf="isDeleteDiv">
-  <span>Are you sure you want to delete user?</span>
+  <span>{{ translations.confirm_delete_message }}</span>
   <div>
-    <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason" />
+    <input
+      type="text"
+      [(ngModel)]="deleteReason"
+      placeholder="{{ translations.enter_delete_reason_placeholder }}"
+    />
   </div>
-
   <div class="buttons">
-    <button class="yes" (click)="deleteUser()">CONFIRM</button>
-    <button class="cancel" (click)="cancelDelete()">CANCEL</button>
+    <button class="yes" (click)="deleteUser()">
+      {{ translations.confirm_delete_button }}
+    </button>
+    <button class="cancel" (click)="cancelDelete()">
+      {{ translations.cancel_delete_button }}
+    </button>
   </div>
 </div>
 
 <ng-container *ngIf="isAccountDeleted">
   <div class="deleteAccount">
-    <p>Bank account successfully deleted</p>
+    <p>{{ translations.account_deleted_message }}</p>
   </div>
 </ng-container>

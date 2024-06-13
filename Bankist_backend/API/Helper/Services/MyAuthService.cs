@@ -40,8 +40,13 @@ namespace API.Helper.Services
 
             if (loggedInAccount.Is2FActive)
             {
-                twoFKey = TokenGenerator.GenerateRandomKey();
-                _emailSenderService.Send("adnan.voloder9@gmail.com", "2f", $"Your 2f key is {twoFKey}", false);
+                var user = await _dbContext.User.FirstOrDefaultAsync(u => u.id == loggedInAccount.id);
+
+                if (user != null)
+                {
+                    twoFKey = TokenGenerator.GenerateRandomKey();
+                    _emailSenderService.Send(user.email, "2f", $"Your 2f key is {twoFKey}", false);
+                }
             }
 
             string randomString = TokenGenerator.Generate(10);

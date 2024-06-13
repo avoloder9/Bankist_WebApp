@@ -8,7 +8,7 @@
   <app-loader *ngIf="isLoading"></app-loader>
   <div class="selection" *ngIf="!isLoading">
     <div class="empty-wrapper" *ngIf="banks.length === 0">
-      <p>No new bank to select.</p>
+      <p>{{ translations.no_new_bank_to_select }}</p>
     </div>
     <div class="bank-selection-wrapper" *ngIf="banks.length !== 0">
       <div class="bank-selection">
@@ -17,10 +17,10 @@
             <img [src]="bank.image" alt="" />
           </div>
           <p>{{ bank.name }}</p>
-          <p>Number of users: {{ bank.numberOfUsers }}</p>
+          <p>{{ translations.number_of_users }}</p>
         </div>
       </div>
     </div>
-    <button class="return" (click)="return()">Return</button>
+    <button class="return" (click)="return()">{{ translations.return }}</button>
   </div>
 </div>

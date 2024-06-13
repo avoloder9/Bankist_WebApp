@@ -3,15 +3,19 @@
     <app-loader></app-loader>
   </div>
   <div class="loan-list-wrapper" *ngIf="!isLoading">
-    <h1>Loan list</h1>
+    <h1>{{ translations.loan_list }}</h1>
     <div class="loan-list">
       <div class="loan" *ngFor="let loan of loans">
         <div class="status" [class]="activeClass(loan?.status)">
           {{ loan?.status }}
         </div>
-        <div class="type"><span>Type : </span>{{ loan?.loanType?.name }}</div>
+        <div class="type">
+          <span>{{ translations.type }} : </span
+          >{{ translations[loan?.loanType?.name.toLowerCase()] }}
+        </div>
         <div class="amount">
-          <span>Amount : </span> {{ loan?.amount.toFixed(2) }}
+          <span>{{ translations.amount }} : </span>
+          {{ loan?.amount.toFixed(2) }}
         </div>
         <button
           *ngIf="isPending(loan?.status)"
@@ -30,8 +34,10 @@
       </div>
     </div>
     <div class="buttons">
-      <button (click)="return()">return</button>
-      <button [routerLink]="['/loan', cardNumber]">new loan</button>
+      <button (click)="return()">{{ translations.return }}</button>
+      <button [routerLink]="['/loan', cardNumber]">
+        {{ translations.new_loan }}
+      </button>
     </div>
   </div>
 </div>

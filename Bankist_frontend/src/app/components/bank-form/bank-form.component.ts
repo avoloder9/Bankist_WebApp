@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MyConfig } from 'src/app/myConfig';
 import { LoaderComponent } from '../loader/loader.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslationService } from 'src/app/services/TranslationService';
 
 interface BankOption {
   name: string;
@@ -22,11 +23,18 @@ interface BankAccountVM {
 })
 export class BankFormComponent implements OnInit {
   username: any;
-  constructor(private router: Router, private httpClient: HttpClient, private route: ActivatedRoute) { }
+  translations: any;
+  constructor(
+    private router: Router,
+    private httpClient: HttpClient,
+    private route: ActivatedRoute,
+    private translationService: TranslationService
+  ) {}
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.username = params['username'];
     });
+    this.translations = this.translationService.getTranslations();
   }
 
   @Output() event = new EventEmitter<string>();
@@ -61,7 +69,7 @@ export class BankFormComponent implements OnInit {
     this.httpClient
       .post<any>(
         `${MyConfig.serverAddress}/Bank/new-account`,
-        newBankAccount/*,
+        newBankAccount /*,
         { headers: headers }*/
       )
       .subscribe({

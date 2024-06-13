@@ -1,32 +1,25 @@
 <div class="container">
-  <label>Search: </label>
+  <label>{{ translations.search_label }}</label>
   <input
     type="text"
     [(ngModel)]="filterTable"
-    placeholder="Enter first name, last name or card number"
+    placeholder="{{ translations.search_placeholder }}"
   />
-  <button [routerLink]="['/user-list']" [queryParams]="{ bankId: bankId }">
-    Users
-  </button>
-  <button
-    [routerLink]="['/bank-view']"
-    [queryParams]="{ bankId: bankId }"
-    style="margin-left: 10px"
-  >
-    Loans
+  <button [routerLink]="['/bank-view']" [queryParams]="{ bankId: bankId }">
+    {{ translations.transactions_button }}
   </button>
 </div>
 <table>
   <thead>
     <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Card number</th>
-      <th>Request date</th>
-      <th>Amount</th>
-      <th>Rates</th>
-      <th>Status</th>
-      <th>Action</th>
+      <th>{{ translations.first_name }}</th>
+      <th>{{ translations.last_name }}</th>
+      <th>{{ translations.card_number }}</th>
+      <th>{{ translations.request_date }}</th>
+      <th>{{ translations.amount }}</th>
+      <th>{{ translations.rates }}</th>
+      <th>{{ translations.status }}</th>
+      <th>{{ translations.action }}</th>
     </tr>
   </thead>
   <tbody>
@@ -74,33 +67,37 @@
 </table>
 
 <div class="confirm" *ngIf="isBlockDiv">
-  <span>Are you sure you want to block card?</span>
+  <span>{{ translations.confirm_block_card }}</span>
   <div class="buttons">
-    <button class="yes">CONFIRM</button>
-    <button class="cancel">CANCEL</button>
+    <button class="yes">{{ translations.confirm_button }}</button>
+    <button class="cancel">{{ translations.cancel_button }}</button>
   </div>
 </div>
 
 <ng-container *ngIf="isBlock">
   <div class="deleteAccount">
-    <p>Card successfully blocked</p>
+    <p>{{ translations.card_blocked_message }}</p>
   </div>
 </ng-container>
 
 <div class="confirm" *ngIf="isDeleteDiv">
-  <span>Are you sure you want to delete user?</span>
+  <span>{{ translations.confirm_delete_user }}</span>
   <div>
-    <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason" />
+    <input
+      type="text"
+      [(ngModel)]="deleteReason"
+      placeholder="{{ translations.enter_reason_placeholder }}"
+    />
   </div>
 
   <div class="buttons">
-    <button class="yes">CONFIRM</button>
-    <button class="cancel">CANCEL</button>
+    <button class="yes">{{ translations.confirm_button }}</button>
+    <button class="cancel">{{ translations.cancel_button }}</button>
   </div>
 </div>
 
 <ng-container *ngIf="isAccountDeleted">
   <div class="deleteAccount">
-    <p>Bank account successfully deleted</p>
+    <p>{{ translations.account_deleted_message }}</p>
   </div>
 </ng-container>

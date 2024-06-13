@@ -1,30 +1,30 @@
 <div class="container">
-  <label>Search: </label>
+  <label>{{ translations.search_label }}</label>
   <input
     type="text"
     [(ngModel)]="filterTable"
-    placeholder="Enter sender card or receiver card number"
+    placeholder="{{ translations.search_placeholder }}"
   />
   <button [routerLink]="['/user-list']" [queryParams]="{ bankId: bankId }">
-    Users
+    {{ translations.users_button }}
   </button>
   <button
     [routerLink]="['/loan-list']"
     [queryParams]="{ bankId: bankId }"
     style="margin-left: 10px"
   >
-    Loans
+    {{ translations.loans_button }}
   </button>
 </div>
 <table class="transactionTable">
   <thead>
     <tr>
-      <th>Transaction Date</th>
-      <th>Amount</th>
-      <th>Purpose</th>
-      <th>Status</th>
-      <th>Sender Card</th>
-      <th>Receiver Card</th>
+      <th>{{ translations.transaction_date }}</th>
+      <th>{{ translations.amount }}</th>
+      <th>{{ translations.purpose }}</th>
+      <th>{{ translations.status }}</th>
+      <th>{{ translations.sender_card }}</th>
+      <th>{{ translations.receiver_card }}</th>
     </tr>
   </thead>
   <tbody>
@@ -35,7 +35,7 @@
         {{ transaction.currency }}
       </td>
       <td>{{ transaction.type }}</td>
-      <td>{{ transaction.status }}</td>
+      <td>{{ translations[transaction.status.toLowerCase()] }}</td>
       <td>{{ transaction?.senderCardId ?? "-" }}</td>
       <td>{{ transaction?.recieverCardId ?? "-" }}</td>
     </tr>

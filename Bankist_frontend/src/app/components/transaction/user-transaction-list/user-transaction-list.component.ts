@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SignalRService } from 'src/app/services/signalR.service';
 import { UserService } from 'src/app/services/UserService';
 import { DataService } from 'src/app/data.service';
+import { TranslationService } from 'src/app/services/TranslationService';
 
 interface Transaction {
   transactionId: number;
@@ -55,19 +56,22 @@ export class UserTransactionListComponent implements OnInit {
   today: Date = new Date();
   username: any;
   userId: any;
+  translations: any;
   constructor(
     private httpClient: HttpClient,
     private route: ActivatedRoute,
     private signalRService: SignalRService,
     private router: Router,
     private dataService: DataService,
-    private userService: UserService
+    private userService: UserService,
+    private translationService: TranslationService
   ) {
     this.signalRService.reloadTransactions.subscribe(() => {
       this.loadTransactions();
     });
   }
   ngOnInit(): void {
+    this.translations = this.translationService.getTranslations();
     /*const headers = this.getHeaders();
     console.log(headers);
     */ this.route.params.subscribe((params) => {

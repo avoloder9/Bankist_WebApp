@@ -3,12 +3,12 @@
     <div class="heading">
       <div class="screen">
         <div class="stage1" *ngIf="stage1">
-          <p id="title">Welcome to Bankist ATM!</p>
+          <p id="title">{{ translations.welcome }}</p>
           <img src="../../../assets/logo.png" alt="" />
-          <p>Please insert your card number to proceed</p>
+          <p></p>
         </div>
         <div class="stage2" *ngIf="stage2">
-          <p>Please insert your pin!</p>
+          <p>{{ translations.insert_pin }}</p>
           <img src="../../../assets/logo.png" alt="" />
           <form>
             <input
@@ -22,18 +22,22 @@
           </form>
         </div>
         <div class="stage3" *ngIf="stage3">
-          <p>Select an option!</p>
-          <button (click)="showBalance()">Check balance</button>
-          <button (click)="showDeposit()">Deposit</button>
-          <button (click)="showWithdrawal()">Withdrawal</button>
+          <p>{{ translations.select_option }}</p>
+          <button (click)="showBalance()">
+            {{ translations.check_balance }}
+          </button>
+          <button (click)="showDeposit()">{{ translations.deposit }}</button>
+          <button (click)="showWithdrawal()">
+            {{ translations.withdrawal }}
+          </button>
         </div>
         <div class="stageBalanceCheck" *ngIf="stageBalanceCheck">
-          <p>Your balance is</p>
+          <p>{{ translations.your_balance }}</p>
           <p>{{ balance }}</p>
-          <button (click)="return()">Return</button>
+          <button (click)="return()">{{ translations.return }}</button>
         </div>
         <div class="stageDeposit" *ngIf="stageDeposit">
-          <p>How much would you like to deposit?</p>
+          <p>{{ translations.deposit_question }}</p>
           <input
             type="text"
             name="depositAmount"
@@ -44,7 +48,9 @@
           />
         </div>
         <div class="stageWithdrawal" *ngIf="stageWithdrawal">
-          <p>How much would you like to withdraw?</p>
+          <p>
+            {{ translations.withdraw_question }}
+          </p>
           <input
             type="text"
             name="withdrawalAmount"
@@ -54,9 +60,10 @@
             autocomplete="off"
           />
         </div>
+
         <div class="stage1" *ngIf="stageThank">
-          <p>Operation successful!</p>
-          <p id="title">Thank you for using Bankist ATM!</p>
+          <p>{{ translations.operation_success }}</p>
+          <p id="title">{{ translations.thank_you_message }}</p>
           <img src="../../../assets/logo.png" alt="" />
         </div>
         <div class="stage1" *ngIf="stageError">
@@ -68,7 +75,7 @@
         </div>
       </div>
       <div class="card-input">
-        <label for="cardNumber">Insert your card number</label>
+        <label for="cardNumber">{{ translations.insert_card_number }}</label>
         <input
           type="text"
           name="cardNumber"
@@ -77,7 +84,7 @@
           maxlength="19"
           autocomplete="off"
         />
-        <button (click)="checkCard()">Proceed</button>
+        <button (click)="checkCard()">{{ translations.proceed }}</button>
       </div>
     </div>
     <div class="inputs">

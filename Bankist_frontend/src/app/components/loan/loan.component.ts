@@ -5,6 +5,7 @@ import { MyConfig } from 'src/app/myConfig';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderComponent } from '../loader/loader.component';
 import { Location } from '@angular/common';
+import { TranslationService } from 'src/app/services/TranslationService';
 
 interface LoanRequestVM {
   amount: number;
@@ -29,12 +30,14 @@ export class LoanComponent {
   responseMessage: string = '';
   isSuccess: boolean = false;
   isError: boolean = false;
+  translations: any;
 
   constructor(
     private httpClient: HttpClient,
     private location: Location,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translationService: TranslationService
   ) {
     this.form = this.fb.group({
       numberInput: [
@@ -48,6 +51,14 @@ export class LoanComponent {
         1000,
         [Validators.required, Validators.min(1000), Validators.max(50000)],
       ],
+    });
+  }
+
+  ngOnInit() {
+    this.translations = this.translationService.getTranslations();
+    this.getOptions();
+    this.route.params.subscribe((params) => {
+      this.userCard = params['cardNumber'];
     });
   }
 
@@ -77,13 +88,6 @@ export class LoanComponent {
           console.log(error);
         },
       });
-  }
-
-  ngOnInit() {
-    this.getOptions();
-    this.route.params.subscribe((params) => {
-      this.userCard = params['cardNumber'];
-    });
   }
 
   submitForm() {

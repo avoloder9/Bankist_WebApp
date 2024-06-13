@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -28,6 +28,13 @@ import { LoanComponent } from './components/loan/loan.component';
 import { ActiveLoansComponent } from './components/active-loans/active-loans.component';
 import { LoanListComponent } from './components/loan-list/loan-list.component';
 import { TwoFactorAuthenticationComponent } from './components/two-factor-authentication/two-factor-authentication.component';
+import { TranslationService } from './services/TranslationService';
+
+export function initializeTranslationService(
+  translationService: TranslationService
+): () => Promise<void> {
+  return () => translationService.loadTranslations();
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,6 +70,12 @@ import { TwoFactorAuthenticationComponent } from './components/two-factor-authen
     BankSelectionComponent,
     { provide: HTTP_INTERCEPTORS, useClass: MyAuthInterceptor, multi: true },
     AuthorizationGuard,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeTranslationService,
+      deps: [TranslationService],
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { MyConfig } from 'src/app/myConfig';
 import { UserService } from 'src/app/services/UserService';
 import { DataService } from 'src/app/data.service';
+import { TranslationService } from 'src/app/services/TranslationService';
 
 interface Users {
   userId: number;
@@ -44,13 +45,16 @@ export class SettingsComponent implements OnInit {
   atmLimit: number;
   negativeLimit: number;
   bankName: string | null = null;
+  translations: any;
 
   constructor(
     private httpClient: HttpClient,
     private userService: UserService,
-    private dataService: DataService
+    private dataService: DataService,
+    private translationService: TranslationService
   ) {}
   ngOnInit(): void {
+    this.translations = this.translationService.getTranslations();
     this.dataService.currentBankName.subscribe(
       (bankName) => (this.bankName = bankName)
     );
