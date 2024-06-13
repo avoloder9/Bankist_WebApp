@@ -5,6 +5,7 @@ import { MyConfig } from '../../myConfig';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SignalRService } from 'src/app/services/signalR.service';
+import { TranslationService } from 'src/app/services/TranslationService';
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
@@ -23,15 +24,18 @@ export class TransactionComponent implements OnInit {
   insufficientFunds: boolean = false;
   transactionSuccessful: boolean = false;
   receiverConnectionId: string | null = null;
+  translations: any;
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
     private location: Location,
     private route: ActivatedRoute,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private translationService: TranslationService
   ) {}
 
   ngOnInit(): void {
+    this.translations = this.translationService.getTranslations();
     this.transactionForm = this.fb.group({
       senderCardId: ['', Validators.required],
       recieverCardId: ['', Validators.required],

@@ -25,7 +25,9 @@
     "paths": {
       "@angular/forms": ["node_modules/@angular/forms"]
       // other paths...
-    }
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

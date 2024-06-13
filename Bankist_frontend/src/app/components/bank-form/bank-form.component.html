@@ -4,14 +4,17 @@
     <app-loader></app-loader>
   </div>
   <ng-container *ngIf="!isLoading && !success">
-    <h3>You are opening an account in {{ selectedBank.name }} bank.</h3>
+    <h3>
+      {{ translations.opening_account.replace('{{ selectedBank.name }}',
+      selectedBank.name) }}
+    </h3>
     <div class="image-wrapper">
       <img [src]="selectedBank.image" alt="" />
     </div>
 
     <div class="registration-info">
       <div class="option">
-        <label for="deposit">Initial deposit</label>
+        <label for="deposit">{{ translations.initial_deposit }}</label>
         <input
           type="number"
           placeholder="0.00"
@@ -20,7 +23,7 @@
         />
       </div>
       <div class="option">
-        <label>Card type</label>
+        <label>{{ translations.card_type }}</label>
         <select [(ngModel)]="selectedCard">
           <option *ngFor="let option of cardOptions" [value]="option">
             {{ option }}
@@ -28,7 +31,7 @@
         </select>
       </div>
       <div class="option">
-        <label>Currency</label>
+        <label>{{ translations.currency }}</label>
         <select [(ngModel)]="selectedCurrency">
           <option *ngFor="let option of currencyOptions" [value]="option">
             {{ option }}
@@ -36,13 +39,15 @@
         </select>
       </div>
     </div>
-    <div class="btn-wrap"><button (click)="register()">Register</button></div>
+    <div class="btn-wrap">
+      <button (click)="register()">{{ translations.register }}</button>
+    </div>
   </ng-container>
   <ng-container *ngIf="!isLoading && success">
     <div class="added">
-      <p>Bank account successfully opened.</p>
+      <p>{{ translations.account_success }}</p>
       <div class="btn-return">
-        <button (click)="return()">Return to banks</button>
+        <button (click)="return()">{{ translations.return_to_banks }}</button>
       </div>
     </div>
   </ng-container>

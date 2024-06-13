@@ -1,68 +1,142 @@
 <html>
-<head>
-</head>
-<body>
+  <head> </head>
+  <body>
     <div class="settings-container">
-        <div class="settings">
-            <div class="limits-container">
-                <div class="setting">
-                    <label>First name</label>
-                    <input type="text" [ngModel]="userData?.users[0]?.firstName" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].firstName = $event)"/>
-                </div>
-                <div class="setting">
-                    <label>Last name</label>
-                    <input type="text" [ngModel]="userData?.users[0]?.lastName" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].lastName = $event)"/>
-                </div>
-                <div class="setting">
-                    <label>Transaction Limit</label>
-                    <input type="number" [(ngModel)]="transactionLimit"/>
-                </div>
-                <div class="setting">
-                    <label>ATM limit</label>
-                    <input type="number"[(ngModel)]="atmLimit" />
-                </div>
-                <div class="setting">
-                    <label>Negative limit</label>
-                    <input type="number" [(ngModel)]="negativeLimit" />
-                </div>            
-  
-            </div>
-            <div class="account-settings">
-                <div class="setting">
-                    <label >Username</label>
-                    <input type="text" [ngModel]="userData && userData.users && userData.users[0] ? userData.users[0].userName : ''" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].userName = $event)"/>
-                </div>
-                <div class="setting">
-                    <label>Email</label>
-                    <input type="text" [ngModel]="userData && userData.users && userData.users[0] ? userData.users[0].email : ''" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].email = $event)"/>
-                </div>
-                <div class="setting">
-                    <label>Current password</label>
-                    <input type="password" [ngModel]="userData && userData.users && userData.users[0] ? userData.users[0].password : ''" (ngModelChange)="userData && userData.users && userData.users[0] && (userData.users[0].password = $event)"/>
-                </div>
-                
-                <div class="setting">
-                    <label>Change password</label>
-                    <input type="password" [(ngModel)]="newPassword"/>
-                </div>
-                <div class="setting">
-                    <label>Confrim password</label>
-                    <input type="password"[(ngModel)]="confirmPassword"/>
-                    </div>
-            </div>
-            <div class="save-container">
-                    <button class="save" (click)="editUser()" [ngClass]="{ 'loading': isSuccess }">Save</button>
-                
-                <div class="info">
-                    <span *ngIf="isSuccess">Data saved successfully!</span>
-                    <span *ngIf="!isSuccess && isSame && (newPassword !== '' && confirmPassword !== '')">Cannot save data!</span>                
-                    <span *ngIf="!isPasswordMatching && confirmPassword !== '' && !isSame">Passwords do not match!</span> 
-                </div>
-             
-               <span class="loader" *ngIf="isSuccess"></span>
-           
-            </div>
+      <div class="settings">
+        <div class="limits-container">
+          <div class="setting">
+            <label>{{ translations.first_name }}</label>
+            <input
+              type="text"
+              [ngModel]="userData?.users[0]?.firstName"
+              (ngModelChange)="
+                userData &&
+                  userData.users &&
+                  userData.users[0] &&
+                  (userData.users[0].firstName = $event)
+              "
+            />
+          </div>
+          <div class="setting">
+            <label>{{ translations.last_name }}</label>
+            <input
+              type="text"
+              [ngModel]="userData?.users[0]?.lastName"
+              (ngModelChange)="
+                userData &&
+                  userData.users &&
+                  userData.users[0] &&
+                  (userData.users[0].lastName = $event)
+              "
+            />
+          </div>
+          <div class="setting">
+            <label>{{ translations.transaction_limit }}</label>
+            <input type="number" [(ngModel)]="transactionLimit" />
+          </div>
+          <div class="setting">
+            <label>{{ translations.atm_limit }}</label>
+            <input type="number" [(ngModel)]="atmLimit" />
+          </div>
+          <div class="setting">
+            <label>{{ translations.negative_limit }}</label>
+            <input type="number" [(ngModel)]="negativeLimit" />
+          </div>
         </div>
+        <div class="account-settings">
+          <div class="setting">
+            <label>{{ translations.username }}</label>
+            <input
+              type="text"
+              [ngModel]="
+                userData && userData.users && userData.users[0]
+                  ? userData.users[0].userName
+                  : ''
+              "
+              (ngModelChange)="
+                userData &&
+                  userData.users &&
+                  userData.users[0] &&
+                  (userData.users[0].userName = $event)
+              "
+            />
+          </div>
+          <div class="setting">
+            <label>{{ translations.email }}</label>
+            <input
+              type="text"
+              [ngModel]="
+                userData && userData.users && userData.users[0]
+                  ? userData.users[0].email
+                  : ''
+              "
+              (ngModelChange)="
+                userData &&
+                  userData.users &&
+                  userData.users[0] &&
+                  (userData.users[0].email = $event)
+              "
+            />
+          </div>
+          <div class="setting">
+            <label>{{ translations.current_password }}</label>
+            <input
+              type="password"
+              [ngModel]="
+                userData && userData.users && userData.users[0]
+                  ? userData.users[0].password
+                  : ''
+              "
+              (ngModelChange)="
+                userData &&
+                  userData.users &&
+                  userData.users[0] &&
+                  (userData.users[0].password = $event)
+              "
+            />
+          </div>
+
+          <div class="setting">
+            <label>{{ translations.change_password }}</label>
+            <input type="password" [(ngModel)]="newPassword" />
+          </div>
+          <div class="setting">
+            <label>{{ translations.confirm_password }}</label>
+            <input type="password" [(ngModel)]="confirmPassword" />
+          </div>
+        </div>
+        <div class="save-container">
+          <button
+            class="save"
+            (click)="editUser()"
+            [ngClass]="{ loading: isSuccess }"
+          >
+            {{ translations.save }}
+          </button>
+
+          <div class="info">
+            <span *ngIf="isSuccess">{{
+              translations.data_saved_successfully
+            }}</span>
+            <span
+              *ngIf="
+                !isSuccess &&
+                isSame &&
+                newPassword !== '' && confirmPassword !== ''
+              "
+              >{{ translations.cannot_save_data }}</span
+            >
+            <span
+              *ngIf="!isPasswordMatching && confirmPassword !== '' && !isSame"
+              >{{ translations.passwords_do_not_match }}</span
+            >
+          </div>
+
+          <span class="loader" *ngIf="isSuccess">{{
+            translations.loading
+          }}</span>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

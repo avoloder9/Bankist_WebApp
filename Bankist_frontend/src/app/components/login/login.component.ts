@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { AuthLoginVM } from './authLoginVM';
 import { MyAuthService } from 'src/app/services/MyAuthService';
 import { SignalRService } from 'src/app/services/signalR.service';
+import { TranslationService } from 'src/app/services/TranslationService';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -21,19 +22,24 @@ export class LoginComponent {
   userNotFound: boolean = false;
   unauthorized: boolean = false;
   unexpectedError: boolean = false;
-
+  translations: any;
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
     private store: Store<{ login: { loggedIn: boolean } }>,
     private router: Router,
     private myAuthService: MyAuthService,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private translationService: TranslationService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit() {
+    this.translations = this.translationService.getTranslations();
   }
 
   isFieldInvalid(field: string) {

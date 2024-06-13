@@ -56,7 +56,7 @@ namespace API.Controllers
             banks.Add(new Bank { username = "Sanpaolo", password = TokenGenerator.GeneratePassword(), totalCapital = 10000, numberOfUsers = 0 });
 
             users.Add(new User { Is2FActive = true, firstName = "Adnan", lastName = "Voloder", email = "adnanvoloder@gmail.com", phone = "061312132", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "adnanv1", password = "Adnan123!" });
-            users.Add(new User { Is2FActive = true, firstName = "Faris", lastName = "Dizdarevic", email = "farisdiz@gmail.com", phone = "061341232", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "farisDiz1", password = "Faris123!" });
+            users.Add(new User { Is2FActive = true, firstName = "Faris", lastName = "Dizdarevic", email = "faris.diz789@gmail.com", phone = "061341232", birthDate = TokenGenerator.GenerateRandomBirthDate(), registrationDate = DateTime.Now, username = "farisDiz1", password = "Faris123!" });
 
             Random random = new Random();
 

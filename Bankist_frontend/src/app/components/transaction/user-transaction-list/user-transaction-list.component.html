@@ -1,12 +1,12 @@
 <div class="imageWrapper">
   <div class="account-status">
-    <p>Account status:</p>
+    <p>{{ translations.account_status }}</p>
     <div>
       <p>{{ cardInfo?.status }}</p>
       <img [src]="getStatus()" alt="" />
     </div>
   </div>
-  <h2>Payment information</h2>
+  <h2>{{ translations.payment_information }}</h2>
   <img src="../../assets/images/bankist_card.jpg" class="image" />
 
   <div class="textWrapper">
@@ -14,7 +14,8 @@
       {{ cardInfo?.cardTypeId }} <b>{{ cardInfo?.cardNumber }}</b>
     </p>
     <p>
-      Exp. date:<b id="expirationDate">
+      {{ translations.exp_date
+      }}<b id="expirationDate">
         {{ cardInfo?.expirationDate | date : "MM/yyyy" }}</b
       >
     </p>
@@ -25,7 +26,7 @@
   <div class="balance__detail">
     <p class="balance__bank">{{ cardInfo.bankId }}</p>
     <p class="balance__label">
-      Current balance: {{ cardInfo.amount.toFixed(2) }}
+      {{ translations.current_balance }} {{ cardInfo.amount.toFixed(2) }}
       {{ cardInfo?.currencyId }}
     </p>
 
@@ -36,7 +37,7 @@
 </div>
 
 <div *ngIf="!cardInfo">
-  <p>Card information not available</p>
+  <p>{{ translations.card_info_not_available }}</p>
 </div>
 
 <div class="container">
@@ -45,29 +46,31 @@
       class="transfer"
       [routerLink]="['/transaction', cardInfo?.cardNumber]"
     >
-      Transfer Money
+      {{ translations.transfer_money }}
     </button>
     <button class="loan" [routerLink]="['/active-loans', cardInfo?.cardNumber]">
-      Loan
+      {{ translations.loan }}
     </button>
-    <button class="close" (click)="showDiv()">Close account</button>
+    <button class="close" (click)="showDiv()">
+      {{ translations.close_account }}
+    </button>
     <button
       class="another_card"
       [routerLink]="['/bank-selection', { username: this.username }]"
     >
-      Choose another card
+      {{ translations.choose_another_card }}
     </button>
   </div>
 
   <table id="transactionTable" *ngIf="transactions">
     <thead>
       <tr>
-        <th>Date</th>
-        <th>Amount</th>
-        <th>Purpose</th>
-        <th>Status</th>
-        <th>Sender Card</th>
-        <th>Receiver Card</th>
+        <th>{{ translations.date }}</th>
+        <th>{{ translations.amount }}</th>
+        <th>{{ translations.purpose }}</th>
+        <th>{{ translations.status }}</th>
+        <th>{{ translations.sender_card }}</th>
+        <th>{{ translations.receiver_card }}</th>
       </tr>
     </thead>
     <tbody>
@@ -109,19 +112,27 @@
 </div>
 
 <div class="confirm" *ngIf="isDeleteDiv">
-  <span>Are you sure you want to close account?</span>
+  <span>{{ translations.confirm_close_account }}</span>
   <div>
-    <input type="text" [(ngModel)]="deleteReason" placeholder="Enter reason" />
+    <input
+      type="text"
+      [(ngModel)]="deleteReason"
+      placeholder="{{ translations.enter_reason }}"
+    />
   </div>
 
   <div class="buttons">
-    <button class="yes" (click)="closeAccount()">CONFIRM</button>
-    <button class="cancel" (click)="cancelDelete()">CANCEL</button>
+    <button class="yes" (click)="closeAccount()">
+      {{ translations.confirm }}
+    </button>
+    <button class="cancel" (click)="cancelDelete()">
+      {{ translations.cancel }}
+    </button>
   </div>
 </div>
 
 <ng-container *ngIf="isAccountDeleted">
   <div class="deleteAccount">
-    <p>Bank account successfully closed</p>
+    <p>{{ translations.account_closed_successfully }}</p>
   </div>
 </ng-container>

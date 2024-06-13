@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
-
+import { TranslationService } from 'src/app/services/TranslationService';
 interface Auth2FRequest {
   key: string;
 }
@@ -18,13 +18,16 @@ export class TwoFactorAuthenticationComponent implements OnInit {
   username: string = '';
   allInputsFilled: boolean = false;
   notValidKey: boolean = false;
+  translations: any;
   constructor(
     private router: Router,
     private httpClient: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translationService: TranslationService
   ) {}
 
   ngOnInit(): void {
+    this.translations = this.translationService.getTranslations();
     this.route.params.subscribe((params) => {
       this.username = params['username'];
     });

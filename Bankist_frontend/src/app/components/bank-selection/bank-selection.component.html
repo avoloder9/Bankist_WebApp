@@ -1,17 +1,22 @@
 <div class="container">
   <app-loader *ngIf="isLoading"></app-loader>
-  <h2 *ngIf="!isLoading">Please select a bank or add a new one</h2>
+  <h2 *ngIf="!isLoading">{{ translations.select_or_add_bank }}</h2>
   <div class="bank-options-container" *ngIf="!isLoading">
     <div class="inner-container">
       <div class="bank" *ngFor="let bank of banks">
-        <img [src]="bank.image" alt="{{ bank.name }}" [routerLink]="['/userTransactionList', bank.name]"
-          (click)="onImageClick(bank.name)" />
+        <img
+          [src]="bank.image"
+          alt="{{ bank.name }}"
+          [routerLink]="['/userTransactionList', bank.name]"
+          (click)="onImageClick(bank.name)"
+        />
       </div>
       <div class="bank" (click)="addNewBank()">
         <div class="circle">
           <svg height="32px" viewBox="0 0 32 32" width="32px">
             <path
-              d="M28,14H18V4c0-1.104-0.896-2-2-2s-2,0.896-2,2v10H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h10v10c0,1.104,0.896,2,2,2  s2-0.896,2-2V18h10c1.104,0,2-0.896,2-2S29.104,14,28,14z" />
+              d="M28,14H18V4c0-1.104-0.896-2-2-2s-2,0.896-2,2v10H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h10v10c0,1.104,0.896,2,2,2  s2-0.896,2-2V18h10c1.104,0,2-0.896,2-2S29.104,14,28,14z"
+            />
           </svg>
         </div>
       </div>

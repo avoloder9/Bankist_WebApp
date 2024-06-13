@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
 import { SignalRService } from 'src/app/services/signalR.service';
+import { TranslationService } from 'src/app/services/TranslationService';
+
 @Component({
   selector: 'app-loan-list',
   templateUrl: './loan-list.component.html',
@@ -22,16 +24,19 @@ export class LoanListComponent {
   blockedCardNumbers: any = [];
   cardBlocked: boolean = false;
   showMessage: any;
+  translations: any;
   constructor(
     private httpClient: HttpClient,
     private route: ActivatedRoute,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private translationService: TranslationService
   ) {
     this.signalRService.reloadLoans.subscribe(() => {
       this.getLoans();
     });
   }
   ngOnInit(): void {
+    this.translations = this.translationService.getTranslations();
     this.getLoans();
   }
   getLoans() {

@@ -4,8 +4,8 @@
     class="registration-success"
     *ngIf="registrationSuccessful && !isSending"
   >
-    <p class="text-success">Registration successful</p>
-    <button routerLink="../login">Log in</button>
+    <p class="text-success">{{ translations.registration_success }}</p>
+    <button routerLink="../login">{{ translations.log_in }}</button>
   </div>
   <form
     [formGroup]="registrationForm"
@@ -23,7 +23,7 @@
             registrationForm.get('firstName')!.touched
           "
         >
-          First name must start with an uppercase letter.
+          {{ translations.first_name_error }}
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
             registrationForm.get('lastName')!.touched
           "
         >
-          Last name must start with an uppercase letter.
+          {{ translations.last_name_error }}
         </div>
       </div>
     </div>
@@ -54,7 +54,7 @@
             isFieldInvalid('email') && registrationForm.get('email')!.touched
           "
         >
-          Email is required and must be a valid email address.
+          {{ translations.email_error }}
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@
             registrationForm.get('username')!.touched
           "
         >
-          Username is required.
+          {{ translations.username_required }}
         </div>
       </div>
     </div>
@@ -90,8 +90,7 @@
             registrationForm.get('password')!.touched
           "
         >
-          Password is required and must be at least 8 characters, one uppercase
-          letter, one number, and one special character.
+          {{ translations.password_error }}
         </div>
       </div>
     </div>
@@ -106,7 +105,7 @@
             isFieldInvalid('phone') && registrationForm.get('phone')!.touched
           "
         >
-          Phone is required and must contain only numbers, 9 or 10 digits.
+          {{ translations.phone_error }}
         </div>
       </div>
     </div>
@@ -122,14 +121,14 @@
             registrationForm.get('birthDate')!.touched
           "
         >
-          Birth date is required.
+          {{ translations.birthdate_error }}
         </div>
       </div>
     </div>
 
     <div *ngIf="registrationFailed">
       <p class="text-danger">
-        User already exists with the same username or email
+        {{ translations.user_exists_error }}
       </p>
     </div>
 
@@ -140,14 +139,14 @@
         (click)="closePopup()"
         routerLink="homePage"
       >
-        Close
+        {{ translations.close }}
       </button>
       <button
         class="proceed"
         type="submit"
         [disabled]="registrationForm.invalid"
       >
-        Register
+        {{ translations.register }}
       </button>
     </div>
   </form>

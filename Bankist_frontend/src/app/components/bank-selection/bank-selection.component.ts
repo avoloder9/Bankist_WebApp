@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
 import { LoaderComponent } from '../loader/loader.component';
-
+import { TranslationService } from 'src/app/services/TranslationService';
 
 interface Bank {
   name: string;
@@ -19,13 +19,23 @@ export class BankSelectionComponent implements OnInit {
   banks: Bank[] = [];
   isLoading: Boolean = false;
   username: any;
-
-  constructor(private router: Router, private httpClient: HttpClient, private route: ActivatedRoute) { }
+  translations: any;
+  constructor(
+    private router: Router,
+    private httpClient: HttpClient,
+    private route: ActivatedRoute,
+    private translationService: TranslationService
+  ) {}
 
   onImageClick(bankName: string) {
-    this.router.navigate(['/userTransactionList', bankName, { username: this.username }]);
+    this.router.navigate([
+      '/userTransactionList',
+      bankName,
+      { username: this.username },
+    ]);
   }
   ngOnInit() {
+    this.translations = this.translationService.getTranslations();
 
     this.route.params.subscribe((params) => {
       this.username = params['username'];
@@ -36,9 +46,11 @@ export class BankSelectionComponent implements OnInit {
       Token: localStorage.getItem('token') ?? '',
     });*/
     this.httpClient
-      .get<any>(`${MyConfig.serverAddress}/Bank/active-banks`/*, {
+      .get<any>(
+        `${MyConfig.serverAddress}/Bank/active-banks` /*, {
         headers: headers,
-      }*/)
+      }*/
+      )
       .subscribe({
         next: (response: any) => {
           console.log(response);

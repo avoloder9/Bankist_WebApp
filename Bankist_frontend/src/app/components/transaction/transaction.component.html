@@ -3,7 +3,7 @@
     <app-visualization type="transaction"></app-visualization>
   </div>
   <div class="transaction-success" *ngIf="transactionSuccessful && !isExecute">
-    <p class="text-success">Transaction successful</p>
+    <p class="text-success">{{ translations.transaction_successful }}</p>
   </div>
 
   <form
@@ -16,7 +16,7 @@
       <div>
         <input
           type="text"
-          placeholder="Transfer to"
+          [placeholder]="translations.placeholder_transfer_to"
           formControlName="recieverCardId"
         /><br />
       </div>
@@ -24,34 +24,37 @@
         <input
           type="number"
           step="10"
-          placeholder="Amount"
-          name="amount"
+          [placeholder]="translations.placeholder_amount"
           formControlName="amount"
         /><br />
       </div>
       <div>
         <input
           type="text"
-          name="type"
-          placeholder="Purpose of payment"
+          [placeholder]="translations.placeholder_purpose_of_payment"
           formControlName="type"
         /><br />
       </div>
     </div>
     <div class="buttons">
-      <button (click)="goBack()">Back</button>
+      <button (click)="goBack()">{{ translations.back }}</button>
       <button
         type="submit"
         (click)="onSubmit()"
         [disabled]="transactionForm.invalid"
       >
-        Submit Transaction
+        {{ translations.submit_transaction }}
       </button>
     </div>
 
-    <div class="error" *ngIf="unexpectedError">Unexpected error occured.</div>
-    <div class="error" *ngIf="insufficientFunds">Insufficient funds .</div>
-    <div class="error" *ngIf="transactionLimit">Transaction amount exceeds transaction limit.</div>
-
+    <div class="error" *ngIf="unexpectedError">
+      {{ translations.unexpected_error }}
+    </div>
+    <div class="error" *ngIf="insufficientFunds">
+      {{ translations.insufficient_funds }}
+    </div>
+    <div class="error" *ngIf="transactionLimit">
+      {{ translations.transaction_limit_exceeded }}
+    </div>
   </form>
 </div>

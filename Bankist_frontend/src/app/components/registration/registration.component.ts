@@ -10,6 +10,7 @@ import { AppComponent } from '../../app.component';
 import { MatDialog } from '@angular/material/dialog';
 import { startWithUppercaseValidator } from './startWithUppercase';
 import { LoaderComponent } from '../loader/loader.component';
+import { TranslationService } from 'src/app/services/TranslationService';
 
 @Component({
   selector: 'app-registration',
@@ -21,11 +22,13 @@ export class RegistrationComponent implements OnInit {
   isSending: boolean = false;
   registrationSuccessful: boolean = false;
   registrationFailed: boolean = false;
+  translations: any;
 
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
-    private dialogRef: MatDialog
+    private dialogRef: MatDialog,
+    private translationService: TranslationService
   ) {
     this.registrationForm = this.fb.group({
       firstName: ['', [Validators.required, startWithUppercaseValidator()]],
@@ -37,7 +40,9 @@ export class RegistrationComponent implements OnInit {
       birthDate: ['', Validators.required],
     });
   }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.translations = this.translationService.getTranslations();
+  }
 
   isFieldInvalid(field: string) {
     return (

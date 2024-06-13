@@ -4,8 +4,16 @@
       <img src="../../assets/logo.png" alt="" />
     </div>
     <div class="links" *ngIf="!isLoggedIn">
-      <h2 routerLink="login" routerLinkActive="active-link">Login</h2>
-      <h2 routerLink="register" routerLinkActive="active-link">Register</h2>
+      <h2 routerLink="login" routerLinkActive="active-link">
+        {{ translations.login }}
+      </h2>
+      <h2 routerLink="register" routerLinkActive="active-link">
+        {{ translations.register }}
+      </h2>
+      <select [(ngModel)]="selectedLang" (change)="saveLang()">
+        <option value="en">EN</option>
+        <option value="bh">BH</option>
+      </select>
     </div>
     <div class="links" *ngIf="isLoggedIn">
       <div class="settings-icon" routerLink="/settings">
@@ -30,6 +38,10 @@
           </g>
         </svg>
       </div>
+      <select [(ngModel)]="selectedLang" (change)="saveLang()">
+        <option value="en">EN</option>
+        <option value="bh">BH</option>
+      </select>
     </div>
   </div>
 </div>

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head> </head>
   <body>
@@ -16,6 +17,7 @@
             d="M10.3 7.71 4.41 12.59l5.89 4.89c.37.31.37.84 0 1.15-.32.31-.84.31-1.16 0L2.73 12.59c-.37-.32-.37-.84 0-1.15L9.14 7.71c.32-.31.84-.31 1.16 0 .37.31.37.84 0 1.15-.32.31-.84.31-1.16 0z"
           ></path>
         </svg>
+        {{ translations.back }}
       </a>
       <div class="circle">
         <svg
@@ -33,7 +35,7 @@
           ></path>
         </svg>
       </div>
-      <p class="title">Two Factor Authentication</p>
+      <p class="title">{{ translations.two_factor_authentication }}</p>
       <div class="numInputContainer" (paste)="onPaste($event)" #inputContainer>
         <input
           class="numInput"
@@ -91,12 +93,14 @@
         />
       </div>
       <p class="message" *ngIf="!allInputsFilled">
-        Enter 6-digit code that has been sent to your mail.
+        {{ translations.enter_code_message }}
       </p>
       <button class="btn" (click)="confirm2F()" [disabled]="!allInputsFilled">
-        Confirm
+        {{ translations.confirm }}
       </button>
-      <div class="error" *ngIf="notValidKey">Not valid key</div>
+      <div class="error" *ngIf="notValidKey">
+        {{ translations.not_valid_key }}
+      </div>
     </div>
   </body>
 </html>

@@ -9,13 +9,13 @@
     <app-loader></app-loader>
   </div>
   <div class="loan" *ngIf="!isLoading && !isSuccess && !isError">
-    <h1>Fill out the loan form</h1>
+    <h1>{{ translations.loan_form_title }}</h1>
     <div class="row">
-      <label for="">Your card: </label>
+      <label for="">{{ translations.your_card_label }}</label>
       <input type="text" placeholder="111111" disabled [(ngModel)]="userCard" />
     </div>
     <div class="row">
-      <label for="">Loan type: </label>
+      <label for="">{{ translations.loan_type_label }}</label>
       <select [(ngModel)]="activeOption">
         <option *ngFor="let item of options" [ngValue]="item">
           {{ item.name }}
@@ -24,7 +24,7 @@
     </div>
     <div class="row">
       <form [formGroup]="amountForm">
-        <label for="">Loan amount: </label>
+        <label for="">{{ translations.loan_amount_label }}</label>
         <input
           type="number"
           formControlName="loanAmountInput"
@@ -43,20 +43,20 @@
               (amountForm.get('loanAmountInput')?.errors ?? {})['required']
             "
           >
-            Loan amount is required.
+            {{ translations.loan_amount_required_error }}
           </div>
           <div *ngIf="(amountForm.get('loanAmountInput')?.errors ?? {})['min']">
-            Minimum value is 1000.
+            {{ translations.loan_amount_min_error }}
           </div>
           <div *ngIf="(amountForm.get('loanAmountInput')?.errors ?? {})['max']">
-            Maximum value is 50000.
+            {{ translations.loan_amount_max_error }}
           </div>
         </div>
       </form>
     </div>
     <div class="row">
       <form [formGroup]="form">
-        <label for="">Number of rates: </label>
+        <label for="">{{ translations.number_of_rates_label }}</label>
         <input type="number" formControlName="numberInput" placeholder="12" />
         <div
           *ngIf="
@@ -66,25 +66,27 @@
           class="error"
         >
           <div *ngIf="(form.get('numberInput')?.errors ?? {})['required']">
-            Number of rates is required.
+            {{ translations.rates_required_error }}
           </div>
           <div *ngIf="(form.get('numberInput')?.errors ?? {})['min']">
-            Minimum value is 1.
+            {{ translations.rates_min_error }}
           </div>
           <div *ngIf="(form.get('numberInput')?.errors ?? {})['max']">
-            Maximum value is 30.
+            {{ translations.rates_max_error }}
           </div>
         </div>
       </form>
     </div>
     <div class="row">
-      <button class="cancel" (click)="return()">Cancel</button>
+      <button class="cancel" (click)="return()">
+        {{ translations.cancel_button }}
+      </button>
       <button
         class="proceed"
         (click)="submitForm()"
         [disabled]="form.invalid || amountForm.invalid"
       >
-        Proceed
+        {{ translations.proceed_button }}
       </button>
     </div>
   </div>

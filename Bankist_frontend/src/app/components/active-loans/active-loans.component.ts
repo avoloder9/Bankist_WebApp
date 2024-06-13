@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { MyConfig } from 'src/app/myConfig';
 import { Location } from '@angular/common';
+import { TranslationService } from 'src/app/services/TranslationService';
 
 @Component({
   selector: 'app-active-loans',
@@ -13,11 +14,13 @@ export class ActiveLoansComponent {
   isLoading: boolean = false;
   cardNumber: any = null;
   loans: any = [];
+  translations: any;
 
   constructor(
     private httpClient: HttpClient,
     private location: Location,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translationService: TranslationService
   ) {}
 
   return() {
@@ -77,5 +80,6 @@ export class ActiveLoansComponent {
       this.cardNumber = params['cardNumber'];
     });
     this.getLoans();
+    this.translations = this.translationService.getTranslations();
   }
 }
