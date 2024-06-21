@@ -20,6 +20,7 @@ namespace API.Data
         public DbSet<User> User { get; set; }
         public DbSet<UserActivity> UserActivity { get; set; }
         public DbSet<SystemLogs> SystemLogs { get; set; }
+        public DbSet<Config> Configs { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

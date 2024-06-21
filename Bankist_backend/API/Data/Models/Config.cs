@@ -4,7 +4,8 @@ namespace API.Data.Models
 {
     public class Config
     {
-        public int id;
+        
+        public int id { get; set; }
         public int userId { get; set; }
         [ForeignKey(nameof(userId))]
         public User user { get; set; }
