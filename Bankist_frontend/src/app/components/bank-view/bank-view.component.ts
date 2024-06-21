@@ -27,6 +27,10 @@ export class BankViewComponent implements OnInit {
   bankId: any;
   filterTable: string = '';
   translations: any;
+  pageSize: number = 10;
+  pageNumber: number = 1;
+  totalPages: number = 0;
+  pages: number[] = [];
   constructor(
     private httpClient: HttpClient,
     private route: ActivatedRoute,
@@ -34,32 +38,52 @@ export class BankViewComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.translations = this.translationService.getTranslations();
+    this.loadTransactions();
+  }
 
+  loadTransactions() {
     this.route.queryParams.subscribe(
       (params) => {
         this.bankId = params['bankId'];
 
         this.httpClient
           .get<Transaction[]>(
-            `${MyConfig.serverAddress}/Transaction/bank-transaction?bankId=${this.bankId}`
+            `${MyConfig.serverAddress}/Transaction/bank-transaction?bankId=${this.bankId}&pageSize=${this.pageSize}&pageNumber=${this.pageNumber}`
           )
-          .subscribe((data) => {
-            this.transactions = data;
-            this.transactions.map((transaction) => {
-              if (transaction.senderCard)
-                transaction.currency =
-                  transaction.senderCard.currency.currencyCode;
-              else if (transaction.recieverCardId)
-                transaction.currency =
-                  transaction.recieverCard.currency.currencyCode;
-            });
-            this.sortTransactions();
+          .subscribe((data: any) => {
+            this.totalPages = data.totalPages;
+            this.transactions = data.dataItems;
+            if (this.transactions) {
+              this.transactions.map((transaction: any) => {
+                if (transaction.senderCard)
+                  transaction.currency =
+                    transaction.senderCard.currency.currencyCode;
+                else if (transaction.recieverCardId)
+                  transaction.currency =
+                    transaction.recieverCard.currency.currencyCode;
+              });
+              this.sortTransactions();
+            }
           });
       },
       (error) => {
         console.error('Error fetching data:', error);
       }
     );
+  }
+
+  nextPage(): void {
+    if (this.pageNumber < this.totalPages) {
+      this.pageNumber++;
+      this.loadTransactions();
+    }
+  }
+
+  previousPage(): void {
+    if (this.pageNumber > 1) {
+      this.pageNumber--;
+      this.loadTransactions();
+    }
   }
 
   sortTransactions() {
