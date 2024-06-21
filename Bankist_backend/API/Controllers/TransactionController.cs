@@ -12,6 +12,7 @@ using API.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using API.ViewModels;
 using API.Helper;
+using FIT_Api_Example.Helper;
 
 namespace API.Controllers
 {
@@ -39,7 +40,7 @@ namespace API.Controllers
         }
 
         [HttpGet("user-transaction")]
-        public ActionResult<List<Transaction>> GetUserTransaction([FromQuery] string bankName)
+        public ActionResult<PagedList<Transaction>> GetUserTransaction([FromQuery] string bankName, [FromQuery] int pageSize, [FromQuery] int pageNumber)
         {
             if (!_authService.IsLogin())
             {
@@ -69,14 +70,16 @@ namespace API.Controllers
                                    .Select(buc => buc.cardId)
                                    .ToList();
 
-                var transactions = _dbContext.Transaction.Include(t => t.senderCard.currency).Include(t => t.recieverCard.currency)
+                IQueryable<Transaction> transactions = _dbContext.Transaction.Include(t => t.senderCard.currency).Include(t => t.recieverCard.currency)
                                    .Where(t =>
                                        (t.senderCardId.HasValue && userCardIds.Contains(t.senderCardId.Value)) ||
                                        userCardIds.Contains(t.recieverCardId))
-                                   .OrderBy(t => t.transactionId)
-                                   .ToList();
+                                   .OrderBy(t => t.transactionId);
 
-                return Ok(transactions);
+
+                var onePage = PagedList<Transaction>.Create(transactions, pageNumber, pageSize);
+
+                return Ok(onePage);
             }
             catch (Exception ex)
             {
@@ -86,7 +89,7 @@ namespace API.Controllers
 
 
         [HttpGet("bank-transaction")]
-        public ActionResult<List<Transaction>> GetBankTransaction(int bankId)
+        public ActionResult<PagedList<Transaction>> GetBankTransaction([FromQuery] int bankId ,[FromQuery] int pageSize, [FromQuery] int pageNumber)
         {
             try
             {
@@ -95,22 +98,23 @@ namespace API.Controllers
                                               .Select(buc => buc.cardId)
                                               .ToList();
 
-                var transactions = _dbContext.Transaction
+                IQueryable<Transaction> transactions = _dbContext.Transaction
                                              .Include(x => x.senderCard)
                                              .ThenInclude(x => x.currency)
                                              .Include(x => x.recieverCard)
                                              .ThenInclude(x => x.currency)
                                              .Where(t => validCardIds.Contains(t.senderCardId ?? 0) ||
                                                          validCardIds.Contains(t.recieverCardId))
-                                             .OrderByDescending(t => t.transactionDate)
-                                             .ToList();
+                                             .OrderByDescending(t => t.transactionDate);
 
                 if (!transactions.Any())
                 {
                     return NotFound($"No transactions found for bank with ID {bankId}.");
                 }
 
-                return Ok(transactions);
+                var onePage = PagedList<Transaction>.Create(transactions, pageNumber, pageSize);
+
+                return Ok(onePage);
             }
             catch (Exception ex)
             {
