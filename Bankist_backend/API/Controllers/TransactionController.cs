@@ -175,9 +175,13 @@ namespace API.Controllers
                 if (senderCard.currency.currencyCode != receiverCard.currency.currencyCode)
                 {
                     convertedAmount = _currencyConverter.ConvertAmount(request.amount, senderCard.currency.currencyCode, receiverCard.currency.currencyCode);
+                    senderCard.amount -= request.amount + transactionFee;
+                    receiverCard.amount += convertedAmount;
+                } else
+                {
+                    senderCard.amount -= request.amount + transactionFee;
+                    receiverCard.amount += request.amount;
                 }
-                senderCard.amount -= request.amount + transactionFee;
-                receiverCard.amount += convertedAmount;
 
                 transactionRecord = new Transaction
                 {

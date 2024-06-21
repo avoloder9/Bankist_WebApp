@@ -117,7 +117,10 @@ namespace API.Controllers
                     amount = amount,
                     cardType = randomCardType,
                     currency = randomCurrency,
-                    pin = cardPin
+                    pin = cardPin,
+                    transactionLimit = 100,
+                    atmLimit = 100,
+                    negativeLimit = 0,
                 };
                 cards.Add(card);
             }
