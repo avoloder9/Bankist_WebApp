@@ -3,7 +3,7 @@
   <input
     type="text"
     [(ngModel)]="filterTable"
-    placeholder="{{ translations.search_placeholder }}"
+    placeholder="{{ translations.search_placeholder_user }}"
   />
   <button [routerLink]="['/bank-view']" [queryParams]="{ bankId: bankId }">
     {{ translations.transactions_button }}

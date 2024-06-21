@@ -38,6 +38,7 @@
   "select_or_add_bank": "Please select a bank or add a new one",
   "search_label": "Search:",
   "search_placeholder": "Enter sender card or receiver card number",
+  "search_placeholder_user": "Enter user name or card number",
   "users_button": "Users",
   "loans_button": "Loans",
   "transaction_date": "Transaction Date",

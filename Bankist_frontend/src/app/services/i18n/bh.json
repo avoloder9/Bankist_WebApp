@@ -38,6 +38,7 @@
   "select_or_add_bank": "Molimo odaberite banku ili dodajte novu",
   "search_label": "Pretraga:",
   "search_placeholder": "Unesite broj kartice pošiljaoca ili primaoca",
+  "search_placeholder_user": "Unesite ime prezime korisnika ili broj kartice",
   "users_button": "Korisnici",
   "loans_button": "Krediti",
   "transaction_date": "Datum transakcije",
