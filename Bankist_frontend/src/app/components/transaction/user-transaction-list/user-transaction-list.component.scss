@@ -35,6 +35,29 @@ nav {
   color: #a77f7f;
 }
 
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: $greenGradient;
+  width: 150px;
+  margin: 20px auto;
+  border-radius: 20px;
+  padding: 10px;
+  svg {
+    height: 30px;
+    width: 30px;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  p {
+    font-size: 30px;
+    color: white;
+  }
+}
+
 .container {
   display: flex;
   flex-direction: row-reverse;

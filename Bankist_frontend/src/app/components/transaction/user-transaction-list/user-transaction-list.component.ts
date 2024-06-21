@@ -57,6 +57,10 @@ export class UserTransactionListComponent implements OnInit {
   username: any;
   userId: any;
   translations: any;
+  pageSize: number = 10;
+  pageNumber: number = 1;
+  totalPages: number = 0;
+  pages: number[] = [];
   constructor(
     private httpClient: HttpClient,
     private route: ActivatedRoute,
@@ -72,9 +76,7 @@ export class UserTransactionListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.translations = this.translationService.getTranslations();
-    /*const headers = this.getHeaders();
-    console.log(headers);
-    */ this.route.params.subscribe((params) => {
+    this.route.params.subscribe((params) => {
       this.bankName = params['bankName'];
       this.dataService.changeBankName(this.bankName);
       if (this.bankName) {
@@ -85,15 +87,14 @@ export class UserTransactionListComponent implements OnInit {
     });
   }
   loadTransactions() {
-    //   this.getCardInfo();
-
     this.httpClient
       .get<Transaction[]>(
-        `${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}` /* { headers: headers }*/
+        `${MyConfig.serverAddress}/Transaction/user-transaction?bankName=${this.bankName}&pageSize=${this.pageSize}&pageNumber=${this.pageNumber}`
       )
       .subscribe(
-        (data) => {
-          this.transactions = data.map((transaction) => {
+        (data: any) => {
+          this.totalPages = data.totalPages;
+          this.transactions = data.dataItems.map((transaction: any) => {
             if (transaction.senderCardId === this.cardInfo?.cardNumber) {
               transaction.amount = -Math.abs(transaction.amount);
               transaction.currency = transaction.senderCard.currency;
@@ -109,6 +110,19 @@ export class UserTransactionListComponent implements OnInit {
           console.error('Error fetching data:', error);
         }
       );
+  }
+  nextPage(): void {
+    if (this.pageNumber < this.totalPages) {
+      this.pageNumber++;
+      this.loadTransactions();
+    }
+  }
+
+  previousPage(): void {
+    if (this.pageNumber > 1) {
+      this.pageNumber--;
+      this.loadTransactions();
+    }
   }
 
   getCardInfo() {
