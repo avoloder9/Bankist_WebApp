@@ -38,7 +38,7 @@ export class NewBankComponent {
     console.log('GET BANKS');
     this.isLoading = true;
     /* const headers = new HttpHeaders({
-       Token: localStorage.getItem('token') ?? '',
+       User: localStorage.getItem('token') ?? '',
      });
      */
     this.httpClient

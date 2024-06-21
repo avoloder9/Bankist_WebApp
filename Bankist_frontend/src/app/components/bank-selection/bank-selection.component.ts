@@ -43,7 +43,7 @@ export class BankSelectionComponent implements OnInit {
 
     this.isLoading = true;
     /*const headers = new HttpHeaders({
-      Token: localStorage.getItem('token') ?? '',
+      User: localStorage.getItem('token') ?? '',
     });*/
     this.httpClient
       .get<any>(

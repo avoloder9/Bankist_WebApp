@@ -23,7 +23,7 @@ namespace API.Helper.Services
             _emailSenderService = emailSenderService;
         }
 
-        public async Task<MyAuthInfo> Login(AuthLoginVM request)
+        public async Task<MyAuthInfo> Login(AuthLoginVM request, string? token)
         {
             var loggedInAccount = await _dbContext.Account.FirstOrDefaultAsync(u => u.username == request.username);
 
@@ -32,10 +32,22 @@ namespace API.Helper.Services
                 throw new UnauthorizedAccessException("Username not found.");
             }
 
-            if (loggedInAccount.password != request.password)
+            if (token != null)
             {
-                throw new UnauthorizedAccessException("Incorrect password.");
+                var activeToken = _dbContext.AutentificationToken.FirstOrDefault(aut => aut.value == token);
+
+                if (activeToken == null)
+                {
+                    throw new UnauthorizedAccessException("Invalid token");
+                }
+            } else
+            {
+                if (loggedInAccount.password != request.password)
+                {
+                    throw new UnauthorizedAccessException("Incorrect password.");
+                }
             }
+
             string? twoFKey = null;
 
             if (loggedInAccount.Is2FActive)

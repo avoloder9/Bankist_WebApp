@@ -2,7 +2,7 @@
   <head> </head>
   <body>
     <div class="settings-container">
-      <div class="settings">
+      <div class="settings" *ngIf="!isLoading">
         <div class="limits-container">
           <div class="setting">
             <label>{{ translations.first_name }}</label>
@@ -122,7 +122,8 @@
               *ngIf="
                 !isSuccess &&
                 isSame &&
-                newPassword !== '' && confirmPassword !== ''
+                newPassword !== '' &&
+                confirmPassword !== ''
               "
               >{{ translations.cannot_save_data }}</span
             >
@@ -131,12 +132,9 @@
               >{{ translations.passwords_do_not_match }}</span
             >
           </div>
-
-          <span class="loader" *ngIf="isSuccess">{{
-            translations.loading
-          }}</span>
         </div>
       </div>
+      <app-loader *ngIf="isLoading"></app-loader>
     </div>
   </body>
 </html>

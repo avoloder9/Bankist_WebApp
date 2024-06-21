@@ -195,6 +195,7 @@ export class AtmComponent {
       signalRConnection: SignalRService.ConnectionId,
     });
     localStorage.removeItem('token');
+    localStorage.removeItem('User');
   }
 
   showBalance() {

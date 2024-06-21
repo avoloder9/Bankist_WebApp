@@ -4,7 +4,7 @@ import { MyConfig } from 'src/app/myConfig';
 import { UserService } from 'src/app/services/UserService';
 import { DataService } from 'src/app/data.service';
 import { TranslationService } from 'src/app/services/TranslationService';
-
+import { LoaderComponent } from '../loader/loader.component';
 interface Users {
   userId: number;
   userName: string;
@@ -46,6 +46,7 @@ export class SettingsComponent implements OnInit {
   negativeLimit: number;
   bankName: string | null = null;
   translations: any;
+  isLoading: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -110,6 +111,7 @@ export class SettingsComponent implements OnInit {
   }
 
   editUser() {
+    this.isLoading = true;
     this.getEditData();
     if (
       this.user &&
@@ -122,15 +124,17 @@ export class SettingsComponent implements OnInit {
         )
         .subscribe((x) => {
           this.isSuccess = true;
+          this.isLoading = false;
           setTimeout(() => {
             this.getUserId();
             this.isSuccess = false;
             this.newPassword = '';
             this.confirmPassword = '';
-          }, 3000);
+          }, 1000);
         });
     } else {
       this.isSame = false;
+      this.isLoading = false;
     }
   }
 }

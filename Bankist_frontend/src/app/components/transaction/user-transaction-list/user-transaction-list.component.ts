@@ -146,7 +146,7 @@ export class UserTransactionListComponent implements OnInit {
     const token = localStorage.getItem('token') ?? '';
     
     const headers = new HttpHeaders({
-      Token: token
+      User: token
     });
     return headers;
   }*/

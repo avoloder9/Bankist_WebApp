@@ -64,7 +64,7 @@ export class BankFormComponent implements OnInit {
       currency: this.selectedCurrency,
     };
     /*const headers = new HttpHeaders({
-      Token: localStorage.getItem('token') ?? '',
+      User: localStorage.getItem('token') ?? '',
     });*/
     this.httpClient
       .post<any>(

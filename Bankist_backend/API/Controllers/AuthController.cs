@@ -29,11 +29,11 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<MyAuthInfo>> Login([FromBody] AuthLoginVM request)
+        public async Task<ActionResult<MyAuthInfo>> Login([FromBody] AuthLoginVM request, [FromQuery] string token)
         {
             try
             {
-                var authInfo = await _authService.Login(request);
+                var authInfo = await _authService.Login(request, token);
                 return Ok(authInfo);
             }
             catch (UnauthorizedAccessException ex)

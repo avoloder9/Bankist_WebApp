@@ -141,7 +141,7 @@ namespace API.Controllers
 
             try
             {
-                var authInfo = await _authService.Login(loginRequest);
+                var authInfo = await _authService.Login(loginRequest, null);
 
                 var response = new CardAuthResponse
                 {

@@ -10,7 +10,7 @@ export class MyAuthService {
   }
 
   getAuthorizationToken(): AutentificationToken | null {
-    let tokenString = window.localStorage.getItem('Token') ?? '';
+    let tokenString = window.localStorage.getItem('User') ?? '';
     try {
       return JSON.parse(tokenString);
     } catch (e) {
@@ -30,9 +30,9 @@ export class MyAuthService {
 
   setLoginAccount(x: AutentificationToken | null) {
     if (x == null) {
-      window.localStorage.setItem('Token', '');
+      window.localStorage.setItem('User', '');
     } else {
-      window.localStorage.setItem('Token', JSON.stringify(x));
+      window.localStorage.setItem('User', JSON.stringify(x));
     }
   }
 }

@@ -51,7 +51,6 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    console.log(this.loginForm);
     if (this.loginForm.valid) {
       this.signalRService.open_ws_connection();
 

@@ -13,6 +13,9 @@ export class TranslationService {
   }
 
   public async loadTranslations(): Promise<void> {
+    if (!localStorage.getItem('lang')) {
+      localStorage.setItem('lang', 'en');
+    }
     const langKey = localStorage.getItem('lang') || this.defaultLang;
     const lang = this.availableLangs.includes(langKey)
       ? langKey

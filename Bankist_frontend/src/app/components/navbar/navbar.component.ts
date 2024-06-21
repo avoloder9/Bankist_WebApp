@@ -24,7 +24,8 @@ export class NavbarComponent {
     private httpClient: HttpClient,
     private userService: UserService,
     private translationService: TranslationService,
-    private location: Location
+    private location: Location,
+    private signalRService: SignalRService
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +60,10 @@ export class NavbarComponent {
       .subscribe(() => {
         console.log('logout');
       });
+    console.log('logout');
+    this.signalRService.close_ws_connection();
     localStorage.removeItem('token');
+    localStorage.removeItem('User');
     this.router.navigate(['/']);
     this.store.dispatch(logout());
   }
