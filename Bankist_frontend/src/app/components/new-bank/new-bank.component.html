@@ -17,7 +17,10 @@
             <img [src]="bank.image" alt="" />
           </div>
           <p>{{ bank.name }}</p>
-          <p>{{ translations.number_of_users }}</p>
+          <p>
+            {{ translations.number_of_users.replace('{{ bank.numberOfUsers }}',
+            bank.numberOfUsers) }}
+          </p>
         </div>
       </div>
     </div>

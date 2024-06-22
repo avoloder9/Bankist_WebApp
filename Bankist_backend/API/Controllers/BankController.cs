@@ -219,14 +219,18 @@ namespace API.Controllers
                 };
                 _dbContext.Card.Add(card);
 
+                var bank = _dbContext.Bank.FirstOrDefault(bank => bank.username == request.name);
+
                 var bankUserCard = new BanksUsersCards
                 {
                     user = user,
-                    bank = _dbContext.Bank.FirstOrDefault(bank => bank.username == request.name),
+                    bank = bank,
                     card = card,
                     accountIssueDate = DateTime.Now,
                 };
                 _dbContext.Add(bankUserCard);
+
+                bank.numberOfUsers++;
 
                 await _dbContext.SaveChangesAsync();
 

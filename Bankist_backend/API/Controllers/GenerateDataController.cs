@@ -131,6 +131,7 @@ namespace API.Controllers
                 var randomBank = banks[random.Next(banks.Count)];
 
                 bankUserCard.Add(new BanksUsersCards { user = randomUser, bank = randomBank, card = card, accountIssueDate = card.issueDate });
+                randomBank.numberOfUsers++;
             }
 
             for (int i = 0; i < 100; i++)
