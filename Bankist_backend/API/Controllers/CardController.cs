@@ -4,6 +4,7 @@ using API.Endpoints.AuthEndpoints.Login;
 using API.Helper.Auth;
 using API.Helper.Services;
 using API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -86,7 +87,7 @@ namespace API.Controllers
 
         }
 
-
+        [AllowAnonymous]
         [HttpGet("check-card")]
         public ActionResult CheckCardNumber([FromQuery] string cardNumber)
         {
@@ -109,7 +110,7 @@ namespace API.Controllers
 
             return Ok(new { message = "Card exists" });
         }
-
+        [AllowAnonymous]
         [HttpPost("authenticate-card-owner")]
         public async Task<ActionResult<CardAuthResponse>> AuthenticateCardOwner(CardPinVM cardPin)
         {
@@ -156,6 +157,7 @@ namespace API.Controllers
                 return StatusCode(500, $"Error during authentication: {ex.Message}");
             }
         }
+        [AllowAnonymous]
         [HttpGet("card-balance")]
         public ActionResult CardBalance([FromQuery] string cardNumber)
         {

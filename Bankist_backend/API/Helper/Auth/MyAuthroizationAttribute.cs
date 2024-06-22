@@ -1,6 +1,9 @@
 ﻿using API.Helper.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Reflection;
 
 namespace API.Helper.Auth
 {
@@ -17,6 +20,13 @@ namespace API.Helper.Auth
         {
             var authService = context.HttpContext.RequestServices.GetService<MyAuthService>()!;
             var actionLogService = context.HttpContext.RequestServices.GetService<MyActionLogService>()!;
+
+            var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+            if (actionDescriptor != null && actionDescriptor.MethodInfo.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).Any())
+            {
+                await next();
+                return;
+            }
 
             if (!authService.IsLogin())
             {
