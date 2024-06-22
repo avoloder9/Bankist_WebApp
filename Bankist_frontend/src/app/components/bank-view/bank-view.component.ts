@@ -38,14 +38,20 @@ export class BankViewComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.translations = this.translationService.getTranslations();
-    const storedData = localStorage.getItem('User');
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      this.bankId = parsedData.account.id;
-    } else {
-      console.error('Error: No data found in localStorage');
-    }
-    this.loadTransactions();
+    this.route.queryParams.subscribe((params) => {
+      if (params['bankId']) {
+        this.bankId = params['bankId'];
+      } else {
+        const storedData = localStorage.getItem('User');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          this.bankId = parsedData.account.id;
+        } else {
+          console.error('Error: No data found in localStorage');
+        }
+      }
+      this.loadTransactions();
+    });
   }
 
   loadTransactions() {

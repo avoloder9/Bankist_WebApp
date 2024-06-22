@@ -78,9 +78,19 @@ export class UserTransactionListComponent implements OnInit {
   ngOnInit(): void {
     this.translations = this.translationService.getTranslations();
     this.route.params.subscribe((params) => {
-      this.bankName = params['bankName'];
-      this.dataService.changeBankName(this.bankName);
+      if (params['bankName']) {
+        this.bankName = params['bankName'];
+      } else {
+        const storedData = localStorage.getItem('User');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          this.bankName = parsedData.bankName;
+        } else {
+          console.error('Error: No data found in localStorage');
+        }
+      }
       if (this.bankName) {
+        this.dataService.changeBankName(this.bankName);
         this.loadTransactions();
         this.getCardInfo();
       }

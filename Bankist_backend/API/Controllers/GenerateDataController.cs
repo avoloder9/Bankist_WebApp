@@ -130,8 +130,22 @@ namespace API.Controllers
                 var randomUser = users[random.Next(users.Count)];
                 var randomBank = banks[random.Next(banks.Count)];
 
-                bankUserCard.Add(new BanksUsersCards { user = randomUser, bank = randomBank, card = card, accountIssueDate = card.issueDate });
-                randomBank.numberOfUsers++;
+                bool userHasAccountInBank = bankUserCard.Any(buc => buc.user == randomUser && buc.bank == randomBank);
+              
+                if (!userHasAccountInBank)
+                {
+                    bankUserCard.Add(new BanksUsersCards { user = randomUser, bank = randomBank, card = card, accountIssueDate = card.issueDate });
+                    randomBank.numberOfUsers++;
+                }
+            }
+            for (int i = 0; i < users.Count; i++)
+            {
+                userActivities.Add(new UserActivity
+                {
+                    user = users[i],
+                    accountStatus = "BRONZE",
+                    transactionsCount = 0
+                });
             }
 
             for (int i = 0; i < 100; i++)
@@ -153,16 +167,15 @@ namespace API.Controllers
                     senderCard = senderCard,
                     recieverCard = receiverCard
                 });
-            }
-
-            for (int i = 0; i < users.Count; i++)
-            {
-                userActivities.Add(new UserActivity
+                var senderUserCard = bankUserCard.FirstOrDefault(buc => buc.card == senderCard);
+                if (senderUserCard != null)
                 {
-                    user = users[i],
-                    accountStatus = "BRONZE",
-                    transactionsCount = 0
-                });
+                    var senderUserActivity = userActivities.FirstOrDefault(ua => ua.user == senderUserCard.user);
+                    if (senderUserActivity != null)
+                    {
+                        senderUserActivity.transactionsCount++;
+                    }
+                }
             }
 
             _dbContext.AddRange(users);
