@@ -72,6 +72,7 @@ export class UserTransactionListComponent implements OnInit {
   ) {
     this.signalRService.reloadTransactions.subscribe(() => {
       this.loadTransactions();
+      this.getCardInfo();
     });
   }
   ngOnInit(): void {
