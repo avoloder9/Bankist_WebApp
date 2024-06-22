@@ -56,10 +56,18 @@ export class SettingsComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.translations = this.translationService.getTranslations();
-    this.dataService.currentBankName.subscribe(
-      (bankName) => (this.bankName = bankName)
-    );
+    this.dataService.currentBankName.subscribe((bankName) => {
+      this.bankName = bankName;
+      if (bankName) {
+        localStorage.setItem('bankName', bankName);
+      }
+    });
     this.userId = this.userService.getUserId();
+    if (this.userId) {
+      localStorage.setItem('userId', this.userId);
+    }
+    this.userId = localStorage.getItem('userId') || '';
+    this.bankName = localStorage.getItem('bankName') || '';
     console.log('UserID:', this.userId);
     this.getUserId();
   }

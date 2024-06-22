@@ -213,6 +213,9 @@ namespace API.Controllers
                     cardType = _dbContext.CardType.FirstOrDefault(type => type.CardTypeId == request.type),
                     currency = _dbContext.Currency.FirstOrDefault(currency => currency.currencyCode == request.currency),
                     pin = lastPin + 1,
+                    transactionLimit=100,
+                    atmLimit=100,
+                    negativeLimit=0
                 };
                 _dbContext.Card.Add(card);
 
