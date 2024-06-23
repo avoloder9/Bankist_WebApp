@@ -213,9 +213,9 @@ namespace API.Controllers
                     cardType = _dbContext.CardType.FirstOrDefault(type => type.CardTypeId == request.type),
                     currency = _dbContext.Currency.FirstOrDefault(currency => currency.currencyCode == request.currency),
                     pin = lastPin + 1,
-                    transactionLimit=100,
-                    atmLimit=100,
-                    negativeLimit=0
+                    transactionLimit = 100,
+                    atmLimit = 100,
+                    negativeLimit = 0
                 };
                 _dbContext.Card.Add(card);
 
@@ -268,7 +268,11 @@ namespace API.Controllers
             {
                 return NotFound("User's card in this bank not found.");
             }
-
+            var card = _dbContext.Card.FirstOrDefault(c => c.cardNumber == userCard.cardId);
+            if (card == null)
+            {
+                return NotFound("User's card not found.");
+            }
             try
             {
                 var deletedUser = new DeletedUser
@@ -285,9 +289,15 @@ namespace API.Controllers
                     deletionDate = DateTime.Now
                 };
                 _dbContext.DeletedUser.Add(deletedUser);
+                var relatedTransactions = _dbContext.Transaction
+            .Where(t => t.senderCardId == card.cardNumber || t.recieverCardId == card.cardNumber)
+            .ToList();
 
+                _dbContext.Transaction.RemoveRange(relatedTransactions);
+
+                // Obriši karticu i userCard
                 _dbContext.BankUserCard.Remove(userCard);
-
+                _dbContext.Card.Remove(card);
                 _dbContext.SaveChanges();
 
                 return Ok("User's account has been successfully closed in the selected bank.");

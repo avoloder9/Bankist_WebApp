@@ -26,54 +26,58 @@ namespace API.Helper.Services
         {
             for (int i = 0; i < loan.rateCount; i++)
             {
-                await Task.Delay(TimeSpan.FromSeconds(20));
+                await Task.Delay(TimeSpan.FromSeconds(15));
                 using (var scope = _scopeFactory.CreateScope())
                 {
                     var _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-                    var transaction = new Transaction
+                    var cardToUpdate = await _dbContext.Card.FirstOrDefaultAsync(c => c.cardNumber == card.cardNumber);
+                    if (cardToUpdate != null)
                     {
-                        transactionDate = DateTime.UtcNow,
-                        amount = loan.rate,
-                        type = "Rate",
-                        status = "Completed",
-                        senderCardId = null,
-                        recieverCardId = card.cardNumber
-                    };
+                        cardToUpdate.amount -= loan.rate;
 
-                    _dbContext.Transaction.Add(transaction);
-
-                    var loanToUpdate = await _dbContext.Loan.FirstOrDefaultAsync(l => l.loanId == loan.loanId);
-                    if (loanToUpdate != null)
-                    {
-                        loanToUpdate.ratesPayed++;
-                        loanToUpdate.totalAmountPayed += loan.rate;
-                        loanToUpdate.remainingAmount -= loan.rate;
-                        loanToUpdate.status = "ACTIVE";
-                        if (i == loan.rateCount - 1)
+                        var transaction = new Transaction
                         {
-                            loanToUpdate.status = "COMPLETED";
-                        }
-                    }
-
-
-                    await _dbContext.SaveChangesAsync();
-
-                    var buc = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == card.cardNumber);
-
-                    if (buc != null)
-                    {
-                        var user = _dbContext.User.FirstOrDefault(u => u.id == buc.userId);
-                        if (user != null)
+                            transactionDate = DateTime.UtcNow,
+                            amount = loan.rate,
+                            type = "Rate",
+                            status = "Completed",
+                            senderCardId = null,
+                            recieverCardId = card.cardNumber
+                        };
+                        _dbContext.Transaction.Add(transaction);
+                        await _dbContext.SaveChangesAsync();
+                        var loanToUpdate = await _dbContext.Loan.FirstOrDefaultAsync(l => l.loanId == loan.loanId);
+                        if (loanToUpdate != null)
                         {
-                            var connectionId = _cache.Get<string>($"ConnectionId_{user.id}");
-                            if (!string.IsNullOrEmpty(connectionId))
+                            loanToUpdate.ratesPayed++;
+                            loanToUpdate.totalAmountPayed += loan.rate;
+                            loanToUpdate.remainingAmount -= loan.rate;
+                            loanToUpdate.status = "ACTIVE";
+                            if (i == loan.rateCount - 1)
                             {
-                                await _hubContext.Clients.Client(connectionId).SendAsync("rate", "Loan rate has been deducted from your account. Amount " + loanToUpdate?.rate + card.currency.currencyCode);
+                                loanToUpdate.status = "COMPLETED";
                             }
                         }
-                    }
 
+
+                        await _dbContext.SaveChangesAsync();
+
+                        var buc = _dbContext.BankUserCard.FirstOrDefault(buc => buc.cardId == card.cardNumber);
+
+                        if (buc != null)
+                        {
+                            var user = _dbContext.User.FirstOrDefault(u => u.id == buc.userId);
+                            if (user != null)
+                            {
+                                var connectionId = _cache.Get<string>($"ConnectionId_{user.id}");
+                                if (!string.IsNullOrEmpty(connectionId))
+                                {
+                                    await _hubContext.Clients.Client(connectionId).SendAsync("rate", "Loan rate has been deducted from your account. Amount " + loanToUpdate?.rate + card.currency.currencyCode);
+                                }
+                            }
+                        }
+
+                    }
                 }
             }
         }

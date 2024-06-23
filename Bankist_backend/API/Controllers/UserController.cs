@@ -7,6 +7,7 @@ using API.Helper;
 using API.Helper.Auth;
 using API.Helper.Services;
 using API.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -108,7 +109,7 @@ namespace API.Controllers
 
             return Ok(userVM);
         }
-
+        [AllowAnonymous]
         [HttpPost("check")]
         public IActionResult CheckUserExists([FromBody] UserCheckVM request)
         {
@@ -116,7 +117,7 @@ namespace API.Controllers
 
             return Ok(new { Exists = userExists });
         }
-
+        [AllowAnonymous]
         [HttpPost("add")]
         public async Task<ActionResult<User>> AddUser([FromBody] UserAddVM request)
         {

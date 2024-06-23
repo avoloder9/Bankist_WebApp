@@ -22,7 +22,7 @@ namespace API.Helper.Services
 
         public async Task TrackActivity(User user, Card senderCard, string connectionId)
         {
-            var userActivity = await _dbContext.UserActivity.FirstOrDefaultAsync(u => u.id == user.id);
+            var userActivity = await _dbContext.UserActivity.FirstOrDefaultAsync(u => u.userId == user.id);
 
             if (userActivity == null)
             {

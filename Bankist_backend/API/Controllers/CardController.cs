@@ -44,7 +44,7 @@ namespace API.Controllers
                 var banksUsersCard = _dbContext.BankUserCard.Include(x => x.user).Include(x => x.card).Include(x => x.bank).Include(x => x.card.cardType).Include(x => x.card.currency)
         .FirstOrDefault(buc => buc.bank.username == bankName && buc.userId == userId);
 
-                var status = _dbContext.UserActivity.FirstOrDefault(activity => activity.id == userId);
+                var status = _dbContext.UserActivity.FirstOrDefault(activity => activity.userId == userId);
 
                 if (banksUsersCard != null)
                 {
@@ -67,6 +67,7 @@ namespace API.Controllers
                                 CardTypeId = banksUsersCard.card.cardType.CardTypeId,
                                 CurrencyId = banksUsersCard.card.currency.currencyCode,
                                 status = status.accountStatus,
+                               
                             });
                         }
                         else
